@@ -4,8 +4,8 @@ import math
 import sys
 import os
 
-sys.path.insert(0, "/who_arted")
-os.chdir("/who_arted")
+sys.path.insert(0, "/lib/plugins/who_arted")
+os.chdir("/lib/plugins/who_arted")
 
 eyes_cream = color.rgb(255, 245, 208)
 eyes_black = color.rgb(20, 20, 20)
@@ -35,7 +35,9 @@ cycle = True  # Whether to stay on the specified piece or cycle through all thre
 art_lifetime = 30  # The time in minutes between cycling art.
 
 
-while True:
+def update():
+    global last_ticks, next_interval, next_duration, active, piece, changer_last_ticks
+    
     now = time.ticks_ms()
     elapsed = now - last_ticks
 
