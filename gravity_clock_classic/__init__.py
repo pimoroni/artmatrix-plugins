@@ -7,8 +7,8 @@ import wifi
 import ntptime
 from machine import RTC
 
-sys.path.insert(0, "/gravity_clock_classic")
-os.chdir("/gravity_clock_classic")
+sys.path.insert(0, "lib/plugins/gravity_clock_classic")
+os.chdir("lib/plugins/gravity_clock_classic")
 
 import chromeball
 import timezone
@@ -436,7 +436,9 @@ clock_state = ClockState.Running
 
 frame_counter = 0
 
-while True:
+def update():
+    global frame_counter, clock_state
+
     wifi.tick()
 
     if clock_state == ClockState.Running:
