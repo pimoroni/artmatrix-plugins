@@ -1,13 +1,7 @@
 import random
-import sys
-import os
 import time
 
-sys.path.insert(0, "/bezier")
-os.chdir("/bezier")
-
 screen.antialias = image.X4
-screen.font = rom_font.sins
 
 # These values are exposed to the web interface.
 curves = 1  # Number of separate loops to display, minimum 1
@@ -139,7 +133,9 @@ screen.clear()
 
 last_ticks = time.ticks_ms()
 
-while True:
+
+def update():
+    global last_ticks
 
     screen.pen = clear_colour
     screen.clear()
@@ -147,7 +143,6 @@ while True:
     for loop in loops:
         loop.update()
         loop.draw_line()
-        # loop.draw_points()
 
     if show_fps:
         now = time.ticks_ms()
