@@ -1,13 +1,8 @@
 import random
-import sys
-import os
 import time
 
-sys.path.insert(0, "/firework")
-os.chdir("/firework")
-
-bg = image.load("assets/bg.png")
-fg = image.load("assets/fg.png")
+bg = image.load("lib/plugins/firework/assets/bg.png")
+fg = image.load("lib/plugins/firework/assets/fg.png")
 
 screen.antialias = image.X2
 screen.font = rom_font.sins
@@ -23,6 +18,7 @@ timing = 100  # How often a firework is launched, in the form of "1 in x chance 
 gravity = 5  # Gravity level. Must be int.
 max_speed = 32  # Maximum speed of the fireworks.
 show_fps = False  # Displays framerate in the top left corner of the screen.
+
 
 @micropython.native
 def create_spark():
@@ -121,7 +117,9 @@ def process_fireworks():
 
 last_ticks = time.ticks_ms()
 
-while True:
+
+def update():
+    global last_ticks
     process_fireworks()
 
     if show_fps:
