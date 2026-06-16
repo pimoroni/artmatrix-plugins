@@ -5,8 +5,8 @@ import time
 import micropython
 from micropython import const
 
-sys.path.insert(0, "/this_is_fine")
-os.chdir("/this_is_fine")
+sys.path.insert(0, "lib/plugins/this_is_fine")
+os.chdir("lib/plugins/this_is_fine")
 
 # These need to be constants for the viper optimized block below.
 WIDTH = const(128 + 2)
@@ -31,7 +31,7 @@ def make_heat() -> ptr32:     # noqa: F821
 
 
 @micropython.viper
-def update(heat: ptr32):  # noqa: F821
+def _update(heat: ptr32):  # noqa: F821
     # clear the bottom row and then add a new fire seed to it
     for x in range(WIDTH):
         heat[x + WIDTH * (HEIGHT - 1)] = 0
@@ -100,10 +100,13 @@ t_frames = 0
 text_window = screen.window(0, 0, screen.width, screen.height / 2)
 my_scroll = text.scroll(message, font_face=rom_font.awesome, target=text_window, gap=20)
 
-while True:
+
+def update():
+    global t_total, t_frames
+
     t_start = time.ticks_ms()
 
-    update(heat)
+    _update(heat)
     draw(heat, memoryview(screen), pixel_size)
 
     if scroll:
