@@ -7,8 +7,8 @@ import wifi
 import ntptime
 from machine import RTC
 
-sys.path.insert(0, "lib/plugins/gravity_clock_classic")
-os.chdir("lib/plugins/gravity_clock_classic")
+sys.path.insert(0, "/lib/plugins/gravity_clock_classic")
+os.chdir("/lib/plugins/gravity_clock_classic")
 
 import chromeball
 import timezone

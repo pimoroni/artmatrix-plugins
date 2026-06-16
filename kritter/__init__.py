@@ -5,8 +5,8 @@ from ulab import numpy as np
 import sys
 import os
 
-sys.path.insert(0, "/kritter")
-os.chdir("/kritter")
+sys.path.insert(0, "/lib/plugins/kritter")
+os.chdir("/lib/plugins/kritter")
 
 import blob
 import draw_planet
@@ -255,7 +255,10 @@ for _i in range(num_targets):
 
 last_ticks = time.ticks_ms()
 
-while True:
+
+def update():
+    global last_ticks
+
     screen.blit(bg, vec2(0, 0))
 
     for kritter in kritters:

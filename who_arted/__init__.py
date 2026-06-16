@@ -37,7 +37,7 @@ art_lifetime = 30  # The time in minutes between cycling art.
 
 def update():
     global last_ticks, next_interval, next_duration, active, piece, changer_last_ticks
-    
+
     now = time.ticks_ms()
     elapsed = now - last_ticks
 

@@ -3,7 +3,7 @@ import sys
 import os
 import time
 
-sys.path.insert(0, "lib/plugins/firework")
+sys.path.insert(0, "/lib/plugins/firework")
 os.chdir("/lib/plugins/firework")
 
 bg = image.load("assets/bg.png")
