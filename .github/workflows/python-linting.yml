@@ -21,8 +21,4 @@ jobs:
 
     - name: Lint MicroPython Examples
       shell: bash
-      run: source ci/python.sh && qa_examples_check
-
-    - name: Lint MicroPython Modules
-      shell: bash
-      run: source ci/python.sh && qa_modules_check
+      run: source ci/python.sh && qa_check
