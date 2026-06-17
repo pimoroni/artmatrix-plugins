@@ -4,8 +4,8 @@ import sys
 import os
 import time
 
-sys.path.insert(0, "/trilobite")
-os.chdir("/trilobite")
+sys.path.insert(0, "/lib/plugins/trilobite")
+os.chdir("/lib/plugins/trilobite")
 
 width = 128
 height = 128
@@ -111,7 +111,10 @@ for _i in range(num_trilobites):
 
 last_ticks = time.ticks_ms()
 
-while True:
+
+def update():
+    global last_ticks
+
     screen.blit(sand, vec2(0, 0))
 
     for trilobite in trilobites:
