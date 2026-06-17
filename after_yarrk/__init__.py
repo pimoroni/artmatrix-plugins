@@ -4,8 +4,8 @@ import random
 import sys
 import os
 
-sys.path.insert(0, "/after_yarrk")
-os.chdir("/after_yarrk")
+sys.path.insert(0, "/lib/plugins/after_yarrk")
+os.chdir("/lib/plugins/after_yarrk")
 
 import vector_sprite
 
@@ -288,7 +288,9 @@ t = 0
 
 # In the main loop we've set up a frame limiter at around 30fps.
 # Each frame we just clear the screen, and then draw every ship.
-while True:
+def update():
+    global t, last_frame
+
     now = time.ticks_ms()
     frametime = now - last_frame
 
