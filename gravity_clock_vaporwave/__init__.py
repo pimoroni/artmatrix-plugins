@@ -1,24 +1,19 @@
 import math
 import random
 import time
-import sys
-import os
 import wifi
 import ntptime
 from machine import RTC
 
-sys.path.insert(0, "/gravity_clock_vaporwave")
-os.chdir("/gravity_clock_vaporwave")
-
-import timezone
-from daylightsaving import DaylightSavingPolicy, DaylightSaving
+from gravity_clock_vaporwave import timezone
+from gravity_clock_vaporwave.daylightsaving import DaylightSavingPolicy, DaylightSaving
 
 GRAVITY_STRENGTH = 5
 seconds_gravity_vec = vec2(0, 0)
 minutes_gravity_vec = vec2(0, 0)
 hours_gravity_vec = vec2(0, 0)
 
-sheet_rays = SpriteSheet("assets/sheet_rays.png", 24, 4)
+sheet_rays = SpriteSheet("/lib/plugins/gravity_clock_vaporwave/assets/sheet_rays.png", 24, 4)
 hand_second_sprite = AnimatedSprite(sheet_rays, 0, 0, 24)
 hand_minute_sprite = AnimatedSprite(sheet_rays, 0, 1, 24)
 hand_hour_sprite = AnimatedSprite(sheet_rays, 0, 2, 24)
@@ -367,7 +362,9 @@ clock_state = ClockState.Running
 
 frame_counter = 0
 
-while True:
+
+def update():
+    global last_ticks, frame_counter, clock_state
     wifi.tick()
 
     if clock_state == ClockState.Running:

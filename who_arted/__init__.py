@@ -1,20 +1,15 @@
 import time
 import random
 import math
-import sys
-import os
-
-sys.path.insert(0, "/lib/plugins/who_arted")
-os.chdir("/lib/plugins/who_arted")
 
 eyes_cream = color.rgb(255, 245, 208)
 eyes_black = color.rgb(20, 20, 20)
 mouth_black = color.rgb(64, 22, 8)
 
-scream = image.load("assets/scream-no-mouth.png")
-lisa = image.load("assets/monalisa_noeyes.png")
-pearl_base = image.load("assets/pearl_base.png")
-pearl_overlay = image.load("assets/pearl_overlay.png")
+scream = image.load("/lib/plugins/who_arted/assets/scream-no-mouth.png")
+lisa = image.load("/lib/plugins/who_arted/assets/monalisa_noeyes.png")
+pearl_base = image.load("/lib/plugins/who_arted/assets/pearl_base.png")
+pearl_overlay = image.load("/lib/plugins/who_arted/assets/pearl_overlay.png")
 
 screen.antialias = image.OFF
 

@@ -4,17 +4,14 @@ import sys
 import os
 import time
 
-sys.path.insert(0, "/lib/plugins/trilobite")
-os.chdir("/lib/plugins/trilobite")
-
 width = 128
 height = 128
 
 screen.font = rom_font.sins
 
-trilo_sprite = image.load("assets/trilobite.png")
-ammo_sprite = image.load("assets/ammonite.png")
-track_sprite = SpriteSheet("assets/track.png", 5, 1)
+trilo_sprite = image.load("/lib/plugins/trilobite/assets/trilobite.png")
+ammo_sprite = image.load("/lib/plugins/trilobite/assets/ammonite.png")
+track_sprite = SpriteSheet("/lib/plugins/trilobite/assets/track.png", 5, 1)
 sand = image(128, 128)
 sand_light = color.rgb(252, 248, 177)
 sand.pen = sand_light

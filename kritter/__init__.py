@@ -2,16 +2,10 @@ import math
 import random
 import time
 from ulab import numpy as np
-import sys
-import os
 
-sys.path.insert(0, "/lib/plugins/kritter")
-os.chdir("/lib/plugins/kritter")
+from plugins.kritter import blob, draw_planet
 
-import blob
-import draw_planet
-
-bg = image.load("assets/space.png")
+bg = image.load("/lib/plugins/kritter/assets/space.png")
 
 colours = [color.rgb(255, 0, 0),
            color.rgb(255, 255, 0),

@@ -1,13 +1,8 @@
 import math
 import time
 import random
-import sys
-import os
 
-sys.path.insert(0, "/lib/plugins/after_yarrk")
-os.chdir("/lib/plugins/after_yarrk")
-
-import vector_sprite
+from plugins.after_yarrk import vector_sprite
 
 # Setting up a colour palette to use to draw the ships and sea
 white = color.rgb(255, 255, 255)

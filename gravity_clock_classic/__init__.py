@@ -1,26 +1,20 @@
 import math
 import random
 import time
-import sys
-import os
 import wifi
 import ntptime
 from machine import RTC
 
-sys.path.insert(0, "/lib/plugins/gravity_clock_classic")
-os.chdir("/lib/plugins/gravity_clock_classic")
-
-import chromeball
-import timezone
-from daylightsaving import DaylightSavingPolicy, DaylightSaving
+from plugins.gravity_clock_classic import chromeball, timezone
+from plugins.gravity_clock_classic.daylightsaving import DaylightSavingPolicy, DaylightSaving
 
 GRAVITY_STRENGTH = 5
 seconds_gravity_vec = vec2(0, 0)
 minutes_gravity_vec = vec2(0, 0)
 hours_gravity_vec = vec2(0, 0)
 
-bg = image.load("assets/bg.png")
-fg = image.load("assets/fg.png")
+bg = image.load("/lib/plugins/gravity_clock_classic/assets/bg.png")
+fg = image.load("/lib/plugins/gravity_clock_classic/assets/fg.png")
 
 shadow = color.rgb(0, 0, 0, 128)
 

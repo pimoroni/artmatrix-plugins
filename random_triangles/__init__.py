@@ -1,7 +1,7 @@
 from fetch import AsyncFetch, HTTPException
 import random
 
-FILE_PATH = "lib/plugins/random_triangles/random_triangle.png"
+FILE_PATH = "/lib/plugins/random_triangles/random_triangle.png"
 
 center_x, center_y = screen.width / 2, screen.height / 2
 

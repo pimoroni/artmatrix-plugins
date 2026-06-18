@@ -1,12 +1,7 @@
 import random
-import sys
-import os
 import time
 import micropython
 from micropython import const
-
-sys.path.insert(0, "lib/plugins/this_is_fine")
-os.chdir("lib/plugins/this_is_fine")
 
 # These need to be constants for the viper optimized block below.
 WIDTH = const(128 + 2)

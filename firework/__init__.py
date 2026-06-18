@@ -1,13 +1,8 @@
 import random
-import sys
-import os
 import time
 
-sys.path.insert(0, "/lib/plugins/firework")
-os.chdir("/lib/plugins/firework")
-
-bg = image.load("assets/bg.png")
-fg = image.load("assets/fg.png")
+bg = image.load("/lib/plugins/firework/assets/bg.png")
+fg = image.load("/lib/plugins/firework/assets/fg.png")
 
 screen.antialias = image.X2
 screen.font = rom_font.sins
