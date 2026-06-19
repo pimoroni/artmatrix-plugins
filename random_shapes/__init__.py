@@ -1,28 +1,48 @@
 from fetch import AsyncFetch, HTTPException
 import random
+import time
+import binascii
+from easing import easeInCubic
 
-FILE_PATH = "/lib/plugins/random_shapes/random_shape.png"
-
-center_x, center_y = screen.width / 2, screen.height / 2
+FADE_DURATION = 2000
+UPDATE_INTERVAL = 10
+RANDOMNESS = 32
 
 SHAPES_API_HOST = "api.dicebear.com"
 SHAPES_API_PATH = "/10.x/shapes/png?size=128&seed="
-FILE_PATH = "assets"
-update_interval = 10
-seed = random.getrandbits(32)
-img = None
+CACHE_FILE = "/lib/plugins/random_shapes/random_shapes.png"
+
+UID = binascii.hexlify(machine.unique_id()).decode()
+
+seed = random.getrandbits(RANDOMNESS)
+img = image(128, 128)
+old = image(128, 128)
+
+try:
+    old.load_into(CACHE_FILE)
+except (OSError, ValueError):
+    pass
 
 api_data = AsyncFetch(SHAPES_API_HOST, debug=True)
-api_data.fetch(f"{SHAPES_API_PATH}{seed}", file=FILE_PATH, interval=update_interval)
+
+api_data.fetch(f"{SHAPES_API_PATH}{UID}{seed}", file=CACHE_FILE, interval=UPDATE_INTERVAL)
+
+fade_start = time.ticks_ms() - FADE_DURATION
 
 
 @api_data.on_complete
 def complete(fetch):
-    global seed, img
+    global fade_start
 
-    seed = random.getrandbits(32)
-    api_data.fetch(f"{SHAPES_API_PATH}{seed}", file=FILE_PATH)
-    img = image.load(FILE_PATH)
+    # start the load for the NEXT image
+    seed = random.getrandbits(RANDOMNESS)
+    api_data.fetch(f"{SHAPES_API_PATH}{UID}{seed}", file=CACHE_FILE)
+
+    # Load in the image we just downloaded.
+    old.blit(img, vec2(0, 0))
+    img.load_into(CACHE_FILE)
+
+    fade_start = time.ticks_ms()
 
 
 @api_data.on_error
@@ -31,11 +51,18 @@ def error(fetch):
 
 
 def update():
+    t = min(1.0, time.ticks_diff(time.ticks_ms(), fade_start) / FADE_DURATION)
+    t = easeInCubic(t)
+
+    screen.alpha = 255
+    screen.blit(old, vec2(0, 0))
+    screen.alpha = int(t * 255)
+    screen.blit(img, vec2(0, 0))
 
     try:
         api_data.update()
     except HTTPException as e:
         print("Exception was raised!")
         print(e.fetch.http_status)
-    if img:
-        screen.blit(img, rect(0, 0, 128, 128))
+
+    display.update()
