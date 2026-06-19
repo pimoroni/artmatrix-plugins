@@ -3,6 +3,7 @@ import random
 import time
 import binascii
 from easing import easeInCubic
+import machine
 
 FADE_DURATION = 2000
 UPDATE_INTERVAL = 10
