@@ -6,6 +6,7 @@ background = color.rgb(0, 0, 0)
 phosphor = color.rgb(246, 135, 4)
 terminal_text = color.rgb(0, 128, 0)
 
+
 class Terminal:
     lines = []
     max_lines = 25
