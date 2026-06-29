@@ -50,6 +50,9 @@ def complete(fetch):
 def error(fetch):
     print(fetch.http_status, fetch.http_response_headers)
 
+    seed = random.getrandbits(RANDOMNESS)
+    api_data.fetch(f"{SHAPES_API_PATH}{UID}{seed}", file=CACHE_FILE, interval=UPDATE_INTERVAL)
+
 
 def update():
     t = min(1.0, time.ticks_diff(time.ticks_ms(), fade_start) / FADE_DURATION)
