@@ -16,7 +16,7 @@ shadow = color.rgb(0, 0, 0, 128)
 yellow = color.rgb(247, 209, 77)
 black = color.rgb(0, 0, 0)
 dark_red = color.rgb(64, 0, 0)
-ocean = color.rgb(13, 17, 38) # color.rgb(26, 34, 76)
+ocean = color.rgb(13, 17, 38)  # color.rgb(26, 34, 76)
 
 # These values are exposed to the web interface
 global_scale = 0.2  # Overall scale of all ships and waves.
@@ -281,6 +281,7 @@ for _i in range(num_ships):
 
 t = 0
 
+
 # In the main loop we've set up a frame limiter at around 30fps.
 # Each frame we just clear the screen, and then draw every ship.
 def update():
@@ -324,5 +325,3 @@ def update():
             screen.font = rom_font.sins
             screen.pen = color.red
             screen.text(str(fps), 0, 0)
-
-        display.update()

@@ -110,11 +110,6 @@ def update():
         x, y = screen.measure_text(message)
         screen.text(message, (128 - x) / 2, 25)
 
-    display.update()
-
-    # pause for a moment (important or the USB serial device will fail)
-    time.sleep(0.001)
-
     t_end = time.ticks_ms()
 
     t_total += time.ticks_diff(t_end, t_start)

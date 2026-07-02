@@ -32,7 +32,7 @@ fade_start = time.ticks_ms() - FADE_DURATION
 
 
 @api_data.on_complete
-def complete(fetch):
+def complete(_fetch):
     global fade_start
 
     # start the load for the NEXT image
@@ -68,5 +68,3 @@ def update():
     except HTTPException as e:
         print("Exception was raised!")
         print(e.fetch.http_status)
-
-    display.update()

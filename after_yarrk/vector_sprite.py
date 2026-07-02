@@ -1,5 +1,6 @@
 import math
 
+
 # This class holds frame and subframe data for a single vector shape.
 # Instead of requesting a specific frame by number, a number between frames can be provided and a shape will be returned interpolated between the two adjacent frames.
 class Vector_sprite:

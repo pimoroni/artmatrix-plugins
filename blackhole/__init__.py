@@ -53,5 +53,3 @@ def update():
 
     screen.pen = color.white
     screen.shape(shape.circle(CX, CY, 35, 2).stroke(1))
-
-    display.update()

@@ -19,6 +19,7 @@ gravity = 5  # Gravity level. Must be int.
 max_speed = 32  # Maximum speed of the fireworks.
 show_fps = False  # Displays framerate in the top left corner of the screen.
 
+
 @micropython.native
 def create_spark():
     x = random.randint(3200, 9600)
@@ -108,13 +109,12 @@ def process_fireworks():
 
     screen.blit(fg, vec2(0, 0))
 
-    display.update()
-
     if not random.randint(0, timing):
         create_spark()
 
 
 last_ticks = time.ticks_ms()
+
 
 def update():
     global last_ticks

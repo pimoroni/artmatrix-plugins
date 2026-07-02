@@ -64,4 +64,3 @@ def update():
     screen.pen = color.rgb(0, 0, 0)
     screen.clear()
     draw_terminal()
-    display.update()

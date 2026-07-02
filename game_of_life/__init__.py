@@ -1,4 +1,3 @@
-import time
 import re
 import machine  # noqa: F401
 import micropython
@@ -267,10 +266,3 @@ def update():
     if SEED_AT and gen == SEED_AT:
         gol.seed_life()
         gen = 0
-
-    display.update()
-    time.sleep(0.001)
-
-
-while True:
-    update()

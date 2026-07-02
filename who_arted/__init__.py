@@ -94,5 +94,3 @@ def update():
         screen.blit(pearl_base, vec2(0, 0))
         if active:
             screen.blit(pearl_overlay, vec2(0, 0))
-
-    display.update()

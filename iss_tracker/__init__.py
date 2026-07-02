@@ -247,5 +247,3 @@ def update():
 
     if update_location:
         draw_notification("Updating...")
-
-    display.update()

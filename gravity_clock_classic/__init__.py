@@ -162,7 +162,6 @@ class Clock:
         self.minute_rotation = (minute * 6) + (0.1 * second)
         self.hour_rotation = (hour * 30) + (0.5 * minute)
 
-
     @micropython.native
     def draw_hands(self):
         second_hand_path = [vec2(0.5, -56),
@@ -430,6 +429,7 @@ clock_state = ClockState.Running
 
 frame_counter = 0
 
+
 def update():
     global frame_counter, clock_state
 
@@ -495,5 +495,3 @@ def update():
         screen.font = rom_font.sins
         screen.pen = color.red
         screen.text(str(fps), 0, 0)
-
-    display.update()

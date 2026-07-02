@@ -1,7 +1,5 @@
 import random
 import math
-import sys
-import os
 import time
 
 width = 128
@@ -130,5 +128,3 @@ def update():
         screen.font = rom_font.sins
         screen.pen = color.red
         screen.text(str(fps), 0, 0)
-
-    display.update()
