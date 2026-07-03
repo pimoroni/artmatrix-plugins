@@ -2,23 +2,16 @@ import json
 import math
 from datetime import datetime, timezone
 import time
-import ntptime
-
-import requests
+from fetch import AsyncFetch, HTTPException
 
 screen.font = rom_font.sins
 
 CX, CY = screen.width / 2, screen.height / 2
 
-ONE_MINUTE = 60
+API_HOST = "api.open-notify.org"
+ISS_JSON = "/iss-now.json"
 
-ISS_API_URL = "http://api.open-notify.org/iss-now.json"
-CREW_API_URL = "http://api.open-notify.org/astros.json"
-
-last_updated_loc = None
-
-update_location = False
-time_set = False
+UPDATE_INTERVAL = 60
 
 MAP_HEIGHT = 180
 MAP_WIDTH = 360
@@ -33,14 +26,39 @@ coastlines = []
 coastline_bounds = []
 coastline_lats = []
 iss_path = []
-
-# variables used for the crew member window
-cr = rect(10, 10, screen.width - 20, screen.height - 20)
-crew_window = shape.rectangle(cr.x, cr.y, cr.w, cr.h)
-crew_outline = shape.rectangle(cr.x, cr.y, cr.w, cr.h).stroke(2)
-show_info = False
+long, lat = None, None
 
 iss_sprite = image.load("lib/plugins/iss_tracker/icon.png")
+
+api_data = AsyncFetch(API_HOST, 80, use_tls=False, debug=True)
+api_data.fetch(f"{ISS_JSON}", interval=UPDATE_INTERVAL)
+
+
+@api_data.on_complete
+def complete(fetch):
+    global long, lat, x, y
+
+    j = fetch.to_json()
+    long, lat = float(j["iss_position"]["longitude"]), float(j["iss_position"]["latitude"])
+
+    if long and lat:
+        x, y = -long, lat
+
+        # add location to list and clamp it to max length of 90
+        iss_path.append((-x, -y))
+        if len(iss_path) > 90:
+            iss_path.pop(0)
+
+    # start the load for the NEXT location
+    api_data.fetch(f"{ISS_JSON}")
+
+
+@api_data.on_error
+def error(fetch):
+    print(fetch.http_status, fetch.http_response_headers)
+
+    # start the load for the NEXT location
+    api_data.fetch(f"{ISS_JSON}", interval=UPDATE_INTERVAL)
 
 
 def load_coastlines():
@@ -67,15 +85,6 @@ def load_coastlines():
 
 
 def get_tau_and_dec():
-    global time_set
-
-    # sync time with ntp at start up. We don't need to do this again
-    if not time_set:
-        try:
-            ntptime.settime()
-            time_set = True
-        except OSError:
-            pass
 
     dt = datetime.now(timezone.utc)
     year = dt.year
@@ -107,48 +116,6 @@ def calc_day_night_latitude(longitude, dec):
     except ZeroDivisionError:
         latitude = 90.0 if cos_lat > 0 else -90.0 if cos_lat < 0 else 0
     return latitude
-
-
-def get_location():
-    global last_updated_loc
-
-    last_updated_loc = time.time()
-
-    # try and get the latest position
-    # return the last if error raised
-    try:
-        r = requests.get(ISS_API_URL)
-        j = r.json()
-        return float(j["iss_position"]["longitude"]), float(j["iss_position"]["latitude"])
-    except (OSError, ValueError):
-        return None, None
-
-
-def get_crew():
-    global iss_crew, last_updated_crew
-
-    last_updated_crew = time.time()
-
-    crew = []
-    # try and get the latest position
-    # return the last if error raised
-    try:
-        # get the d data
-        r = requests.get(CREW_API_URL)
-        j = r.json()
-
-        # grab the list of people in space right now
-        people_in_space = j["people"]
-
-        # if that person is on the ISS, save their name to a list
-        for person in people_in_space:
-            if person["craft"] == "ISS":
-                crew.append(person["name"])
-
-        iss_crew = crew
-
-    except (OSError, ValueError):
-        pass
 
 
 def draw_notification(t):
@@ -200,20 +167,19 @@ def draw_map():
             daynight_shape.transform = matricies[j]
             screen.shape(daynight_shape)
 
-    if not show_info:
-        screen.pen = color.white
-        if len(iss_path) > 0:
-            x1, y1 = iss_path[0]
-            for i in range(1, len(iss_path)):
-                x2, y2 = iss_path[i]
-                if x2 < x1:
-                    x1 -= 360
-                line_seg = shape.line(x1, y1, x2, y2, PATH_WIDTH / s)
-                for j, o in enumerate([-360, 0, 360]):
-                    if x1 + o < -x + cx_scaled or x2 + o > -x - cx_scaled:
-                        line_seg.transform = matricies[j]
-                        screen.shape(line_seg)
-                x1, y1 = x2, y2
+    screen.pen = color.white
+    if len(iss_path) > 0:
+        x1, y1 = iss_path[0]
+        for i in range(1, len(iss_path)):
+            x2, y2 = iss_path[i]
+            if x2 < x1:
+                x1 -= 360
+            line_seg = shape.line(x1, y1, x2, y2, PATH_WIDTH / s)
+            for j, o in enumerate([-360, 0, 360]):
+                if x1 + o < -x + cx_scaled or x2 + o > -x - cx_scaled:
+                    line_seg.transform = matricies[j]
+                    screen.shape(line_seg)
+            x1, y1 = x2, y2
 
         w, h = iss_sprite.width, iss_sprite.height
         i = (math.sin(time.time() / 120) * 64) + (255 - 64)
@@ -223,27 +189,16 @@ def draw_map():
 
 
 def update():
-    global update_location, x, y
+
+    try:
+        api_data.update()
+    except HTTPException as e:
+        print("Exception was raised!")
+        print(e.fetch.http_status)
+    except OSError:
+        pass
 
     screen.pen = STAR_PATTERN
     screen.clear()
 
-    if update_location:
-        long, lat = get_location()
-        if long and lat:
-            x, y = -long, lat
-
-            # add location to list and clamp it to max length of 90
-            iss_path.append((-x, -y))
-            if len(iss_path) > 90:
-                iss_path.pop(0)
-            update_location = False
-
-    # get the ISS location once every minute
-    if last_updated_loc is None or (time.time() - last_updated_loc) > ONE_MINUTE:
-        update_location = True
-
     draw_map()
-
-    if update_location:
-        draw_notification("Updating...")
