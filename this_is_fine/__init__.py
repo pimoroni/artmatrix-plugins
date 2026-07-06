@@ -2,6 +2,7 @@ import random
 import time
 import micropython
 from micropython import const
+import json
 
 # These need to be constants for the viper optimized block below.
 WIDTH = const(128 + 2)
@@ -18,6 +19,22 @@ screen.pen = color.white
 message = "this is fine."  # Message, obvs.
 scroll = False  # Whether to scroll the message.
 pixel_size = 3  # Resolution of the fire in pixels. Max 3.
+
+try:
+    with open("/lib/plugins/this_is_fine/config.json") as f:
+        cfg = json.load(f)
+        message = cfg["message"] or "this is fine."
+        scroll = "scroll" in cfg
+        pixel_size = int(cfg["pixel_size"] or 3)
+except OSError:
+    pass
+
+try:
+    with open("/lib/plugins/this_is_fine/config.html", "r", encoding="utf-8") as f:
+        config_html = f.read()
+except OSError as e:
+    print(e)
+    config_html = None
 
 
 @micropython.viper
