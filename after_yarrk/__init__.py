@@ -1,6 +1,7 @@
 import math
 import time
 import random
+import json
 
 from plugins.after_yarrk import vector_sprite
 
@@ -29,6 +30,30 @@ animation_speed = 25  # The speed of the wing flapping animation and associated 
 wave_animation_speed = 20
 fps_limiter = True  # Locks the simulation to max 30fps.
 show_fps = False  # Displays framerate in the top left corner of the screen.
+
+try:
+    with open("/lib/plugins/after_yarrk/config.json") as f:
+        cfg = json.load(f)
+        global_scale = float(cfg["global_scale"] or 0.2)
+        num_ships = int(cfg["num_ships"] or 5)
+        sailing_angle = int(cfg["sailing_angle"] or 330)
+        bob_amount = float(cfg["bob_amount"] or 5)
+        travel_speed = float(cfg["travel_speed"] or 0.5)
+        spawn_border = int(cfg["spawn_border"] or 25)
+        animation_speed = int(cfg["animation_speed"] or 25)
+        wave_animation_speed = int(cfg["wave_animation_speed"] or 20)
+        fps_limiter = "fps_limiter" in cfg
+        show_fps = "show_fps" in cfg
+except OSError:
+    pass
+
+
+try:
+    with open("/lib/plugins/after_yarrk/config.html", "r", encoding="utf-8") as f:
+        config_html = f.read()
+except OSError as e:
+    print(e)
+    config_html = None
 
 screen.antialias = image.X4
 

@@ -1,0 +1,53 @@
+<form method="post" action="/config?plugin={{ plugin }}">
+  <label>Global scale
+    <small>Overall scale of all ships and waves</small>
+    <input type="number" name="global_scale" min="0.05" step="0.05" value="{{ placeholder.global_scale }}">
+  </label>
+
+  <label>Number of ships
+    <small>Total ships on screen</small>
+    <input type="number" name="num_ships" min="1" step="1" value="{{ placeholder.num_ships }}">
+  </label>
+
+  <label>Sailing angle
+    <small>Direction of travel in degrees (0 = x+). Doesn't rotate the ships</small>
+    <input type="number" name="sailing_angle" min="0" max="360" step="1" value="{{ placeholder.sailing_angle }}">
+  </label>
+
+  <label>Bob amount
+    <small>Movement added by the wing-flapping motion</small>
+    <input type="number" name="bob_amount" min="0" step="0.5" value="{{ placeholder.bob_amount }}">
+  </label>
+
+  <label>Travel speed
+    <small>How fast ships move across the screen</small>
+    <input type="number" name="travel_speed" min="0" step="0.1" value="{{ placeholder.travel_speed }}">
+  </label>
+
+  <label>Spawn border
+    <small>Pixels beyond the screen edge where ships spawn / despawn. Increase if ships pop in/out</small>
+    <input type="number" name="spawn_border" min="0" step="1" value="{{ placeholder.spawn_border }}">
+  </label>
+
+  <label>Animation speed
+    <small>Wing-flap &amp; bob speed (whole number)</small>
+    <input type="number" name="animation_speed" min="1" step="1" value="{{ placeholder.animation_speed }}">
+  </label>
+
+  <label>Wave animation speed
+    <small>Speed of the wave animation (whole number)</small>
+    <input type="number" name="wave_animation_speed" min="1" step="1" value="{{ placeholder.wave_animation_speed }}">
+  </label>
+
+  <label class="row">
+    <input type="checkbox" name="fps_limiter" {{ "checked" if placeholder.fps_limiter else "" }}>
+    FPS limiter <small>Locks the simulation to max 30fps</small>
+  </label>
+
+  <label class="row">
+    <input type="checkbox" name="show_fps" {{ "checked" if placeholder.show_fps else "" }}>
+    Show FPS <small>Framerate in the top-left corner</small>
+  </label>
+
+  <button type="submit">Apply</button>
+</form>
