@@ -1,6 +1,8 @@
 import time
 import math
 
+screen.antialias = image.X4
+
 CX = screen.width / 2
 CY = screen.height / 2
 
