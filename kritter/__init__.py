@@ -2,6 +2,7 @@ import math
 import random
 import time
 from ulab import numpy as np
+import json
 
 from plugins.kritter import blob, draw_planet
 
@@ -37,6 +38,31 @@ planet_speed_max = 0.2  # Maximum scrolling speed for planets.
 planet_rotation_speed_min = 0.5  # Minimum rotation speed for planets in degrees per frame.
 planet_rotation_speed_max = 1.5  # Maximum rotation speed for planets in degrees per frame.
 show_fps = False  # Displays framerate in the top left corner of the screen.
+
+try:
+    with open("/lib/plugins/kritter/config.json") as f:
+        cfg = json.load(f)
+        num_kritters = int(cfg["num_kritters"] or 5)
+        num_planets = int(cfg["num_planets"] or 10)
+        num_targets = int(cfg["num_targets"] or 10)
+        jump_chaos = int(cfg["jump_chaos"] or 30)
+        gravity_strength = int(cfg["gravity_strength"] or 5)
+        planet_radius_min = int(cfg["planet_radius_min"] or 5)
+        planet_radius_max = int(cfg["planet_radius_max"] or 12)
+        planet_speed_min = float(cfg["planet_speed_min"] or 0.05)
+        planet_speed_max = float(cfg["planet_speed_max"] or 0.2)
+        planet_rotation_speed_min = float(cfg["planet_rotation_speed_min"] or 0.5)
+        planet_rotation_speed_max = float(cfg["planet_rotation_speed_max"] or 1.5)
+        show_fps = "show_fps" in cfg
+except OSError:
+    pass
+
+try:
+    with open("/lib/plugins/kritter/config.html", "r", encoding="utf-8") as f:
+        config_html = f.read()
+except OSError as e:
+    print(e)
+    config_html = None
 
 
 class Planet:

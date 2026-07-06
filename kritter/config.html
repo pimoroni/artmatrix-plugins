@@ -1,0 +1,63 @@
+<form method="post" action="/config?plugin={{ plugin }}">
+  <label>Number of kritters
+    <small>How many kritters jumping around</small>
+    <input type="number" name="num_kritters" min="1" step="1" value="{{ placeholder.num_kritters }}">
+  </label>
+
+  <label>Number of planets
+    <small>How many planets to jump around on</small>
+    <input type="number" name="num_planets" min="1" step="1" value="{{ placeholder.num_planets }}">
+  </label>
+
+  <label>Number of targets
+    <small>Invisible jump targets — higher means more jumping</small>
+    <input type="number" name="num_targets" min="1" step="1" value="{{ placeholder.num_targets }}">
+  </label>
+
+  <label>Jump chaos
+    <small>Max random variation from vertical per jump, in degrees</small>
+    <input type="number" name="jump_chaos" min="0" max="180" step="1" value="{{ placeholder.jump_chaos }}">
+  </label>
+
+  <label>Gravity strength
+    <small>Strength of the planets' gravitational fields</small>
+    <input type="number" name="gravity_strength" min="0" step="1" value="{{ placeholder.gravity_strength }}">
+  </label>
+
+  <label>Planet radius (min)
+    <small>Minimum planet radius in pixels</small>
+    <input type="number" name="planet_radius_min" min="1" step="1" value="{{ placeholder.planet_radius_min }}">
+  </label>
+
+  <label>Planet radius (max)
+    <small>Maximum planet radius in pixels</small>
+    <input type="number" name="planet_radius_max" min="1" step="1" value="{{ placeholder.planet_radius_max }}">
+  </label>
+
+  <label>Planet speed (min)
+    <small>Minimum scrolling speed for planets</small>
+    <input type="number" name="planet_speed_min" min="0" step="0.01" value="{{ placeholder.planet_speed_min }}">
+  </label>
+
+  <label>Planet speed (max)
+    <small>Maximum scrolling speed for planets</small>
+    <input type="number" name="planet_speed_max" min="0" step="0.01" value="{{ placeholder.planet_speed_max }}">
+  </label>
+
+  <label>Planet rotation speed (min)
+    <small>Minimum rotation speed, degrees per frame</small>
+    <input type="number" name="planet_rotation_speed_min" min="0" step="0.1" value="{{ placeholder.planet_rotation_speed_min }}">
+  </label>
+
+  <label>Planet rotation speed (max)
+    <small>Maximum rotation speed, degrees per frame</small>
+    <input type="number" name="planet_rotation_speed_max" min="0" step="0.1" value="{{ placeholder.planet_rotation_speed_max }}">
+  </label>
+
+  <label class="row">
+    <input type="checkbox" name="show_fps" {{ "checked" if placeholder.show_fps else "" }}>
+    Show FPS <small>Framerate in the top-left corner</small>
+  </label>
+
+  <button type="submit">Apply</button>
+</form>
