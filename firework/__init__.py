@@ -1,5 +1,6 @@
 import random
 import time
+import json
 
 bg = image.load("/lib/plugins/firework/assets/bg.png")
 fg = image.load("/lib/plugins/firework/assets/fg.png")
@@ -18,6 +19,28 @@ timing = 100  # How often a firework is launched, in the form of "1 in x chance 
 gravity = 5  # Gravity level. Must be int.
 max_speed = 32  # Maximum speed of the fireworks.
 show_fps = False  # Displays framerate in the top left corner of the screen.
+
+try:
+    with open("/lib/plugins/firework/config.json") as f:
+        cfg = json.load(f)
+        frequencies = (
+            int(cfg["freq_0"] or 0),
+            int(cfg["freq_1"] or 1),
+            int(cfg["freq_2"] or 1),
+        )
+        timing = int(cfg["timing"] or 100)
+        gravity = int(cfg["gravity"] or 5)
+        max_speed = int(cfg["max_speed"] or 32)
+        show_fps = "show_fps" in cfg
+except OSError:
+    pass
+
+try:
+    with open("/lib/plugins/firework/config.html", "r", encoding="utf-8") as f:
+        config_html = f.read()
+except OSError as e:
+    print(e)
+    config_html = None
 
 
 @micropython.native
