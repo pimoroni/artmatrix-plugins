@@ -31,16 +31,15 @@
 
   <label>Colour
     <small>0, 0, 0 = rainbow</small>
-    <div class="row rgb">
+    <div>
       R <input type="number" name="r" min="0" max="255" value="{{ placeholder.colour[0] }}">
       G <input type="number" name="g" min="0" max="255" value="{{ placeholder.colour[1] }}">
       B <input type="number" name="b" min="0" max="255" value="{{ placeholder.colour[2] }}">
     </div>
   </label>
 
-  <label class="row">
+  <label>Show FPS
     <input type="checkbox" name="show_fps" {{ "checked" if placeholder.show_fps else "" }}>
-    Show FPS
   </label>
 
   <button type="submit">Apply</button>

@@ -39,14 +39,12 @@
     <input type="number" name="wave_animation_speed" min="1" step="1" value="{{ placeholder.wave_animation_speed }}">
   </label>
 
-  <label class="row">
+  <label>FPS limiter
     <input type="checkbox" name="fps_limiter" {{ "checked" if placeholder.fps_limiter else "" }}>
-    FPS limiter <small>Locks the simulation to max 30fps</small>
   </label>
 
-  <label class="row">
+  <label>Show FPS
     <input type="checkbox" name="show_fps" {{ "checked" if placeholder.show_fps else "" }}>
-    Show FPS <small>Framerate in the top-left corner</small>
   </label>
 
   <button type="submit">Apply</button>
