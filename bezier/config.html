@@ -1,0 +1,47 @@
+<form method="post" action="/config?plugin={{ plugin }}">
+  <label>Curves
+    <small>Number of separate loops (min 1)</small>
+    <input type="number" name="curves" min="1" value="{{ placeholder.curves }}">
+  </label>
+
+  <label>Points
+    <small>Control points per loop (min 2)</small>
+    <input type="number" name="points" min="2" value="{{ placeholder.points }}">
+  </label>
+
+  <label>Segments
+    <small>Line segments per curve (min 1)</small>
+    <input type="number" name="num_segs" min="1" value="{{ placeholder.num_segs }}">
+  </label>
+
+  <label>Trail length
+    <small>0 = no trail, 5 = no fade</small>
+    <input type="number" name="trail_length" min="0" max="5" value="{{ placeholder.trail_length }}">
+  </label>
+
+  <label>Max speed
+    <small>Points move between this and half this</small>
+    <input type="number" name="max_speed" min="1" step="0.5" value="{{ placeholder.max_speed }}">
+  </label>
+
+  <label>Thickness
+    <small>Higher = less smooth</small>
+    <input type="number" name="thickness" min="1" value="{{ placeholder.thickness }}">
+  </label>
+
+  <label>Colour
+    <small>0, 0, 0 = rainbow</small>
+    <div class="row rgb">
+      R <input type="number" name="r" min="0" max="255" value="{{ placeholder.colour[0] }}">
+      G <input type="number" name="g" min="0" max="255" value="{{ placeholder.colour[1] }}">
+      B <input type="number" name="b" min="0" max="255" value="{{ placeholder.colour[2] }}">
+    </div>
+  </label>
+
+  <label class="row">
+    <input type="checkbox" name="show_fps" {{ "checked" if placeholder.show_fps else "" }}>
+    Show FPS
+  </label>
+
+  <button type="submit">Apply</button>
+</form>

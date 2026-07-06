@@ -1,5 +1,6 @@
 import random
 import time
+import json
 
 screen.antialias = image.X4
 
@@ -12,6 +13,27 @@ max_speed = 1  # Points will move at random speeds between this value and half o
 thickness = 2  # Line thickness - note line will become less smooth as thickness goes up.
 colour = (0, 0, 0)  # Colour of the loop(s). If set to 0, 0, 0 the loops will be rainbow coloured.
 show_fps = False  # Displays framerate in the top left corner of the screen.
+
+try:
+    with open("/lib/plugins/bezier/config.json") as f:
+        cfg = json.load(f)
+        curves = int(cfg["curves"])
+        points = int(cfg["points"])
+        num_segs = int(cfg["num_segs"])
+        trail_length = int(cfg["trail_length"])
+        max_speed = float(cfg["max_speed"])
+        thickness = int(cfg["thickness"])
+        colour = (int(cfg["r"] or 0), int(cfg["g"] or 0), int(cfg["b"] or 0))
+        show_fps = "show_fps" in cfg
+except OSError:
+    pass
+
+try:
+    with open("/lib/plugins/bezier/config.html", "r", encoding="utf-8") as f:
+        config_html = f.read()
+except OSError as e:
+    print(e)
+    config_html = None
 
 
 class BezierPoint:
