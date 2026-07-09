@@ -14,6 +14,12 @@ thickness = 2  # Line thickness - note line will become less smooth as thickness
 colour = (0, 0, 0)  # Colour of the loop(s). If set to 0, 0, 0 the loops will be rainbow coloured.
 show_fps = False  # Displays framerate in the top left corner of the screen.
 
+
+def hex_to_rgb(s):
+    s = s.lstrip("#")
+    return (int(s[0:2], 16), int(s[2:4], 16), int(s[4:6], 16))
+
+
 try:
     with open("/lib/plugins/bezier/config.json") as f:
         cfg = json.load(f)
@@ -23,7 +29,7 @@ try:
         trail_length = int(cfg["trail_length"])
         max_speed = float(cfg["max_speed"])
         thickness = int(cfg["thickness"])
-        colour = (int(cfg["r"] or 0), int(cfg["g"] or 0), int(cfg["b"] or 0))
+        colour = hex_to_rgb(cfg["colour"])
         show_fps = "show_fps" in cfg
 except OSError:
     pass

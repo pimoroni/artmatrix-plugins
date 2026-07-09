@@ -30,12 +30,8 @@
   </label>
 
   <label>Colour
-    <small>0, 0, 0 = rainbow</small>
-    <div>
-      R <input type="number" name="r" min="0" max="255" value="{{ placeholder.colour[0] }}">
-      G <input type="number" name="g" min="0" max="255" value="{{ placeholder.colour[1] }}">
-      B <input type="number" name="b" min="0" max="255" value="{{ placeholder.colour[2] }}">
-    </div>
+    <small>Black (#000000) = rainbow</small>
+    <input type="color" name="colour" value="{{ '#%02x%02x%02x' % placeholder.colour }}">
   </label>
 
   <label>Show FPS
