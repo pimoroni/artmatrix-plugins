@@ -1,0 +1,16 @@
+<form method="post" action="/config?plugin={{ plugin }}">
+  <label>Background colour
+    <input type="color" name="background" value="{{ '#%02x%02x%02x' % placeholder.background }}">
+  </label>
+
+  <label>Terminal text colour
+    <input type="color" name="terminal_text" value="{{ '#%02x%02x%02x' % placeholder.terminal_text }}">
+  </label>
+
+  <label>Terminal speed
+    <small>The delay between new lines, smaller is faster. Measured in milliseconds.</small>
+    <input type="number" name="terminal_speed" min="1" value="{{ placeholder.terminal_speed }}">
+  </label>
+
+  <button type="submit">Apply</button>
+</form>

@@ -1,10 +1,32 @@
 import random
 import time
+import json
 
-black = color.rgb(0, 0, 0)
 background = color.rgb(0, 0, 0)
-phosphor = color.rgb(246, 135, 4)
 terminal_text = color.rgb(0, 128, 0)
+terminal_speed = 250
+
+
+def hex_to_rgb(s):
+    s = s.lstrip("#")
+    return (int(s[0:2], 16), int(s[2:4], 16), int(s[4:6], 16))
+
+
+try:
+    with open("/lib/plugins/terminal/config.json") as f:
+        cfg = json.load(f)
+        background = hex_to_rgb(cfg["background"])
+        terminal_text = hex_to_rgb(cfg["terminal_text"])
+        terminal_speed = int(cfg["terminal_speed"] or 250)
+except OSError:
+    pass
+
+try:
+    with open("/lib/plugins/terminal/config.html", "r", encoding="utf-8") as f:
+        config_html = f.read()
+except OSError as e:
+    print(e)
+    config_html = None
 
 
 class Terminal:
@@ -12,7 +34,7 @@ class Terminal:
     max_lines = 25
     line_added_at = None
     lines_added = 0
-    speed = 250
+    speed = terminal_speed
 
     def update():
         if time.ticks_ms() - Terminal.line_added_at > Terminal.speed:
@@ -34,7 +56,7 @@ for _ in range(35):
 # the terminal effect creates a rolling window of text that is infinitely
 # populated with new lines
 def draw_terminal():
-    screen.pen = terminal_text
+    screen.pen = color.rgb(*terminal_text)
 
     # update the fake terminal
     Terminal.update()
@@ -61,6 +83,6 @@ def draw_terminal():
 
 
 def update():
-    screen.pen = color.rgb(0, 0, 0)
+    screen.pen = color.rgb(*background)
     screen.clear()
     draw_terminal()
