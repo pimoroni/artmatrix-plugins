@@ -1,6 +1,7 @@
 import time
 import random
 import math
+import json
 
 eyes_cream = color.rgb(255, 245, 208)
 eyes_black = color.rgb(20, 20, 20)
@@ -28,6 +29,24 @@ max_duration = 3  # The maximum time to hold Pearl's expression.
 piece = 0  # The piece to start on - 0 = lisa, 1 = scream,  2 = pearl
 cycle = True  # Whether to stay on the specified piece or cycle through all three.
 art_lifetime = 30  # The time in minutes between cycling art.
+
+try:
+    with open("/lib/plugins/who_arted/config.json") as f:
+        cfg = json.load(f)
+        max_interval = int(cfg["max_interval"] or 30)
+        max_duration = int(cfg["max_duration"] or 3)
+        piece = int(cfg["piece"])
+        art_lifetime = int(cfg["art_lifetime"] or 30)
+        cycle = "cycle" in cfg
+except OSError:
+    pass
+
+try:
+    with open("/lib/plugins/who_arted/config.html", "r", encoding="utf-8") as f:
+        config_html = f.read()
+except OSError as e:
+    print(e)
+    config_html = None
 
 
 def update():
