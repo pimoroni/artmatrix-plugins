@@ -1,6 +1,7 @@
 import random
 import math
 import time
+import json
 
 width = 128
 height = 128
@@ -20,6 +21,23 @@ num_trilobites = 1  # The number of trilobites (and ammonites for them to eat).
 trilobite_speed_max = 0.4  # The trilobite's max movement speed.
 trilobite_speed_min = 0.2  # The trilobites' minimum movement speed.
 show_fps = False  # Displays framerate in the top left corner of the screen.
+
+try:
+    with open("/lib/plugins/trilobite/config.json") as f:
+        cfg = json.load(f)
+        num_trilobites = int(cfg["num_trilobites"] or 1)
+        trilobite_speed_max = float(cfg["trilobite_speed_max"] or 0.4)
+        trilobite_speed_min = float(cfg["trilobite_speed_min"] or 0.2)
+        show_fps = "show_fps" in cfg
+except OSError:
+    pass
+
+try:
+    with open("/lib/plugins/trilobite/config.html", "r", encoding="utf-8") as f:
+        config_html = f.read()
+except OSError as e:
+    print(e)
+    config_html = None
 
 
 class Ammonite:
