@@ -121,6 +121,9 @@ def update():
     _update(heat)
     draw(heat, memoryview(screen), pixel_size)
 
+    screen.pen = color.white
+    screen.font = rom_font.ark
+
     if scroll:
         my_scroll()
     else:
