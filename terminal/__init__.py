@@ -2,8 +2,8 @@ import random
 import time
 import json
 
-background = color.rgb(0, 0, 0)
-terminal_text = color.rgb(0, 128, 0)
+background = (0, 0, 0)
+terminal_text = (0, 128, 0)
 terminal_speed = 250
 
 
