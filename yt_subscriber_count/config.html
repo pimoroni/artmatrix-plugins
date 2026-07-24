@@ -1,0 +1,29 @@
+<form method="post" action="/config?plugin={{ plugin }}">
+  <label>API key
+    <small>Your YouTube Data API key</small>
+    <input type="text" name="api_key" value="{{ placeholder.api_key }}">
+  </label>
+
+  <label>Channel ID
+    <small>The YouTube channel to track</small>
+    <input type="text" name="channel_id" value="{{ placeholder.channel_id }}">
+  </label>
+
+  <label>Channel name colour
+    <input type="color" name="channel_name_colour" value="{{ '#%02x%02x%02x' % placeholder.channel_name_colour }}">
+  </label>
+
+  <label>Subscriber count colour
+    <input type="color" name="subscriber_count_colour" value="{{ '#%02x%02x%02x' % placeholder.subscriber_count_colour }}">
+  </label>
+
+  <label>Background colour
+    <input type="color" name="background_colour" value="{{ '#%02x%02x%02x' % placeholder.background_colour }}">
+  </label>
+
+  <label>Animate background
+    <input type="checkbox" name="animate_background" {{ "checked" if placeholder.animate_background else "" }}>
+  </label>
+
+  <button type="submit">Apply</button>
+</form>
