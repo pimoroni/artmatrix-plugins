@@ -23,7 +23,7 @@ except OSError as e:
     config_html = None
 
 
-FRAME_TARGET = 16
+FRAME_TARGET = 33.3
 last = None
 
 # We're using a separate image here so we can make all the changes before it gets blitted to the screen image
@@ -53,3 +53,9 @@ def update():
 
         # now we blit the frame to the screen image
         screen.blit(noise_frame, 0, 0)
+
+        screen.pen = brush.glitch(80)
+        screen.rectangle(0, 0, screen.width, screen.height)
+
+        screen.pen = brush.crt(3, 60)
+        screen.rectangle(0, 0, screen.width, screen.height)
