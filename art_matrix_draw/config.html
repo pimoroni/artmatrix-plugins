@@ -1,0 +1,733 @@
+<form method="POST" action="/config?plugin=art_matrix_draw">
+
+    <style>
+.paint-plugin, .paint-plugin * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    touch-action: manipulation;
+}
+.paint-plugin {
+    --bg: #f0f2f5;
+    --card: #ffffff;
+    --border: #ccd1d9;
+    --text: #333333;
+}
+@media (prefers-color-scheme: dark) {
+    .paint-plugin {
+        --bg: #18191a;
+        --card: #242526;
+        --border: #3a3b3c;
+        --text: #e4e6eb;
+    }
+}
+.paint-plugin {
+    font-family: system-ui, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    background: var(--bg);
+    padding: 10px;
+    color: var(--text);
+}
+#toolbar, #lowerControls {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    background: var(--card);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 420px;
+}
+#toolbar {
+    margin-bottom: 12px;
+}
+#lowerControls {
+    margin-top: 12px;
+}
+.tool-row {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+}
+.split-row {
+    justify-content: space-between;
+    align-items: center;
+}
+.justify-end {
+    justify-content: flex-end;
+}
+.grid-2 { 
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr); 
+}
+.grid-2 { 
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr); 
+}
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+#uploadBtn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+#uploadBtn:hover {
+    background-color: #0056b3;
+}
+#uploadBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+.tool-composite-group {
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.03);
+    padding: 2px 6px;
+    border-radius: 8px;
+    gap: 8px;
+}
+@media (prefers-color-scheme: dark) {
+    .tool-composite-group {
+        background: rgba(255, 255, 255, 0.04);
+    }
+}
+.sub-tool-group {
+    display: flex;
+    gap: 4px;
+}
+.vertical-divider {
+    width: 1px;
+    height: 22px;
+    background: var(--border);
+}
+.tool-group {
+    display: flex;
+    gap: 4px;
+}
+
+.slider-box {
+    display: flex;
+    align-items: center;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0 8px;
+    gap: 6px;
+    flex-grow: 1;
+}
+#sizeDisplay {
+    font-size: 11px;
+    font-weight: bold;
+    min-width: 26px;
+    text-align: right;
+}
+#palette {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 6px;
+    width: 100%;
+}
+#palette > div {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2);
+}
+#palette > div.active {
+    border-color: var(--text);
+    transform: scale(1.05);
+}
+#customColorWrapper {
+    position: relative;
+    padding: 0;
+    overflow: hidden;
+    background: linear-gradient(45deg, #ff0000, #00ff00, #0000ff);
+}
+input[type="color"] {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    width: calc(100% + 10px);
+    height: calc(100% + 10px);
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    background: transparent;
+}
+input[type="range"] {
+    width: 100%;
+    accent-color: #007bff;
+}
+select, button {
+    padding: 6px;
+    min-height: 38px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--bg);
+    color: var(--text);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+}
+button:hover, select:hover {
+    background: var(--border);
+}
+button.active-tool {
+    background: #007bff;
+    color: white;
+    border-color: #0056b3;
+}
+button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+#clearBtn { background: #dc3545; color: white; border: none; }
+#gridToggleBtn { width: 100%; }
+
+.bottom-save-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+    margin-top: 15px;
+    width: 100%;
+    max-width: 420px;
+    font-size: 15px;
+    min-height: 46px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2);
+}
+#canvasContainer {
+    position: relative;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    width: 100%;
+    max-width: 420px;
+    aspect-ratio: 1 / 1;
+    background: #000;
+}
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+}
+#paintCanvas { z-index: 1; image-rendering: pixelated; }
+
+#gridCanvas { 
+    z-index: 2; 
+    pointer-events: none;
+}
+    </style>
+
+    <div class="paint-plugin">
+    <div id="toolbar">
+        <div class="tool-row split-row">
+            <div class="tool-composite-group" id="toolGroupContainer">
+                <div class="sub-tool-group">
+                    <button type="button" class="active-tool" data-tool="square" aria-label="Square Brush">⬛</button>
+                    <button type="button" data-tool="circle" aria-label="Circle Brush">⚫</button>
+                    <button type="button" data-tool="dither" aria-label="Dither Brush">🏁</button>
+                </div>
+                <div class="vertical-divider"></div>
+                <div class="sub-tool-group">
+                    <button type="button" data-tool="bucket" aria-label="Paint Bucket">🪣</button>
+                    <button type="button" data-tool="eraser" aria-label="Eraser">🧽</button>
+                    <button type="button" data-tool="dropper" aria-label="Eye Dropper">🧪</button>
+                </div>
+            </div>
+            
+            <div class="tool-group">
+                <button type="button" id="undoBtn" disabled aria-label="Undo">↩️</button>
+                <button type="button" id="redoBtn" disabled aria-label="Redo">↪️</button>
+            </div>
+        </div>
+
+        <div class="tool-row">
+            <div class="slider-box">
+                <input type="range" id="lineWidth" min="1" max="15" value="1">
+                <span id="sizeDisplay">1px</span>
+            </div>
+        </div>
+
+        <div class="tool-row">
+            <div id="palette">
+                <div style="background-color: #000000;"></div>
+                <div class="active" style="background-color: #ffffff;"></div>
+                <div style="background-color: #ff0000;"></div>
+                <div style="background-color: #0000ff;"></div>
+                <div style="background-color: #ffff00;"></div>
+                <div style="background-color: #00ff00;"></div>
+                <div style="background-color: #00ffff;"></div>
+                <div style="background-color: #ff00ff;"></div>
+                <div id="customColorWrapper">
+                    <input type="color" id="colorPicker" value="#ffffff">
+                </div>
+            </div>
+        </div>
+
+        <div class="tool-row justify-end">
+            <button type="button" id="gridToggleBtn" class="active-tool" aria-label="Toggle Grid">🌐 Grid Overlay</button>
+        </div>
+    </div>
+
+    <div id="canvasContainer">
+        <canvas id="paintCanvas" width="64" height="64"></canvas>
+        <canvas id="gridCanvas"></canvas>
+    </div>
+
+    
+    <button id="uploadBtn" class="bottom-save-btn" aria-label="Upload Image">📤 Upload</button>
+    <div id="lowerControls">
+        <div class="tool-row grid-3">
+            <select id="resolutionSelect">
+                <option value="16">16 × 16</option>
+                <option value="32">32 × 32</option>
+                <option value="64" selected>64 × 64</option>
+            </select>
+            <button type="button" id="clearBtn">New Canvas</button>
+            <!-- New Binary Upload Target Hook Option -->
+             <button type="button" id="exportBtn" aria-label="Export Image">💾 Save</button>
+            <input type="hidden" name="art_data" id="art_data">
+            
+        </div>
+    </div>
+    </div>
+
+    <script>
+window.PixelLib = {
+    rgbToHex(rgbStr) {
+        const vals = rgbStr.match(/\d+/g)
+        if (!vals) return '#000000'
+        return "#" + vals.slice(0,3).map(x => parseInt(x).toString(16).padStart(2, '0')).join('')
+    },
+
+    rgbaToHex(r, g, b) {
+        return "#" + [r, g, b].map(x => {
+            const val = Number(x)
+            return (isNaN(val) ? 0 : val).toString(16).padStart(2, '0')
+        }).join('')
+    },
+
+    hexToRgba(hex) {
+        const num = parseInt(hex.slice(1), 16)
+        return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255, a: 255 }
+    },
+
+    floodFill(ctx, canvas, startX, startY, fillHex) {
+        if (startX < 0 || startX >= canvas.width || startY < 0 || startY >= canvas.height) return
+
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+        const data = imgData.data
+        const width = canvas.width
+        const height = canvas.height
+
+        const targetColor = this.hexToRgba(fillHex)
+        const startIdx = (startY * width + startX) * 4
+        
+        const startR = data[startIdx]
+        const startG = data[startIdx + 1]
+        const startB = data[startIdx + 2]
+        const startA = data[startIdx + 3]
+
+        if (startR === targetColor.r && startG === targetColor.g && 
+            startB === targetColor.b && startA === targetColor.a) {
+            return
+        }
+
+        const visited = new Uint8Array(width * height)
+        const queue = [startX, startY]
+        visited[startY * width + startX] = 1
+
+        let head = 0
+        while (head < queue.length) {
+            const x = queue[head++]
+            const y = queue[head++]
+            const idx = (y * width + x) * 4
+
+            if (data[idx] === startR && data[idx + 1] === startG && 
+                data[idx + 2] === startB && data[idx + 3] === startA) {
+                
+                data[idx] = targetColor.r
+                data[idx + 1] = targetColor.g
+                data[idx + 2] = targetColor.b
+                data[idx + 3] = targetColor.a
+
+                const directions = [
+                    [x - 1, y], [x + 1, y], [x, y - 1], [x, y + 1]
+                ]
+
+                for (const [nx, ny] of directions) {
+                    if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+                        const vIdx = ny * width + nx
+                        if (!visited[vIdx]) {
+                            visited[vIdx] = 1
+                            queue.push(nx, ny)
+                        }
+                    }
+                }
+            }
+        }
+        ctx.putImageData(imgData, 0, 0)
+    },
+
+    drawPixelBlock(ctx, x, y, size, style, color, tool) {
+        if (tool === 'eraser') {
+            ctx.fillStyle = '#000000'
+            ctx.fillRect(x - Math.floor(size / 2), y - Math.floor(size / 2), size, size)
+            return
+        }
+
+        ctx.fillStyle = color
+        const offset = Math.floor(size / 2)
+
+        for (let row = 0; row < size; row++) {
+            for (let col = 0; col < size; col++) {
+                const targetX = x - offset + col
+                const targetY = y - offset + row
+
+                if (style === 'square') {
+                    ctx.fillRect(targetX, targetY, 1, 1)
+                } 
+                else if (style === 'circle') {
+                    const radius = size / 2
+                    const distX = (col + 0.5) - radius
+                    const distY = (row + 0.5) - radius
+                    if (distX * distX + distY * distY <= radius * radius) {
+                        ctx.fillRect(targetX, targetY, 1, 1)
+                    }
+                } 
+                else if (style === 'dither') {
+                    if ((targetX + targetY) % 2 === 0) {
+                        ctx.fillRect(targetX, targetY, 1, 1)
+                    }
+                }
+            }
+        }
+    },
+
+    drawLine(ctx, x0, y0, x1, y1, size, style, color, tool) {
+        if (isNaN(x0) || isNaN(y0) || isNaN(x1) || isNaN(y1)) return
+
+        const dx = Math.abs(x1 - x0)
+        const dy = Math.abs(y1 - y0)
+        const sx = (x0 < x1) ? 1 : -1
+        const sy = (y0 < y1) ? 1 : -1
+        let err = dx - dy
+
+        let safetyCounter = 0
+        const maxIterations = (dx + dy) * 2 + 10
+
+        while (safetyCounter++ < maxIterations) {
+            this.drawPixelBlock(ctx, x0, y0, size, style, color, tool)
+            if (x0 === x1 && y0 === y1) break
+            const e2 = 2 * err
+            if (e2 > -dy) { err -= dy; x0 += sx }
+            if (e2 < dx) { err += dx; y0 += sy }
+        }
+    }
+}
+    </script>
+
+    <script>
+const canvas = document.getElementById('paintCanvas')
+const ctx = canvas.getContext('2d')
+const gridCanvas = document.getElementById('gridCanvas')
+const gridCtx = gridCanvas.getContext('2d')
+
+const resolutionSelect = document.getElementById('resolutionSelect')
+const gridToggleBtn = document.getElementById('gridToggleBtn')
+const colorPicker = document.getElementById('colorPicker')
+const customColorWrapper = document.getElementById('customColorWrapper')
+const palette = document.getElementById('palette')
+const lineWidth = document.getElementById('lineWidth')
+const sizeDisplay = document.getElementById('sizeDisplay')
+const undoBtn = document.getElementById('undoBtn')
+const redoBtn = document.getElementById('redoBtn')
+const clearBtn = document.getElementById('clearBtn')
+const exportBtn = document.getElementById('exportBtn')
+const toolGroupContainer = document.getElementById('toolGroupContainer')
+
+let isDrawing = false
+let lastX = null
+let lastY = null
+let currentColor = '#ffffff'
+let currentTool = 'square'
+let lastSelectedBrush = 'square'
+
+let showGrid = true
+let currentRes = 64
+
+let undoStack = []
+let redoStack = []
+const MAX_HISTORY = 50
+
+ctx.imageSmoothingEnabled = false
+
+function initializeBackground() {
+    ctx.fillStyle = '#000000'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+}
+
+function drawUIOverlayGrid() {
+    const rect = canvas.getBoundingClientRect()
+    const dpr = window.devicePixelRatio || 1
+    
+    gridCanvas.width = Math.floor(rect.width * dpr)
+    gridCanvas.height = Math.floor(rect.height * dpr)
+    
+    gridCtx.clearRect(0, 0, gridCanvas.width, gridCanvas.height)
+    if (!showGrid) return
+
+    gridCtx.fillStyle = '#444444'
+
+    for (let i = 1; i < currentRes; i++) {
+        const pos = Math.floor((i * rect.width / currentRes) * dpr)
+        gridCtx.fillRect(pos, 0, 1, gridCanvas.height)
+        gridCtx.fillRect(0, pos, gridCanvas.width, 1)
+    }
+}
+
+window.addEventListener('resize', drawUIOverlayGrid)
+window.addEventListener('scroll', drawUIOverlayGrid)
+
+clearBtn.addEventListener('click', () => {
+    const targetRes = parseInt(resolutionSelect.value)
+    if(confirm(`Create a new clean ${targetRes}x${targetRes} canvas? Progress will be reset.`)) {
+        currentRes = targetRes
+        canvas.width = currentRes
+        canvas.height = currentRes
+        ctx.imageSmoothingEnabled = false
+        initializeBackground()
+        undoStack = []
+        redoStack = []
+        updateHistoryButtons()
+        drawUIOverlayGrid()
+    }
+})
+
+gridToggleBtn.addEventListener('click', () => {
+    showGrid = !showGrid
+    gridToggleBtn.classList.toggle('active-tool', showGrid)
+    gridCanvas.style.display = showGrid ? 'block' : 'none'
+    drawUIOverlayGrid()
+})
+
+function setTool(tool) {
+    currentTool = tool
+    
+    if (tool === 'square' || tool === 'circle' || tool === 'dither') {
+        lastSelectedBrush = tool
+    }
+    
+    toolGroupContainer.querySelectorAll('button').forEach(btn => {
+        btn.classList.toggle('active-tool', btn.getAttribute('data-tool') === tool)
+    })
+    
+    lineWidth.disabled = (tool === 'bucket' || tool === 'dropper')
+}
+
+toolGroupContainer.addEventListener('click', (e) => {
+    const targetBtn = e.target.closest('button[data-tool]')
+    if (targetBtn) {
+        setTool(targetBtn.getAttribute('data-tool'))
+    }
+})
+
+function saveState() {
+    if (undoStack.length >= MAX_HISTORY) { undoStack.shift() }
+    undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height))
+    redoStack = []
+    updateHistoryButtons()
+}
+
+function updateHistoryButtons() {
+    undoBtn.disabled = undoStack.length === 0
+    redoBtn.disabled = redoStack.length === 0
+}
+
+function undo() {
+    if (undoStack.length === 0) return
+    redoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height))
+    const previousState = undoStack.pop()
+    ctx.putImageData(previousState, 0, 0)
+    updateHistoryButtons()
+}
+
+function redo() {
+    if (redoStack.length === 0) return
+    undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height))
+    const nextState = redoStack.pop()
+    ctx.putImageData(nextState, 0, 0)
+    updateHistoryButtons()
+}
+
+undoBtn.addEventListener('click', undo)
+redoBtn.addEventListener('click', redo)
+
+lineWidth.addEventListener('input', (e) => {
+    sizeDisplay.textContent = `${e.target.value}px`
+})
+
+palette.addEventListener('click', (e) => {
+    const swatch = e.target.closest('#palette > div')
+    if (!swatch || swatch.id === 'customColorWrapper') return
+    
+    document.querySelectorAll('#palette > div').forEach(s => s.classList.remove('active'))
+    swatch.classList.add('active')
+    
+    updateSelectedColor(PixelLib.rgbToHex(swatch.style.backgroundColor), false)
+})
+
+colorPicker.addEventListener('input', (e) => {
+    updateSelectedColor(e.target.value, true)
+})
+
+function updateSelectedColor(hex, isCustomPicker) {
+    currentColor = hex
+    colorPicker.value = hex
+    
+    document.querySelectorAll('#palette > div').forEach(s => s.classList.remove('active'))
+    if (isCustomPicker) {
+        customColorWrapper.classList.add('active')
+    }
+    
+    setTool(lastSelectedBrush)
+}
+
+function getCoordinates(e) {
+    const rect = canvas.getBoundingClientRect()
+    let clientX, clientY
+    
+    if (e.touches && e.touches.length > 0) {
+        clientX = e.touches[0].clientX
+        clientY = e.touches[0].clientY
+    } else if (e.changedTouches && e.changedTouches.length > 0) {
+        clientX = e.changedTouches[0].clientX
+        clientY = e.changedTouches[0].clientY
+    } else {
+        clientX = e.clientX
+        clientY = e.clientY
+    }
+    
+    if (clientX === undefined || clientY === undefined) {
+        return { x: 0, y: 0 }
+    }
+    
+    return {
+        x: Math.floor((clientX - rect.left) * (canvas.width / rect.width)),
+        y: Math.floor((clientY - rect.top) * (canvas.height / rect.height))
+    }
+}
+
+function sampleColor(x, y) {
+    if (x < 0 || x >= canvas.width || y < 0 || y >= canvas.height) return
+    const pixel = ctx.getImageData(x, y, 1, 1).data
+    
+    if (!pixel || pixel.length < 4) return
+    
+    const hex = PixelLib.rgbaToHex(pixel[0], pixel[1], pixel[2])
+    updateSelectedColor(hex, true)
+}
+
+function startDrawing(e) {
+    const coords = getCoordinates(e)
+    
+    if (currentTool === 'dropper') {
+        sampleColor(coords.x, coords.y)
+        return
+    }
+    if (currentTool === 'bucket') {
+        saveState()
+        PixelLib.floodFill(ctx, canvas, coords.x, coords.y, currentColor)
+        return
+    }
+    
+    isDrawing = true
+    saveState()
+    lastX = coords.x
+    lastY = coords.y
+    PixelLib.drawPixelBlock(ctx, lastX, lastY, parseInt(lineWidth.value), currentTool, currentColor, currentTool)
+}
+
+function draw(e) {
+    const coords = getCoordinates(e)
+
+    if (!isDrawing) {
+        if(currentTool === 'dropper' && e.buttons === 1) {
+            sampleColor(coords.x, coords.y)
+        }
+        return
+    }
+    e.preventDefault()
+    
+    PixelLib.drawLine(ctx, lastX, lastY, coords.x, coords.y, parseInt(lineWidth.value), currentTool, currentColor, currentTool)
+    lastX = coords.x
+    lastY = coords.y
+}
+
+function stopDrawing() {
+    if(isDrawing) {
+        isDrawing = false
+        lastX = null
+        lastY = null
+    }
+}
+
+canvas.addEventListener('mousedown', startDrawing)
+canvas.addEventListener('mousemove', draw)
+canvas.addEventListener('mouseup', stopDrawing)
+canvas.addEventListener('mouseout', stopDrawing)
+
+canvas.addEventListener('touchstart', startDrawing, { passive: false })
+canvas.addEventListener('touchmove', draw, { passive: false })
+canvas.addEventListener('touchend', stopDrawing)
+
+exportBtn.addEventListener('click', () => {
+    const imageURI = canvas.toDataURL('image/png')
+    const link = document.createElement('a')
+    link.download = `pixel-art-${currentRes}x${currentRes}.png`
+    link.href = imageURI
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+})
+
+window.addEventListener('load', () => {
+    initializeBackground()
+    setTimeout(drawUIOverlayGrid, 150)
+})
+
+// Add upload button listener logic handling binary data transport packaging
+const uploadBtn = document.getElementById('uploadBtn')
+const paintForm = document.querySelector('form')
+
+uploadBtn.addEventListener('click', () => {
+    const base64 = canvas.toDataURL('image/png').split(',')[1]
+    document.getElementById('art_data').value = base64
+    paintForm.submit()
+})
+
+window.addEventListener('load', () => {
+    initializeBackground()
+    setTimeout(drawUIOverlayGrid, 150)
+})
+    </script>
+</form>
