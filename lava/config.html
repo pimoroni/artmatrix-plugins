@@ -1,0 +1,25 @@
+<form method="post" action="/config?plugin={{ plugin }}">
+    <label>Number of blobs
+        <input type="number" name="num_blobs" min="1" max="100" value="{{ placeholder.num_blobs }}">
+    </label>
+
+    <label>Rainbow Mode
+        <input type="checkbox" name="rainbow_mode" {{ "checked" if placeholder.rainbow_mode else "" }}>
+    </label>
+
+    <label>Start Colour
+        <small>Defines the main colour in single-colour mode, or the central colour in rainbow mode.</small>
+        <input type="color" name="start_colour" value="{{ '#%02x%02x%02x' % placeholder.start_colour }}">
+    </label>
+
+    <label>Minimum Radius
+        <small>Minimum blob radius, roughly but not exactly in number of pixels</small>
+        <input type="number" name="min_radius" min="10" max="100" value="{{ placeholder.min_radius }}">
+    </label>
+
+    <label>Maximum Radius
+        <input type="number" name="max_radius" min="1" max="100" value="{{ placeholder.max_radius }}">
+    </label>
+
+    <button type="submit">Apply</button>
+</form>
