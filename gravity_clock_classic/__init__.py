@@ -154,7 +154,7 @@ class Clock:
             self.last_second = second
 
         ms = time.ticks_ms()
-        ms_diff = ms - self.last_ms
+        ms_diff = time.ticks_diff(ms, self.last_ms)
         self.sub_second += ms_diff
         self.last_ms = ms
 
