@@ -431,7 +431,7 @@ frame_counter = 0
 
 
 def update():
-    global frame_counter, clock_state
+    global clock_state, seconds_gravity_vec, minutes_gravity_vec, hours_gravity_vec, frametime, last_ticks
 
     wifi.tick()
 
