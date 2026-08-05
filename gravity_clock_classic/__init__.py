@@ -34,7 +34,7 @@ max_minute_size = 700  # Maximum size for the minute balls.
 min_minute_size = 500  # Minimum size for the minute balls.
 max_second_size = 470  # Maximum size for the second balls.
 min_second_size = 200  # Minimum size for the second balls.
-show_fps = False  # Displays framerate in the top left corner of the screen.
+show_fps = True  # Displays framerate in the top left corner of the screen.
 
 screen.antialias = image.X2
 screen.font = rom_font.sins
@@ -91,6 +91,92 @@ regions = {
     "australia": (1, 1, 10, 6, 2, 1, 4, 6, 3, 60),
     "nz": (1, 0, 9, 6, 2, 1, 4, 6, 3, 60)
 }
+
+
+second_hand_path = [vec2(0.5, -56),
+                    vec2(1.5, -1.3),
+                    vec2(2.8, 0),
+                    vec2(2.5, 1.3),
+                    vec2(1.3, 2.5),
+                    vec2(0, 2.8),
+                    vec2(-1.3, 2.5),
+                    vec2(-2.5, 1.3),
+                    vec2(-2.8, 0),
+                    vec2(-1.3, -1.5),
+                    vec2(-0.5, -56)]
+
+minute_hand_path = [vec2(0, -36),
+                    vec2(0.3, -35.7),
+                    vec2(0.4, -31.7),
+                    vec2(0.6, -27.6),
+                    vec2(1.2, -25),
+                    vec2(1.7, -23.5),
+                    vec2(1.9, -22.2),
+                    vec2(1.8, -21.2),
+                    vec2(1.4, -20.5),
+                    vec2(0.6, -20),
+                    vec2(0.8, -2.7),
+                    vec2(1.7, -2.2),
+                    vec2(2.5, -1.3),
+                    vec2(2.8, 0),
+                    vec2(2.5, 1.3),
+                    vec2(1.3, 2.5),
+                    vec2(0, 2.8),
+                    vec2(-1.3, 2.5),
+                    vec2(-2.5, 1.3),
+                    vec2(-2.8, 0),
+                    vec2(-1.3, -2.5),
+                    vec2(-1.7, -2.2),
+                    vec2(-0.8, -2.7),
+                    vec2(-0.6, -20),
+                    vec2(-1.4, -20.5),
+                    vec2(-1.8, -21.2),
+                    vec2(-1.9, -22.2),
+                    vec2(-1.7, -23.5),
+                    vec2(-1.2, -25),
+                    vec2(-0.6, -27.6),
+                    vec2(-0.4, -31.7),
+                    vec2(-0.3, -35.7)]
+
+hour_hand_path = [vec2(0, -26),
+                  vec2(0.3, -25.7),
+                  vec2(0.4, -21.7),
+                  vec2(0.6, -17.6),
+                  vec2(1.2, -15),
+                  vec2(1.7, -13.5),
+                  vec2(1.9, -12.2),
+                  vec2(1.8, -11.2),
+                  vec2(1.4, -10.5),
+                  vec2(0.6, -10),
+                  vec2(0.8, -2.7),
+                  vec2(1.7, -2.2),
+                  vec2(2.5, -1.3),
+                  vec2(2.8, 0),
+                  vec2(2.5, 1.3),
+                  vec2(1.3, 2.5),
+                  vec2(0, 2.8),
+                  vec2(-1.3, 2.5),
+                  vec2(-2.5, 1.3),
+                  vec2(-2.8, 0),
+                  vec2(-1.3, -2.5),
+                  vec2(-1.7, -2.2),
+                  vec2(-0.8, -2.7),
+                  vec2(-0.6, -10),
+                  vec2(-1.4, -10.5),
+                  vec2(-1.8, -11.2),
+                  vec2(-1.9, -12.2),
+                  vec2(-1.7, -13.5),
+                  vec2(-1.2, -15),
+                  vec2(-0.6, -17.6),
+                  vec2(-0.4, -21.7),
+                  vec2(-0.3, -25.7)]
+
+minute_hand_shape = shape.custom(minute_hand_path)
+second_hand_shape = shape.custom(second_hand_path)
+hour_hand = shape.custom(hour_hand_path)
+
+# we don't need the paths anymore, so we can remove them to get the ram back.
+del second_hand_path, minute_hand_path, hour_hand_path
 
 
 def update_time(region, timezone):
@@ -164,85 +250,7 @@ class Clock:
 
     @micropython.native
     def draw_hands(self):
-        second_hand_path = [vec2(0.5, -56),
-                            vec2(1.5, -1.3),
-                            vec2(2.8, 0),
-                            vec2(2.5, 1.3),
-                            vec2(1.3, 2.5),
-                            vec2(0, 2.8),
-                            vec2(-1.3, 2.5),
-                            vec2(-2.5, 1.3),
-                            vec2(-2.8, 0),
-                            vec2(-1.3, -1.5),
-                            vec2(-0.5, -56)]
 
-        minute_hand_path = [vec2(0, -36),
-                            vec2(0.3, -35.7),
-                            vec2(0.4, -31.7),
-                            vec2(0.6, -27.6),
-                            vec2(1.2, -25),
-                            vec2(1.7, -23.5),
-                            vec2(1.9, -22.2),
-                            vec2(1.8, -21.2),
-                            vec2(1.4, -20.5),
-                            vec2(0.6, -20),
-                            vec2(0.8, -2.7),
-                            vec2(1.7, -2.2),
-                            vec2(2.5, -1.3),
-                            vec2(2.8, 0),
-                            vec2(2.5, 1.3),
-                            vec2(1.3, 2.5),
-                            vec2(0, 2.8),
-                            vec2(-1.3, 2.5),
-                            vec2(-2.5, 1.3),
-                            vec2(-2.8, 0),
-                            vec2(-1.3, -2.5),
-                            vec2(-1.7, -2.2),
-                            vec2(-0.8, -2.7),
-                            vec2(-0.6, -20),
-                            vec2(-1.4, -20.5),
-                            vec2(-1.8, -21.2),
-                            vec2(-1.9, -22.2),
-                            vec2(-1.7, -23.5),
-                            vec2(-1.2, -25),
-                            vec2(-0.6, -27.6),
-                            vec2(-0.4, -31.7),
-                            vec2(-0.3, -35.7)]
-
-        hour_hand_path = [vec2(0, -26),
-                          vec2(0.3, -25.7),
-                          vec2(0.4, -21.7),
-                          vec2(0.6, -17.6),
-                          vec2(1.2, -15),
-                          vec2(1.7, -13.5),
-                          vec2(1.9, -12.2),
-                          vec2(1.8, -11.2),
-                          vec2(1.4, -10.5),
-                          vec2(0.6, -10),
-                          vec2(0.8, -2.7),
-                          vec2(1.7, -2.2),
-                          vec2(2.5, -1.3),
-                          vec2(2.8, 0),
-                          vec2(2.5, 1.3),
-                          vec2(1.3, 2.5),
-                          vec2(0, 2.8),
-                          vec2(-1.3, 2.5),
-                          vec2(-2.5, 1.3),
-                          vec2(-2.8, 0),
-                          vec2(-1.3, -2.5),
-                          vec2(-1.7, -2.2),
-                          vec2(-0.8, -2.7),
-                          vec2(-0.6, -10),
-                          vec2(-1.4, -10.5),
-                          vec2(-1.8, -11.2),
-                          vec2(-1.9, -12.2),
-                          vec2(-1.7, -13.5),
-                          vec2(-1.2, -15),
-                          vec2(-0.6, -17.6),
-                          vec2(-0.4, -21.7),
-                          vec2(-0.3, -25.7)]
-
-        minute_hand_shape = shape.custom(minute_hand_path)
         minute_hand_transform = mat3().translate(64, 64).scale(1.5).rotate(self.minute_rotation)
         minute_hand_transform_shadow = mat3().translate(66, 66).scale(1.5).rotate(self.minute_rotation)
 
@@ -254,7 +262,6 @@ class Clock:
         screen.pen = minute_hand_colour
         screen.shape(minute_hand_shape)
 
-        second_hand_shape = shape.custom(second_hand_path)
         second_hand_transform = mat3().translate(64, 64).rotate(self.second_rotation)
         second_hand_transform_shadow = mat3().translate(66, 66).rotate(self.second_rotation)
 
@@ -266,7 +273,6 @@ class Clock:
         screen.pen = second_hand_colour
         screen.shape(second_hand_shape)
 
-        hour_hand = shape.custom(hour_hand_path)
         hour_hand_transform = mat3().translate(64, 64).scale(1.5).rotate(self.hour_rotation)
         hour_hand_transform_shadow = mat3().translate(66, 66).scale(1.5).rotate(self.hour_rotation)
 
@@ -338,7 +344,7 @@ def draw_shadows():
         y = ball.pos.y / 100
         offset = ball.radius / 250
 
-        screen.pen = color.rgb(0, 0, 0, 128)
+        screen.pen = shadow
         new_pos = vec2(x + offset, y + offset)
         screen.circle(new_pos, ball.radius / 100)
 
@@ -383,7 +389,7 @@ def calc_ball_collisions(ball_a, ball_b):
     ball_b.velocity -= new_vel_b
 
 
-@micropython.viper
+@micropython.native
 def gravity_vector(direction):
     gravity_rads = direction * 0.01745329252
     gravity_x = math.cos(gravity_rads)
