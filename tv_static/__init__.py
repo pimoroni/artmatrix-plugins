@@ -54,8 +54,8 @@ def update():
         # now we blit the frame to the screen image
         screen.blit(noise_frame, 0, 0)
 
-        screen.pen = brush.glitch(80)
+        screen.pen = brush.glitch(20)
         screen.rectangle(0, 0, screen.width, screen.height)
 
-        screen.pen = brush.crt(3, 60)
+        screen.pen = brush.crt(3, 40)
         screen.rectangle(0, 0, screen.width, screen.height)
