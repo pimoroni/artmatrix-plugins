@@ -4,9 +4,6 @@ from fetch import AsyncFetch, HTTPException
 import math
 from random import randint, uniform
 
-screen.font = font.ignore
-screen.antialias = image.X4
-
 CX = screen.width / 2
 CY = screen.height / 2
 
@@ -209,8 +206,14 @@ if has_location:
 
 def update():
 
+    # clear the display
     screen.pen = color.rgb(0, 0, 0)
     screen.clear()
+
+    # we set the font and AA level here
+    # to make sure it's set properly when coming in from another plugin
+    screen.font = font.ignore
+    screen.antialias = image.X4
 
     t = time.ticks_ms() / 1000
 
