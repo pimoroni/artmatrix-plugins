@@ -1,0 +1,57 @@
+<form method="post" action="/config?plugin={{ plugin }}">
+  <label>Number of planets
+    <small>How many planets orbit the sun.</small>
+    <input type="number" name="num_planets" min="1" step="1" value="{{ placeholder.num_planets }}">
+  </label>
+
+  <label>Planet size range
+    <small>Min / max planet radius. The sun has a radius of 1.</small>
+    <div>
+      <input type="number" name="min_planet_size" min="0" step="any" value="{{ placeholder.min_planet_size }}">
+      <input type="number" name="max_planet_size" min="0" step="any" value="{{ placeholder.max_planet_size }}">
+    </div>
+  </label>
+
+  <label>Max radius
+    <small>Size of the system. Also affects perspective — higher = wider-angle look. 5–10 is naturalistic.</small>
+    <input type="number" name="max_radius" min="1" step="any" value="{{ placeholder.max_radius }}">
+  </label>
+
+  <label>Minutes per orbit
+    <small>Min / max time for a planet to complete one orbit.</small>
+    <div>
+      <input type="number" name="min_mins_per_orbit" min="0" step="any" value="{{ placeholder.min_mins_per_orbit }}">
+      <input type="number" name="max_mins_per_orbit" min="0" step="any" value="{{ placeholder.max_mins_per_orbit }}">
+    </div>
+  </label>
+
+  <label>Minutes per rotation
+    <small>Min / max time for a planet to spin once.</small>
+    <div>
+      <input type="number" name="min_mins_per_rotation" min="0" step="any" value="{{ placeholder.min_mins_per_rotation }}">
+      <input type="number" name="max_mins_per_rotation" min="0" step="any" value="{{ placeholder.max_mins_per_rotation }}">
+    </div>
+  </label>
+
+  <label>Background
+    <small>1 to 5, or 0 for random.</small>
+    <input type="number" name="background" min="0" max="5" step="1" value="{{ placeholder.background }}">
+  </label>
+
+  <label>Sun colour
+    <small>Pick the sun's colour.</small>
+    <input type="color" name="sun_colour"
+           value="{{ '#%02x%02x%02x' % placeholder.sun_colour }}">
+  </label>
+
+  <label>FPS limit
+    <small>Maximum frames per second.</small>
+    <input type="number" name="fps_limit" min="1" step="1" value="{{ placeholder.fps_limit }}">
+  </label>
+
+  <label>Show FPS
+    <input type="checkbox" name="show_fps" {{ "checked" if placeholder.show_fps else "" }}>
+  </label>
+
+  <button type="submit">Apply</button>
+</form>
