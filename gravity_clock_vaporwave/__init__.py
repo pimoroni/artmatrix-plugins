@@ -1,30 +1,27 @@
 import math
 import random
 import time
-import wifi
-import ntptime
-from machine import RTC
+import json
 
-from gravity_clock_vaporwave import timezone
-from gravity_clock_vaporwave.daylightsaving import DaylightSavingPolicy, DaylightSaving
+
+from plugins.gravity_clock_vaporwave.daylightsaving import DaylightSavingPolicy, DaylightSaving
 
 GRAVITY_STRENGTH = 5
 seconds_gravity_vec = vec2(0, 0)
 minutes_gravity_vec = vec2(0, 0)
 hours_gravity_vec = vec2(0, 0)
 
-sheet_rays = SpriteSheet("/lib/plugins/gravity_clock_vaporwave/assets/sheet_rays.png", 24, 4)
-hand_second_sprite = AnimatedSprite(sheet_rays, 0, 0, 24)
-hand_minute_sprite = AnimatedSprite(sheet_rays, 0, 1, 24)
-hand_hour_sprite = AnimatedSprite(sheet_rays, 0, 2, 24)
-bg_sprite = AnimatedSprite(sheet_rays, 0, 3, 24)
-
 shadow = color.rgb(0, 0, 0, 128)
+screen.antialias = image.X4
+screen.font = rom_font.sins
 
-hours_colour = color.rgb(255, 97, 198)  # The colour for the hour balls and hand. NOTE this will only affect the linework, changing the colour of the "ray" will involve editing the spritesheet in Photoshop or similar.
-minutes_colour = color.rgb(255, 193, 0)  # The colour for the minute balls and hand. NOTE this will only affect the linework, changing the colour of the "ray" will involve editing the spritesheet in Photoshop or similar.
-seconds_colour = color.rgb(92, 236, 255)  # The colour for the second balls and hand. NOTE this will only affect the linework, changing the colour of the "ray" will involve editing the spritesheet in Photoshop or similar.
-border_colour = color.rgb(255, 255, 255)  # The colour of the border.
+# These values are exposed to the web interface
+region = "eu"
+tz_offset = 0
+hours_colour = (255, 97, 198)  # The colour for the hour balls and ray. NOTE this is a tuple not a color.rgb so the value survives the round trip to the web interface.
+minutes_colour = (255, 193, 0)  # The colour for the minute balls and ray. NOTE this is a tuple not a color.rgb so the value survives the round trip to the web interface.
+seconds_colour = (92, 236, 255)  # The colour for the second balls and ray. NOTE this is a tuple not a color.rgb so the value survives the round trip to the web interface.
+border_colour = (255, 255, 255)  # The colour of the border. NOTE this is a tuple not a color.rgb so the value survives the round trip to the web interface.
 line_thickness = 2  # Thickness to draw the linework.
 num_balls_hour = 1  # The number of hour balls to display.
 num_balls_minute = 5  # The number of minute balls to display.
@@ -36,48 +33,50 @@ min_minute_size = 500  # Minimum size for the minute balls.
 max_second_size = 470  # Maximum size for the second balls.
 min_second_size = 200  # Minimum size for the second balls.
 show_fps = False  # Displays framerate in the top left corner of the screen.
-show_border = False  # Displays the squircle border the balls collide with.
+show_border = True  # Displays the squircle border the balls collide with.
 show_glow = False  # Displays a neon glow around all screen elements. NOTE this comes with a serious framerate hit.
 
-screen.antialias = image.X4
-screen.font = rom_font.sins
+
+def hex_to_rgb(s):
+    s = s.lstrip("#")
+    return (int(s[0:2], 16), int(s[2:4], 16), int(s[4:6], 16))
 
 
-class ClockState:
-    Running = 0
-    ConnectWiFi = 1
-    UpdateTime = 2
+try:
+    with open("/lib/plugins/gravity_clock_vaporwave/config.json") as f:
+        cfg = json.load(f)
+
+        region = cfg["region"] or "eu"
+        tz_offset = int(cfg["tz_offset"] or 0)
+
+        hours_colour = hex_to_rgb(cfg["hours_colour"])
+        minutes_colour = hex_to_rgb(cfg["minutes_colour"])
+        seconds_colour = hex_to_rgb(cfg["seconds_colour"])
+        border_colour = hex_to_rgb(cfg["border_colour"])
+
+        line_thickness = int(cfg["line_thickness"] or 2)
+        num_balls_hour = int(cfg["num_balls_hour"] or 1)
+        num_balls_minute = int(cfg["num_balls_minute"] or 5)
+        num_balls_second = int(cfg["num_balls_second"] or 10)
+        max_hour_size = int(cfg["max_hour_size"] or 800)
+        min_hour_size = int(cfg["min_hour_size"] or 800)
+        max_minute_size = int(cfg["max_minute_size"] or 700)
+        min_minute_size = int(cfg["min_minute_size"] or 500)
+        max_second_size = int(cfg["max_second_size"] or 470)
+        min_second_size = int(cfg["min_second_size"] or 200)
+        show_fps = "show_fps" in cfg
+        show_border = "show_border" in cfg
+        show_glow = "show_glow" in cfg
+except OSError:
+    pass
 
 
-month_days = {
-    1: 31,
-    2: 28,
-    3: 31,
-    4: 30,
-    5: 31,
-    6: 30,
-    7: 31,
-    8: 31,
-    9: 30,
-    10: 31,
-    11: 30,
-    12: 31
-}
-
-calendar_months = {
-    1: "January",
-    2: "February",
-    3: "March",
-    4: "April",
-    5: "May",
-    6: "June",
-    7: "July",
-    8: "August",
-    9: "September",
-    10: "October",
-    11: "November",
-    12: "December"
-}
+try:
+    with open("/lib/plugins/gravity_clock_vaporwave/config.html", "r", encoding="utf-8") as f:
+        config_html = f.read()
+except OSError as e:
+    print(e)
+    config_html = None
 
 # These are the different Daylight Saving time zones, according to the Wikipedia article.
 # Timezones are incredibly complex, we've covered the main ones here.
@@ -95,34 +94,42 @@ regions = {
     "nz": (1, 0, 9, 6, 2, 1, 4, 6, 3, 60)
 }
 
+region = region if region in regions else "eu"
+tz_minutes = tz_offset * 60
+hemisphere, week_in, month_in, weekday_in, hour_in, week_out, month_out, weekday_out, hour_out, mins_difference = regions[region]
 
-def update_time(region, timezone):
-    # Set the time with ntptime and pass it to the daylight saving calculator.
-    # Pass the result to the unit's RTC.
+dstp = DaylightSavingPolicy(hemisphere, week_in, month_in, weekday_in, hour_in,
+                            tz_minutes + mins_difference)
+stdp = DaylightSavingPolicy(hemisphere, week_out, month_out, weekday_out, hour_out,
+                            tz_minutes)
 
-    # handle time out during ntp comms
-    try:
-        ntptime.settime()
-        time.sleep(2)
-    except OSError:
-        return False
+dst = DaylightSaving(dstp, stdp)
 
-    timezone_minutes = timezone * 60
 
-    hemisphere, week_in, month_in, weekday_in, hour_in, week_out, month_out, weekday_out, hour_out, mins_difference = regions[region]
+# build all the hand shapes, saves rebuilding these every frame. ALL THE FPS.
+rw_list = ((30, 60), (40, 40), (50, 20))
+shapes_list = {}
+for radius, width in rw_list:
+    half_width = width / 2
 
-    dstp = DaylightSavingPolicy(hemisphere, week_in, month_in, weekday_in, hour_in, timezone_minutes + mins_difference)
-    stdp = DaylightSavingPolicy(hemisphere, week_out, month_out, weekday_out, hour_out, timezone_minutes)
+    hand = shape.pie(0, 0, radius, -half_width, half_width)
+    hand.stroke(line_thickness)
 
-    dst = DaylightSaving(dstp, stdp)
-    t = time.mktime(time.gmtime())
-    tm = time.gmtime(dst.localtime(t))
-    print(t)
-    print(tm)
-    rtc = RTC()
-    rtc.datetime((tm[0], tm[1], tm[2], tm[6] + 1, tm[3], tm[4], tm[5], 0))
+    outline_a = shape.line(0, 0, 0, -(radius + 3), line_thickness)
 
-    return True
+    outline_b = shape.pie(0, 0, radius - 10, -half_width, half_width)
+    outline_b.stroke(line_thickness)
+
+    outline_c = shape.pie(0, 0, radius - 20, -half_width, half_width)
+    outline_c.stroke(line_thickness)
+
+    if radius > 30:
+        outline_d = shape.pie(0, 0, radius - 30, -half_width, half_width)
+        outline_d.stroke(line_thickness)
+    else:
+        outline_d = None
+
+    shapes_list[(radius, width)] = (hand, outline_a, outline_b, outline_c, outline_d)
 
 
 @micropython.native
@@ -145,77 +152,74 @@ class Clock:
         self.hour_rotation = 0
         self.last_second = 0
         self.sub_second = 0
-        self.last_ms = 0
+        self.last_ms = time.ticks_ms()
+        self.last_utc_minute = -1
+        self.local_hour = 0
+        self.local_minute = 0
 
     @micropython.native
     def calc_clock(self):
-        currenttime = time.gmtime()
-        year, month, day, hour, minute, second, _, _ = currenttime
+        utc = time.gmtime()
+        minute = utc[4]
+        second = utc[5]
+
+        if minute != self.last_utc_minute:
+            self.last_utc_minute = minute
+            local = time.gmtime(dst.localtime(time.mktime(utc)))
+            self.local_hour = local[3]
+            self.local_minute = local[4]
 
         if second != self.last_second:
             self.sub_second = 0
             self.last_second = second
 
         ms = time.ticks_ms()
-        ms_diff = ms - self.last_ms
-        self.sub_second += ms_diff
+        self.sub_second += time.ticks_diff(ms, self.last_ms)
         self.last_ms = ms
 
         self.second_rotation = (second * 6) + (0.006 * self.sub_second)
-        self.minute_rotation = (minute * 6) + (0.1 * second)
-        self.hour_rotation = (hour * 30) + (0.5 * minute)
+        self.minute_rotation = (self.local_minute * 6) + (0.1 * second)
+        self.hour_rotation = (self.local_hour * 30) + (0.5 * self.local_minute)
 
     @micropython.native
-    def draw_ray(self, radius, width, rotation, sprite, colour, fill):
-        half_width = width / 2
-        hand_transform = mat3().translate(64, 64).rotate(rotation)
+    def draw_ray(self):
+        rotations = (self.hour_rotation, self.minute_rotation, self.second_rotation)
+        colours = (hours_colour, minutes_colour, seconds_colour)
 
-        hand = shape.pie(0, 0, radius, -half_width, half_width)
-        hand.transform = hand_transform
-        if fill:
-            hand_brush = brush.image(sprite.frame(frame_counter), mat3().scale(2))
-            screen.pen = hand_brush
+        for i in range(3):
+            radius, width = rw_list[i]
+            hand, outline_a, outline_b, outline_c, outline_d = shapes_list[(radius, width)]
+
+            hand_transform = mat3().translate(64, 64).rotate(rotations[i])
+            screen.pen = color.rgb(*colours[i])
+
+            hand.transform = hand_transform
             screen.shape(hand)
-        screen.pen = colour
-        hand.stroke(line_thickness)
-        screen.shape(hand)
 
-        outline_a = shape.line(0, 0, 0, -(radius + 3), line_thickness)
-        outline_a.transform = hand_transform
-        screen.shape(outline_a)
+            outline_a.transform = hand_transform
+            screen.shape(outline_a)
 
-        outline_b = shape.pie(0, 0, radius - 10, -half_width, half_width)
-        outline_b.stroke(line_thickness)
-        outline_b.transform = hand_transform
-        screen.shape(outline_b)
+            outline_b.transform = hand_transform
+            screen.shape(outline_b)
 
-        outline_c = shape.pie(0, 0, radius - 20, -half_width, half_width)
-        outline_c.stroke(line_thickness)
-        outline_c.transform = hand_transform
-        screen.shape(outline_c)
+            outline_c.transform = hand_transform
+            screen.shape(outline_c)
 
-        if radius > 30:
-            outline_d = shape.pie(0, 0, radius - 30, -half_width, half_width)
-            outline_d.stroke(line_thickness)
-            outline_d.transform = hand_transform
-            screen.shape(outline_d)
+            if outline_d is not None:
+                outline_d.transform = hand_transform
+                screen.shape(outline_d)
 
     @micropython.native
-    def draw_rays(self, fill):
-        self.draw_ray(30, 60, self.hour_rotation, hand_hour_sprite, hours_colour, fill)
-        self.draw_ray(40, 40, self.minute_rotation, hand_minute_sprite, minutes_colour, fill)
-        self.draw_ray(50, 20, self.second_rotation, hand_second_sprite, seconds_colour, fill)
+    def draw_rays(self):
+        self.draw_ray()
 
 
 class Ball:
     def __init__(self, pos, vel, radius, seconds):
         self.radius = radius
         self.pos = pos
-        self.forces = []
         self.velocity = vel
-        self.acceleration = vec2(0, 0)
         self.damping = 0.5
-        self.pos_correction = vec2(0, 0)
         if seconds == 0:
             self.colour = minutes_colour
         elif seconds == 1:
@@ -223,8 +227,10 @@ class Ball:
         elif seconds == 2:
             self.colour = hours_colour
         self.seconds = seconds
-        self.new_velocity = vec2(0, 0)
         self.mass = math.pi * (self.radius ** 2)
+
+        self.outline = shape.circle(vec2(0, 0), 0.01 * self.radius)
+        self.outline.stroke(-line_thickness)
 
     @property
     @micropython.native
@@ -236,18 +242,10 @@ class Ball:
         self.pos += self.velocity
 
     @micropython.native
-    def draw(self, offset, thickness):
-        x = self.pos.x / 100
-        y = self.pos.y / 100
-
-        sphere_bg = shape.circle(vec2(0, 0), (0.01 * self.radius) - offset)
-        sphere_bg.stroke(-thickness)
-
-        transformation = mat3().translate(x, y)
-
-        screen.pen = self.colour
-        sphere_bg.transform = transformation
-        screen.shape(sphere_bg)
+    def draw(self):
+        self.outline.transform = mat3().translate(self.pos.x / 100, self.pos.y / 100)
+        screen.pen = color.rgb(*self.colour)
+        screen.shape(self.outline)
 
     @micropython.native
     def apply_gravity(self):
@@ -261,10 +259,10 @@ class Ball:
     @micropython.native
     def calc_wall_collisions(self):
         radius, tangent, normal = on_squircle(self.pos)
-        direction = self.velocity / self.speed
-        dot_product = (direction.x * tangent.x) + (direction.y * tangent.y)
 
         if radius + (self.radius) >= 6000:
+            direction = self.velocity / self.speed
+            dot_product = (direction.x * tangent.x) + (direction.y * tangent.y)
             dist = (radius + self.radius) - 6000
             self.pos += normal * dist
             projection = tangent * ((self.velocity.x * tangent.x) + (self.velocity.y * tangent.y))
@@ -313,7 +311,7 @@ def calc_ball_collisions(ball_a, ball_b):
     ball_b.velocity -= new_vel_b
 
 
-@micropython.viper
+@micropython.native
 def gravity_vector(direction):
     gravity_rads = direction * 0.01745329252
     gravity_x = math.cos(gravity_rads)
@@ -353,97 +351,57 @@ for _i in range(num_balls_hour):
     balls.append(Ball(vec2(random.randint(300, 12500), random.randint(300, 12500)), vec2(random.uniform(-1, 1), random.uniform(-1, 1)), hour_radius, 2))
     hour_radius += hour_increment
 
+
 ball_combinations = [(balls[i], balls[j]) for i in range(len(balls)) for j in range(i + 1, len(balls))]
-
 last_ticks = time.ticks_ms()
-
 clock = Clock()
-clock_state = ClockState.Running
-
-frame_counter = 0
 
 
 def update():
-    global last_ticks, frame_counter, clock_state
-    wifi.tick()
+    global seconds_gravity_vec, minutes_gravity_vec, hours_gravity_vec, last_ticks
 
-    if clock_state == ClockState.Running:
-        # If the year in the RTC is 2021 or earlier, we need to sync so it has the same effect as pressing B.
-        if time.gmtime()[0] <= 2021:
-            print("Time out of joint")
-            clock_state = ClockState.ConnectWiFi
+    screen.pen = color.rgb(0, 0, 0)
+    screen.clear()
 
-            screen.pen = color.rgb(10, 12, 55)
-            screen.clear()
+    clock.calc_clock()
+    seconds_gravity_vec = gravity_vector((clock.second_rotation - 90) % 360)
+    minutes_gravity_vec = gravity_vector((clock.minute_rotation - 90) % 360)
+    hours_gravity_vec = gravity_vector((clock.hour_rotation - 90) % 360)
 
-            if show_border:
-                screen.pen = border_colour
-                screen.shape(border)
+    for ball in balls:
+        ball.move()
+        ball.calc_wall_collisions()
 
-            for ball in balls:
-                ball.draw(0, line_thickness)
+    for combination in ball_combinations:
+        calc_ball_collisions(combination[0], combination[1])
 
-            screen.pen = color.white
-            screen.text("Updating...", 36, 69)
+    for ball in balls:
+        ball.apply_gravity()
 
-        else:
-            screen.pen = color.rgb(0, 0, 0)
-            screen.clear()
+    if show_glow:
+        if show_border:
+            screen.pen = color.rgb(*border_colour)
+            screen.shape(border)
 
-            clock.calc_clock()
-            seconds_gravity_vec = gravity_vector((clock.second_rotation - 90) % 360)
-            minutes_gravity_vec = gravity_vector((clock.minute_rotation - 90) % 360)
-            hours_gravity_vec = gravity_vector((clock.hour_rotation - 90) % 360)
+        for ball in balls:
+            ball.draw()
+        clock.draw_rays()
 
-            for ball in balls:
-                ball.move()
-                ball.calc_wall_collisions()
+        screen.blur(1.5)
 
-            for combination in ball_combinations:
-                calc_ball_collisions(combination[0], combination[1])
+    if show_border:
+        screen.pen = color.rgb(*border_colour)
+        screen.shape(border)
 
-            for ball in balls:
-                ball.apply_gravity()
-
-            if show_glow:
-                if show_border:
-                    screen.pen = border_colour
-                    screen.shape(border)
-
-                for ball in balls:
-                    ball.draw(0, line_thickness)
-                clock.draw_rays(True)
-
-                screen.blur(1.5)
-
-            if show_border:
-                screen.pen = border_colour
-                screen.shape(border)
-
-            for ball in balls:
-                ball.draw(0, line_thickness)
-            clock.draw_rays(True)
-
-        frame_counter += 1
-        frame_counter %= 48
-
-    elif clock_state == ClockState.UpdateTime:
-        print("Updating")
-        if update_time(timezone.REGION, timezone.TIMEZONE):
-            clock_state = ClockState.Running
-        print("Updated")
-
-    elif clock_state == ClockState.ConnectWiFi:
-        print("Connecting")
-        if wifi.connect():
-            clock_state = ClockState.UpdateTime
-            print("Connected")
+    for ball in balls:
+        ball.draw()
+    clock.draw_rays()
 
     if show_fps:
         now = time.ticks_ms()
-        frametime = now - last_ticks
+        frametime = time.ticks_diff(now, last_ticks)
         last_ticks = now
-        fps = 1000 / frametime
+        fps = (1000 / frametime) if frametime != 0 else "999"
 
         screen.pen = color.rgb(0, 0, 0)
         screen.rectangle(0, 0, 45, 12)

@@ -19,7 +19,7 @@ class Policy:
             raise ValueError("month must be 1..12")
         if weekday not in range(7):
             raise ValueError("weekday must be 0..6")
-        if hour not in range(24):
+        if hour not in range(25):
             raise ValueError("hour must be 0..23")
         if timezone not in range(-780, 781):
             raise ValueError("timezone must be -780..780")
@@ -114,3 +114,4 @@ class DaylightSaving:
     def ftime(self, t):
         year, month, day, hour, minute, second, ms, dayinyear = utime.localtime(t)
         return "{:4}-{:02}-{:02}T{:02}:{:02}:{:02}".format(year, month, day, hour, minute, second)
+

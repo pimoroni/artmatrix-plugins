@@ -1,0 +1,118 @@
+<form method="post" action="/config?plugin={{ plugin }}">
+  <label>Region
+    <small>Sets which daylight-saving rules the clock follows.</small>
+    <select name="region">
+      <option value="us" {{ "selected" if placeholder.region == "us" else "" }}>us</option>
+      <option value="cuba" {{ "selected" if placeholder.region == "cuba" else "" }}>cuba</option>
+      <option value="eu" {{ "selected" if placeholder.region == "eu" else "" }}>eu</option>
+      <option value="moldova" {{ "selected" if placeholder.region == "moldova" else "" }}>moldova</option>
+      <option value="lebanon" {{ "selected" if placeholder.region == "lebanon" else "" }}>lebanon</option>
+      <option value="egypt" {{ "selected" if placeholder.region == "egypt" else "" }}>egypt</option>
+      <option value="chile" {{ "selected" if placeholder.region == "chile" else "" }}>chile</option>
+      <option value="australia" {{ "selected" if placeholder.region == "australia" else "" }}>australia</option>
+      <option value="nz" {{ "selected" if placeholder.region == "nz" else "" }}>nz</option>
+    </select>
+  </label>
+
+  <label>Timezone
+    <small>Your timezone. Stored as an hour offset from GMT.</small>
+    <select name="tz_offset">
+      <option value="-12" {{ "selected" if placeholder.tz_offset == -12 else "" }}>GMT-12 (Baker Island, Howland Island)</option>
+      <option value="-11" {{ "selected" if placeholder.tz_offset == -11 else "" }}>GMT-11 (American Samoa, Niue, Midway)</option>
+      <option value="-10" {{ "selected" if placeholder.tz_offset == -10 else "" }}>GMT-10 (Hawaii, Tahiti, Cook Islands)</option>
+      <option value="-9" {{ "selected" if placeholder.tz_offset == -9 else "" }}>GMT-9 (Alaska, Gambier Islands)</option>
+      <option value="-8" {{ "selected" if placeholder.tz_offset == -8 else "" }}>GMT-8 (US/Canada Pacific, Baja California)</option>
+      <option value="-7" {{ "selected" if placeholder.tz_offset == -7 else "" }}>GMT-7 (US/Canada Mountain, Arizona, Sonora)</option>
+      <option value="-6" {{ "selected" if placeholder.tz_offset == -6 else "" }}>GMT-6 (US/Canada Central, Mexico City, Costa Rica)</option>
+      <option value="-5" {{ "selected" if placeholder.tz_offset == -5 else "" }}>GMT-5 (US/Canada Eastern, Colombia, Peru)</option>
+      <option value="-4" {{ "selected" if placeholder.tz_offset == -4 else "" }}>GMT-4 (Atlantic Canada, Chile, Venezuela, Bolivia)</option>
+      <option value="-3" {{ "selected" if placeholder.tz_offset == -3 else "" }}>GMT-3 (Argentina, Uruguay, E. Brazil, French Guiana)</option>
+      <option value="-2" {{ "selected" if placeholder.tz_offset == -2 else "" }}>GMT-2 (Fernando de Noronha, South Georgia)</option>
+      <option value="-1" {{ "selected" if placeholder.tz_offset == -1 else "" }}>GMT-1 (Azores, Cape Verde)</option>
+      <option value="0" {{ "selected" if placeholder.tz_offset == 0 else "" }}>GMT+0 (UK, Ireland, Portugal, Iceland)</option>
+      <option value="1" {{ "selected" if placeholder.tz_offset == 1 else "" }}>GMT+1 (Central Europe, W. Africa, Nigeria)</option>
+      <option value="2" {{ "selected" if placeholder.tz_offset == 2 else "" }}>GMT+2 (Eastern Europe, Egypt, South Africa)</option>
+      <option value="3" {{ "selected" if placeholder.tz_offset == 3 else "" }}>GMT+3 (Moscow, Turkey, Saudi Arabia, E. Africa)</option>
+      <option value="4" {{ "selected" if placeholder.tz_offset == 4 else "" }}>GMT+4 (UAE, Oman, Azerbaijan, Georgia)</option>
+      <option value="5" {{ "selected" if placeholder.tz_offset == 5 else "" }}>GMT+5 (Pakistan, Kazakhstan, Uzbekistan, Maldives)</option>
+      <option value="6" {{ "selected" if placeholder.tz_offset == 6 else "" }}>GMT+6 (Bangladesh, Bhutan, Kyrgyzstan)</option>
+      <option value="7" {{ "selected" if placeholder.tz_offset == 7 else "" }}>GMT+7 (Thailand, Vietnam, Indonesia W., Cambodia)</option>
+      <option value="8" {{ "selected" if placeholder.tz_offset == 8 else "" }}>GMT+8 (China, W. Australia, Singapore, Philippines)</option>
+      <option value="9" {{ "selected" if placeholder.tz_offset == 9 else "" }}>GMT+9 (Japan, Korea, Indonesia E.)</option>
+      <option value="10" {{ "selected" if placeholder.tz_offset == 10 else "" }}>GMT+10 (E. Australia, Guam, Papua New Guinea)</option>
+      <option value="11" {{ "selected" if placeholder.tz_offset == 11 else "" }}>GMT+11 (Solomon Islands, New Caledonia, Vanuatu)</option>
+      <option value="12" {{ "selected" if placeholder.tz_offset == 12 else "" }}>GMT+12 (New Zealand, Fiji, Kiribati)</option>
+      <option value="13" {{ "selected" if placeholder.tz_offset == 13 else "" }}>GMT+13 (Tonga, Samoa, Tokelau)</option>
+      <option value="14" {{ "selected" if placeholder.tz_offset == 14 else "" }}>GMT+14 (Line Islands, Kiribati E.)</option>
+    </select>
+  </label>
+
+  <label>Hour colour
+    <small>Colour for the hour balls and hand. Affects the linework only. Recolouring the "ray" needs the spritesheet edited.</small>
+    <input type="color" name="hours_colour" value="{{ '#%02x%02x%02x' % placeholder.hours_colour }}">
+  </label>
+
+  <label>Minute colour
+    <small>Colour for the minute balls and hand. Linework only.</small>
+    <input type="color" name="minutes_colour" value="{{ '#%02x%02x%02x' % placeholder.minutes_colour }}">
+  </label>
+
+  <label>Second colour
+    <small>Colour for the second balls and hand. Linework only.</small>
+    <input type="color" name="seconds_colour" value="{{ '#%02x%02x%02x' % placeholder.seconds_colour }}">
+  </label>
+
+  <label>Border colour
+    <input type="color" name="border_colour" value="{{ '#%02x%02x%02x' % placeholder.border_colour }}">
+  </label>
+
+  <label>Line thickness
+    <small>Thickness to draw the linework.</small>
+    <input type="number" name="line_thickness" min="1" step="1" value="{{ placeholder.line_thickness }}">
+  </label>
+
+  <label>Number of balls
+    <small>Hour / minute / second balls to display.</small>
+    <div>
+      <input type="number" name="num_balls_hour" min="1" step="1" value="{{ placeholder.num_balls_hour }}">
+      <input type="number" name="num_balls_minute" min="1" step="1" value="{{ placeholder.num_balls_minute }}">
+      <input type="number" name="num_balls_second" min="1" step="1" value="{{ placeholder.num_balls_second }}">
+    </div>
+  </label>
+
+  <label>Hour ball size
+    <small>Min / max size for the hour balls.</small>
+    <div>
+      <input type="number" name="min_hour_size" min="1" step="1" value="{{ placeholder.min_hour_size }}">
+      <input type="number" name="max_hour_size" min="1" step="1" value="{{ placeholder.max_hour_size }}">
+    </div>
+  </label>
+
+  <label>Minute ball size
+    <small>Min / max size for the minute balls.</small>
+    <div>
+      <input type="number" name="min_minute_size" min="1" step="1" value="{{ placeholder.min_minute_size }}">
+      <input type="number" name="max_minute_size" min="1" step="1" value="{{ placeholder.max_minute_size }}">
+    </div>
+  </label>
+
+  <label>Second ball size
+    <small>Min / max size for the second balls.</small>
+    <div>
+      <input type="number" name="min_second_size" min="1" step="1" value="{{ placeholder.min_second_size }}">
+      <input type="number" name="max_second_size" min="1" step="1" value="{{ placeholder.max_second_size }}">
+    </div>
+  </label>
+
+  <label>Show FPS
+    <small>Displays framerate in the top left corner.</small>
+    <input type="checkbox" name="show_fps" {{ "checked" if placeholder.show_fps else "" }}>
+  </label>
+
+  <label>Show border
+    <small>Displays the squircle border the balls collide with.</small>
+    <input type="checkbox" name="show_border" {{ "checked" if placeholder.show_border else "" }}>
+  </label>
+
+  <button type="submit">Apply</button>
+</form>

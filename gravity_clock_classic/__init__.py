@@ -1,11 +1,10 @@
 import math
 import random
 import time
-import wifi
-import ntptime
-from machine import RTC
+import json
 
-from plugins.gravity_clock_classic import chromeball, timezone
+
+from plugins.gravity_clock_classic import chromeball
 from plugins.gravity_clock_classic.daylightsaving import DaylightSavingPolicy, DaylightSaving
 
 GRAVITY_STRENGTH = 5
@@ -17,14 +16,18 @@ bg = image.load("/lib/plugins/gravity_clock_classic/assets/bg.png")
 fg = image.load("/lib/plugins/gravity_clock_classic/assets/fg.png")
 
 shadow = color.rgb(0, 0, 0, 128)
+screen.antialias = image.X2
+screen.font = rom_font.sins
 
 # These values are exposed to the web interface
+region = "eu"
+tz_offset = 0
 hours_colour = (184, 115, 51)  # The colour for the hour balls. NOTE this is a tuple not a color.rgb because the values are manipulated to get darker and lighter versions, and you can't pull the r, g and b values from a color brush.
 minutes_colour = (171, 171, 70)  # The colour for the minute balls. NOTE this is a tuple not a color.rgb because the values are manipulated to get darker and lighter versions, and you can't pull the r, g and b values from a color brush.
 seconds_colour = (96, 96, 96)  # The colour for the second balls. NOTE this is a tuple not a color.rgb because the values are manipulated to get darker and lighter versions, and you can't pull the r, g and b values from a color brush.
-hour_hand_colour = color.rgb(184, 115, 51)  # The colour for the hour hand.
-minute_hand_colour = color.rgb(220, 200, 82)  # The colour for the minute hand.
-second_hand_colour = color.rgb(192, 192, 192)  # The colour for the second hand.
+hour_hand_colour = (184, 115, 51)  # The colour for the hour hand.
+minute_hand_colour = (220, 200, 82)  # The colour for the minute hand.
+second_hand_colour = (192, 192, 192)  # The colour for the second hand.
 num_balls_hour = 1  # The number of hour balls to display.
 num_balls_minute = 5  # The number of minute balls to display.
 num_balls_second = 10  # The number of second balls to display.
@@ -34,47 +37,49 @@ max_minute_size = 700  # Maximum size for the minute balls.
 min_minute_size = 500  # Minimum size for the minute balls.
 max_second_size = 470  # Maximum size for the second balls.
 min_second_size = 200  # Minimum size for the second balls.
-show_fps = True  # Displays framerate in the top left corner of the screen.
-
-screen.antialias = image.X2
-screen.font = rom_font.sins
+show_fps = False  # Displays framerate in the top left corner of the screen.
 
 
-class ClockState:
-    Running = 0
-    ConnectWiFi = 1
-    UpdateTime = 2
+def hex_to_rgb(s):
+    s = s.lstrip("#")
+    return (int(s[0:2], 16), int(s[2:4], 16), int(s[4:6], 16))
 
 
-month_days = {
-    1: 31,
-    2: 28,
-    3: 31,
-    4: 30,
-    5: 31,
-    6: 30,
-    7: 31,
-    8: 31,
-    9: 30,
-    10: 31,
-    11: 30,
-    12: 31
-}
+try:
+    with open("/lib/plugins/gravity_clock_classic/config.json") as f:
+        cfg = json.load(f)
 
-calendar_months = {
-    1: "January",
-    2: "February",
-    3: "March",
-    4: "April",
-    5: "May",
-    6: "June",
-    7: "July",
-    8: "August",
-    9: "September",
-    10: "October",
-    11: "November",
-    12: "December"
-}
+        region = cfg["region"] or "eu"
+        tz_offset = int(cfg["tz_offset"] or 0)
+
+        hours_colour = hex_to_rgb(cfg["hours_colour"])
+        minutes_colour = hex_to_rgb(cfg["minutes_colour"])
+        seconds_colour = hex_to_rgb(cfg["seconds_colour"])
+
+        hour_hand_colour = hex_to_rgb(cfg["hour_hand_colour"])
+        minute_hand_colour = hex_to_rgb(cfg["minute_hand_colour"])
+        second_hand_colour = hex_to_rgb(cfg["second_hand_colour"])
+
+        num_balls_hour = int(cfg["num_balls_hour"] or 1)
+        num_balls_minute = int(cfg["num_balls_minute"] or 5)
+        num_balls_second = int(cfg["num_balls_second"] or 10)
+        max_hour_size = int(cfg["max_hour_size"] or 800)
+        min_hour_size = int(cfg["min_hour_size"] or 800)
+        max_minute_size = int(cfg["max_minute_size"] or 700)
+        min_minute_size = int(cfg["min_minute_size"] or 500)
+        max_second_size = int(cfg["max_second_size"] or 470)
+        min_second_size = int(cfg["min_second_size"] or 200)
+        show_fps = "show_fps" in cfg
+except OSError:
+    pass
+
+
+try:
+    with open("/lib/plugins/gravity_clock_classic/config.html", "r", encoding="utf-8") as f:
+        config_html = f.read()
+except OSError as e:
+    print(e)
+    config_html = None
 
 # These are the different Daylight Saving time zones, according to the Wikipedia article.
 # Timezones are incredibly complex, we've covered the main ones here.
@@ -91,6 +96,17 @@ regions = {
     "australia": (1, 1, 10, 6, 2, 1, 4, 6, 3, 60),
     "nz": (1, 0, 9, 6, 2, 1, 4, 6, 3, 60)
 }
+
+region = region if region in regions else "eu"
+tz_minutes = tz_offset * 60
+hemisphere, week_in, month_in, weekday_in, hour_in, week_out, month_out, weekday_out, hour_out, mins_difference = regions[region]
+
+dstp = DaylightSavingPolicy(hemisphere, week_in, month_in, weekday_in, hour_in,
+                            tz_minutes + mins_difference)
+stdp = DaylightSavingPolicy(hemisphere, week_out, month_out, weekday_out, hour_out,
+                            tz_minutes)
+
+dst = DaylightSaving(dstp, stdp)
 
 
 second_hand_path = [vec2(0.5, -56),
@@ -179,35 +195,6 @@ hour_hand = shape.custom(hour_hand_path)
 del second_hand_path, minute_hand_path, hour_hand_path
 
 
-def update_time(region, timezone):
-    # Set the time with ntptime and pass it to the daylight saving calculator.
-    # Pass the result to the unit's RTC.
-
-    # handle time out during ntp comms
-    try:
-        ntptime.settime()
-        time.sleep(2)
-    except OSError:
-        return False
-
-    timezone_minutes = timezone * 60
-
-    hemisphere, week_in, month_in, weekday_in, hour_in, week_out, month_out, weekday_out, hour_out, mins_difference = regions[region]
-
-    dstp = DaylightSavingPolicy(hemisphere, week_in, month_in, weekday_in, hour_in, timezone_minutes + mins_difference)
-    stdp = DaylightSavingPolicy(hemisphere, week_out, month_out, weekday_out, hour_out, timezone_minutes)
-
-    dst = DaylightSaving(dstp, stdp)
-    t = time.mktime(time.gmtime())
-    tm = time.gmtime(dst.localtime(t))
-    print(t)
-    print(tm)
-    rtc = RTC()
-    rtc.datetime((tm[0], tm[1], tm[2], tm[6] + 1, tm[3], tm[4], tm[5], 0))
-
-    return True
-
-
 @micropython.native
 def on_squircle(pos):
     x = pos.x - 6400
@@ -228,29 +215,37 @@ class Clock:
         self.hour_rotation = 0
         self.last_second = 0
         self.sub_second = 0
-        self.last_ms = 0
+        self.last_ms = time.ticks_ms()
+        self.last_utc_minute = -1
+        self.local_hour = 0
+        self.local_minute = 0
 
     @micropython.native
     def calc_clock(self):
-        currenttime = time.gmtime()
-        year, month, day, hour, minute, second, _, _ = currenttime
+        utc = time.gmtime()
+        minute = utc[4]
+        second = utc[5]
+
+        if minute != self.last_utc_minute:
+            self.last_utc_minute = minute
+            local = time.gmtime(dst.localtime(time.mktime(utc)))
+            self.local_hour = local[3]
+            self.local_minute = local[4]
 
         if second != self.last_second:
             self.sub_second = 0
             self.last_second = second
 
         ms = time.ticks_ms()
-        ms_diff = time.ticks_diff(ms, self.last_ms)
-        self.sub_second += ms_diff
+        self.sub_second += time.ticks_diff(ms, self.last_ms)
         self.last_ms = ms
 
         self.second_rotation = (second * 6) + (0.006 * self.sub_second)
-        self.minute_rotation = (minute * 6) + (0.1 * second)
-        self.hour_rotation = (hour * 30) + (0.5 * minute)
+        self.minute_rotation = (self.local_minute * 6) + (0.1 * second)
+        self.hour_rotation = (self.local_hour * 30) + (0.5 * self.local_minute)
 
     @micropython.native
     def draw_hands(self):
-
         minute_hand_transform = mat3().translate(64, 64).scale(1.5).rotate(self.minute_rotation)
         minute_hand_transform_shadow = mat3().translate(66, 66).scale(1.5).rotate(self.minute_rotation)
 
@@ -259,7 +254,7 @@ class Clock:
         screen.shape(minute_hand_shape)
 
         minute_hand_shape.transform = minute_hand_transform
-        screen.pen = minute_hand_colour
+        screen.pen = color.rgb(*minute_hand_colour)
         screen.shape(minute_hand_shape)
 
         second_hand_transform = mat3().translate(64, 64).rotate(self.second_rotation)
@@ -270,7 +265,7 @@ class Clock:
         screen.shape(second_hand_shape)
 
         second_hand_shape.transform = second_hand_transform
-        screen.pen = second_hand_colour
+        screen.pen = color.rgb(*second_hand_colour)
         screen.shape(second_hand_shape)
 
         hour_hand_transform = mat3().translate(64, 64).scale(1.5).rotate(self.hour_rotation)
@@ -281,7 +276,7 @@ class Clock:
         screen.shape(hour_hand)
 
         hour_hand.transform = hour_hand_transform
-        screen.pen = hour_hand_colour
+        screen.pen = color.rgb(*hour_hand_colour)
         screen.shape(hour_hand)
 
 
@@ -289,11 +284,8 @@ class Ball:
     def __init__(self, pos, vel, radius, seconds):
         self.radius = radius
         self.pos = pos
-        self.forces = []
         self.velocity = vel
-        self.acceleration = vec2(0, 0)
         self.damping = 0.5
-        self.pos_correction = vec2(0, 0)
         if seconds == 0:
             self.colour = minutes_colour
         elif seconds == 1:
@@ -301,7 +293,6 @@ class Ball:
         elif seconds == 2:
             self.colour = hours_colour
         self.seconds = seconds
-        self.new_velocity = vec2(0, 0)
         self.mass = math.pi * (self.radius ** 2)
 
     @property
@@ -325,10 +316,10 @@ class Ball:
     @micropython.native
     def calc_wall_collisions(self):
         radius, tangent, normal = on_squircle(self.pos)
-        direction = self.velocity / self.speed
-        dot_product = (direction.x * tangent.x) + (direction.y * tangent.y)
 
         if radius + (self.radius) >= 6000:
+            direction = self.velocity / self.speed
+            dot_product = (direction.x * tangent.x) + (direction.y * tangent.y)
             dist = (radius + self.radius) - 6000
             self.pos += normal * dist
             projection = tangent * ((self.velocity.x * tangent.x) + (self.velocity.y * tangent.y))
@@ -426,74 +417,43 @@ for _i in range(num_balls_hour):
     balls.append(Ball(vec2(random.randint(300, 12500), random.randint(300, 12500)), vec2(random.uniform(-1, 1), random.uniform(-1, 1)), hour_radius, 2))
     hour_radius += hour_increment
 
+
 ball_combinations = [(balls[i], balls[j]) for i in range(len(balls)) for j in range(i + 1, len(balls))]
-
 last_ticks = time.ticks_ms()
-
 clock = Clock()
-clock_state = ClockState.Running
-
-frame_counter = 0
 
 
 def update():
-    global clock_state, seconds_gravity_vec, minutes_gravity_vec, hours_gravity_vec, frametime, last_ticks
+    global seconds_gravity_vec, minutes_gravity_vec, hours_gravity_vec, last_ticks
 
-    wifi.tick()
+    screen.blit(bg, vec2(0, 0))
 
-    if clock_state == ClockState.Running:
-        # If the year in the RTC is 2021 or earlier, we need to sync so it has the same effect as pressing B.
-        if time.gmtime()[0] <= 2021:
-            print("Time out of joint")
-            clock_state = ClockState.ConnectWiFi
+    clock.calc_clock()
+    seconds_gravity_vec = gravity_vector((clock.second_rotation - 90) % 360)
+    minutes_gravity_vec = gravity_vector((clock.minute_rotation - 90) % 360)
+    hours_gravity_vec = gravity_vector((clock.hour_rotation - 90) % 360)
 
-            screen.blit(bg, vec2(0, 0))
-            clock.draw_hands()
-            screen.blit(fg, vec2(0, 0))
+    for ball in balls:
+        ball.move()
+        ball.calc_wall_collisions()
 
-            screen.pen = color.white
-            screen.text("Updating...", 36, 69)
+    for combination in ball_combinations:
+        calc_ball_collisions(combination[0], combination[1])
 
-        else:
-            screen.blit(bg, vec2(0, 0))
-            draw_shadows()
+    draw_shadows()
 
-            clock.calc_clock()
-            seconds_gravity_vec = gravity_vector((clock.second_rotation - 90) % 360)
-            minutes_gravity_vec = gravity_vector((clock.minute_rotation - 90) % 360)
-            hours_gravity_vec = gravity_vector((clock.hour_rotation - 90) % 360)
+    for ball in balls:
+        ball.apply_gravity()
+        chromeball.draw_ball(ball.pos, ball.radius, ball.colour)
 
-            for ball in balls:
-                chromeball.draw_ball(ball.pos, ball.radius, ball.colour)
-                ball.move()
-                ball.calc_wall_collisions()
-
-            for combination in ball_combinations:
-                calc_ball_collisions(combination[0], combination[1])
-
-            for ball in balls:
-                ball.apply_gravity()
-
-            clock.draw_hands()
-            screen.blit(fg, vec2(0, 0))
-
-    elif clock_state == ClockState.UpdateTime:
-        print("Updating")
-        if update_time(timezone.REGION, timezone.TIMEZONE):
-            clock_state = ClockState.Running
-        print("Updated")
-
-    elif clock_state == ClockState.ConnectWiFi:
-        print("Connecting")
-        if wifi.connect():
-            clock_state = ClockState.UpdateTime
-            print("Connected")
+    clock.draw_hands()
+    screen.blit(fg, vec2(0, 0))
 
     if show_fps:
         now = time.ticks_ms()
-        frametime = now - last_ticks
+        frametime = time.ticks_diff(now, last_ticks)
         last_ticks = now
-        fps = 1000 / frametime
+        fps = (1000 / frametime) if frametime != 0 else "999"
 
         screen.pen = color.rgb(0, 0, 0)
         screen.rectangle(0, 0, 45, 12)
