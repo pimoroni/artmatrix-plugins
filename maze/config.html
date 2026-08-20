@@ -1,0 +1,22 @@
+<form method="post" action="/config?plugin={{ plugin }}">
+  <label>Preset
+    <small>Pick a ready-made scene, or random.</small>
+    <select name="preset">
+      <option value="random" {{ "selected" if placeholder.preset == "random" else "" }}>Random</option>
+      <option value="lv426" {{ "selected" if placeholder.preset == "lv426" else "" }}>LV-426</option>
+      <option value="lost_empire" {{ "selected" if placeholder.preset == "lost_empire" else "" }}>Lost Empire</option>
+      <option value="neon" {{ "selected" if placeholder.preset == "neon" else "" }}>Neon</option>
+    </select>
+  </label>
+
+  <label>Change interval
+    <small>Minutes between scene changes. 0 for no change. Only applies when the preset is Random</small>
+    <input type="number" name="maze_period" min="0" step="1" value="{{ placeholder.maze_period }}">
+  </label>
+
+  <label>Show FPS
+    <input type="checkbox" name="show_fps" {{ "checked" if placeholder.show_fps else "" }}>
+  </label>
+
+  <button type="submit">Apply</button>
+</form>
