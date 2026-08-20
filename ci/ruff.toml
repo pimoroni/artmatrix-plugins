@@ -12,6 +12,7 @@ builtins = [
     "font",
     "image",
     "mat3",
+    "palette",
     "pen",
     "pixel_font",
     "vec2",
