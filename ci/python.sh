@@ -7,9 +7,9 @@ function qa_prepare_all {
 }
 
 function qa_check {
-    ruff check --config "$SCRIPT_PATH/ruff.toml" ../
+    ruff check --config "$SCRIPT_PATH/ruff.toml" "$SCRIPT_PATH/.."
 }
 
 function qa_fix {
-    ruff check --config "$SCRIPT_PATH/ruff.toml" --fix ../
+    ruff check --config "$SCRIPT_PATH/ruff.toml" --fix "$SCRIPT_PATH/.."
 }
