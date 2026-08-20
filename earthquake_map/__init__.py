@@ -62,7 +62,7 @@ def handle_response(fetch_instance):
 
         else:
             quake_place = "No Data Found"
-    except Exception:
+    except (OSError, ValueError, KeyError, TypeError):
         quake_place = "Parse Error"
 
 
@@ -97,7 +97,7 @@ def load_coastlines():
 
                     coastline_data.append((shape.custom(path), country_center, pen_color))
 
-    except Exception:
+    except (OSError, ValueError, KeyError, TypeError):
         quake_place = "Map Load Error"
 
 

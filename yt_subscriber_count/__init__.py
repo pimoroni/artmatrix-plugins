@@ -69,7 +69,7 @@ if has_details:
         sub_count = int(data["items"][0]["statistics"]["subscriberCount"])
 
     @api_data.on_error
-    def process_fail(fetch):
+    def process_fail(_fetch):
         return True
 
 
@@ -86,6 +86,7 @@ def format_num(n):
     if length >= 10:
         n /= 1000000000
         return "{:.1f}B".format(n)
+    return str(n)
 
 
 def centre_text(text, cy=None, max_size=12, min_size=1, padding=4):

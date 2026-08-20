@@ -80,7 +80,7 @@ def rgb_to_hls(r, g, b):
     minc = min(r, g, b)
     sumc = (maxc+minc)
     rangec = (maxc-minc)
-    l = sumc/2.0
+    l = sumc/2.0  # noqa: E741
     if minc == maxc:
         return 0.0, l, 0.0
     if l <= 0.5:
@@ -99,7 +99,7 @@ def rgb_to_hls(r, g, b):
     h = (h/6.0) % 1.0
     return h, l, s
 
-def hls_to_rgb(h, l, s):
+def hls_to_rgb(h, l, s):  # noqa: E741
     if s == 0.0:
         return l, l, l
     if l <= 0.5:
@@ -145,7 +145,7 @@ def rgb_to_hsv(r, g, b):
     h = (h/6.0) % 1.0
     return h, s, v
 
-def hsv_to_rgb(h, s, v):
+def hsv_to_rgb(h, s, v):  # noqa: RET503
     if s == 0.0:
         return v, v, v
     i = int(h*6.0) # XXX assume int() truncates!

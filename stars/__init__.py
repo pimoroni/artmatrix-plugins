@@ -24,7 +24,7 @@ class Star:
 
         Star.Stars.append(self)
 
-    def _update(self):
+    def step(self):
         self.z -= 1
         if self.z < abs(self.x) or self.z < abs(self.y):
             self.x = getrandbits(BITS) - CX + 0.0001
@@ -55,7 +55,7 @@ class Star:
             screen.clear()
             sl = Star.Stars
             for star in sl:
-                star._update()
+                star.step()
                 star.draw()
 
 

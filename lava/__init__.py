@@ -192,7 +192,7 @@ blob_radius_array = array("i")
 blob_max_radius_array = array("i")
 blob_velocity_array = array("f")
 
-for i in range(num_blobs):
+for _ in range(num_blobs):
     blob_x_array.append(random.randint(0, width))
     blob_y_array.append(height * random.randint(0, 1))
     blob_radius_array.append(1)

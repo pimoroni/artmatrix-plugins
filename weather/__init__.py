@@ -86,7 +86,7 @@ for _ in range(100):
     snow_particles.append([x, y, speed, size, offset])
 
 
-def draw_rainy(t):
+def draw_rainy(_t):
     screen.pen = color.rgb(255, 255, 255, 70)
     # Background rain_particles
     for p in rain_particles:
@@ -163,7 +163,7 @@ def draw_light_cloud(t):
     screen.clear()
 
 
-def centre_text(text, cy=None, max_size=12, min_size=1, padding=4, colour=color.rgb(255, 255, 255)):
+def centre_text(text, cy=None, max_size=12, min_size=1, padding=4, colour=color.white):
 
     max_width = screen.width - padding * 2
     size = max_size

@@ -41,7 +41,7 @@ except OSError:
     pass
 
 
-def centre_text(text, cy=None, max_size=12, min_size=1, padding=4, colour=color.rgb(255, 255, 255)):
+def centre_text(text, cy=None, max_size=12, min_size=1, padding=4, colour=color.white):
 
     max_width = screen.width - padding * 2
     size = max_size
