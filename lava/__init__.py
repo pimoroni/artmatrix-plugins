@@ -115,8 +115,7 @@ def generate_palette_stop(i):
     if i < 128:
         return (0, 0, 0)
 
-    else:
-        return colour_picker(val, edge_falloff)
+    return colour_picker(val, edge_falloff)
 
 
 @micropython.viper
@@ -184,14 +183,14 @@ else:
     colour_4 = make_colour((h, s, v), (0, 1, 1))
     colour_5 = make_colour((h, s, v), (0.05, 0.3, 1))
 
-raw_palette = array('i', [convert_to_rgba(*generate_palette_stop(j)) for j in range(8000)])
+raw_palette = array("i", [convert_to_rgba(*generate_palette_stop(j)) for j in range(8000)])
 min_radius_adjusted = int((min_radius + 0.7236) / 0.2564)
 max_radius_adjusted = int((max_radius + 0.7236) / 0.2564)
-blob_x_array = array('i')
-blob_y_array = array('i')
-blob_radius_array = array('i')
-blob_max_radius_array = array('i')
-blob_velocity_array = array('f')
+blob_x_array = array("i")
+blob_y_array = array("i")
+blob_radius_array = array("i")
+blob_max_radius_array = array("i")
+blob_velocity_array = array("f")
 
 for i in range(num_blobs):
     blob_x_array.append(random.randint(0, width))

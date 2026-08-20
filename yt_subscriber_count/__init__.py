@@ -38,7 +38,7 @@ def hex_to_rgb(s):
 
 
 try:
-    with open(f'{DATA_PATH}/config.json') as file:
+    with open(f"{DATA_PATH}/config.json") as file:
         config_file = json.load(file)
         api_key = config_file["api_key"] or None
         channel_id = config_file["channel_id"] or None
