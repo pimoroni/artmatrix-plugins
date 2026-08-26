@@ -37,7 +37,7 @@ orbs = [
 try:
     temperature_sensor = BreakoutBME280(I2C())
     has_sensor = True
-except OSError:
+except RuntimeError:
     pass
 
 
