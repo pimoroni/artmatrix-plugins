@@ -1,5 +1,5 @@
 import json
-from lib.fetch import AsyncFetch
+from fetch import AsyncFetch
 from random import randint, uniform, choice
 
 API_UPDATE_TIME = 60
