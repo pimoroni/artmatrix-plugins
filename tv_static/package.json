@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "urls": [
+    [
+      "plugins/tv_static/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/tv_static/config.html",
+      "config.html"
+    ]
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "version": "1.0.0",
+  "urls": [
+    [
+      "plugins/solar_system/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/solar_system/assets/planet.png",
+      "assets/planet.png"
+    ],
+    [
+      "plugins/solar_system/assets/space1.png",
+      "assets/space1.png"
+    ],
+    [
+      "plugins/solar_system/assets/space2.png",
+      "assets/space2.png"
+    ],
+    [
+      "plugins/solar_system/assets/space3.png",
+      "assets/space3.png"
+    ],
+    [
+      "plugins/solar_system/assets/space4.png",
+      "assets/space4.png"
+    ],
+    [
+      "plugins/solar_system/assets/space5.png",
+      "assets/space5.png"
+    ],
+    [
+      "plugins/solar_system/config.html",
+      "config.html"
+    ]
+  ]
+}

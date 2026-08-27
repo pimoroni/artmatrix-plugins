@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "urls": [
+    [
+      "plugins/iss_tracker/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/iss_tracker/icon.png",
+      "icon.png"
+    ],
+    [
+      "plugins/iss_tracker/world.geo.json",
+      "world.geo.json"
+    ]
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "urls": [
+    [
+      "plugins/bezier/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/bezier/config.html",
+      "config.html"
+    ]
+  ]
+}

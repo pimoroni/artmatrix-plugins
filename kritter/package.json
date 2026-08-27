@@ -1,0 +1,25 @@
+{
+  "version": "1.0.0",
+  "urls": [
+    [
+      "plugins/kritter/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/kritter/assets/space.png",
+      "assets/space.png"
+    ],
+    [
+      "plugins/kritter/blob.py",
+      "blob.py"
+    ],
+    [
+      "plugins/kritter/config.html",
+      "config.html"
+    ],
+    [
+      "plugins/kritter/draw_planet.py",
+      "draw_planet.py"
+    ]
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0",
+  "urls": [
+    [
+      "plugins/gravity_clock_classic/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/gravity_clock_classic/assets/bg.png",
+      "assets/bg.png"
+    ],
+    [
+      "plugins/gravity_clock_classic/assets/fg.png",
+      "assets/fg.png"
+    ],
+    [
+      "plugins/gravity_clock_classic/chromeball.py",
+      "chromeball.py"
+    ],
+    [
+      "plugins/gravity_clock_classic/config.html",
+      "config.html"
+    ],
+    [
+      "plugins/gravity_clock_classic/daylightsaving.py",
+      "daylightsaving.py"
+    ]
+  ]
+}

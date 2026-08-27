@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "urls": [
+    [
+      "plugins/yt_subscriber_count/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/yt_subscriber_count/config.html",
+      "config.html"
+    ]
+  ]
+}

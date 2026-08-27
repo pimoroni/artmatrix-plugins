@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0",
+  "urls": [
+    [
+      "plugins/who_arted/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/who_arted/assets/monalisa_noeyes.png",
+      "assets/monalisa_noeyes.png"
+    ],
+    [
+      "plugins/who_arted/assets/pearl_base.png",
+      "assets/pearl_base.png"
+    ],
+    [
+      "plugins/who_arted/assets/pearl_overlay.png",
+      "assets/pearl_overlay.png"
+    ],
+    [
+      "plugins/who_arted/assets/scream-no-mouth.png",
+      "assets/scream-no-mouth.png"
+    ],
+    [
+      "plugins/who_arted/config.html",
+      "config.html"
+    ]
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "urls": [
+    [
+      "plugins/terminal/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/terminal/config.html",
+      "config.html"
+    ]
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "urls": [
+    [
+      "plugins/earthquake_map/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/earthquake_map/world.geo.json",
+      "world.geo.json"
+    ]
+  ]
+}

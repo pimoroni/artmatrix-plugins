@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "urls": [
+    [
+      "plugins/gravity_clock_vaporwave/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/gravity_clock_vaporwave/config.html",
+      "config.html"
+    ],
+    [
+      "plugins/gravity_clock_vaporwave/daylightsaving.py",
+      "daylightsaving.py"
+    ]
+  ]
+}

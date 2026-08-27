@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "urls": [
+    [
+      "plugins/co2_matrix/__init__.py",
+      "__init__.py"
+    ]
+  ]
+}

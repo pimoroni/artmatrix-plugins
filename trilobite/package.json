@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0",
+  "urls": [
+    [
+      "plugins/trilobite/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/trilobite/assets/ammonite.png",
+      "assets/ammonite.png"
+    ],
+    [
+      "plugins/trilobite/assets/star.png",
+      "assets/star.png"
+    ],
+    [
+      "plugins/trilobite/assets/track.png",
+      "assets/track.png"
+    ],
+    [
+      "plugins/trilobite/assets/trilobite.png",
+      "assets/trilobite.png"
+    ],
+    [
+      "plugins/trilobite/config.html",
+      "config.html"
+    ]
+  ]
+}

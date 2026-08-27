@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "urls": [
+    [
+      "plugins/weather/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/weather/config.html",
+      "config.html"
+    ]
+  ]
+}

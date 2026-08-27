@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "urls": [
+    [
+      "plugins/art_matrix_draw/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/art_matrix_draw/config.html",
+      "config.html"
+    ]
+  ]
+}

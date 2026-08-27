@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "urls": [
+    [
+      "plugins/lava/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/lava/colorsys.py",
+      "colorsys.py"
+    ],
+    [
+      "plugins/lava/config.html",
+      "config.html"
+    ]
+  ]
+}

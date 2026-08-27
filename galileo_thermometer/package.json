@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "urls": [
+    [
+      "plugins/galileo_thermometer/__init__.py",
+      "__init__.py"
+    ]
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "version": "1.0.0",
+  "urls": [
+    [
+      "plugins/firework/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/firework/assets/bg.png",
+      "assets/bg.png"
+    ],
+    [
+      "plugins/firework/assets/fg.png",
+      "assets/fg.png"
+    ],
+    [
+      "plugins/firework/config.html",
+      "config.html"
+    ]
+  ]
+}

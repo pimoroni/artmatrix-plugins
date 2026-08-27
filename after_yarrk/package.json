@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "urls": [
+    [
+      "plugins/after_yarrk/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/after_yarrk/config.html",
+      "config.html"
+    ],
+    [
+      "plugins/after_yarrk/vector_sprite.py",
+      "vector_sprite.py"
+    ]
+  ]
+}

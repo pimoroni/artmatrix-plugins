@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "urls": [
+    [
+      "plugins/this_is_fine/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/this_is_fine/config.html",
+      "config.html"
+    ]
+  ]
+}

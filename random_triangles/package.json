@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "urls": [
+    [
+      "plugins/random_triangles/__init__.py",
+      "__init__.py"
+    ]
+  ]
+}
