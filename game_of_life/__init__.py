@@ -247,9 +247,6 @@ gen = 0
 t_frames = 0
 t_total = 0
 
-# Save a couple of milliseconds since we never clear the display
-display.set_blocking(False)
-
 screen.font = rom_font.sins
 
 
