@@ -246,7 +246,6 @@ gol = GameOfLife(randomize=True, palette=USE_PALETTE)
 gen = 0
 t_frames = 0
 t_total = 0
-buf = memoryview(display)
 
 # Save a couple of milliseconds since we never clear the display
 display.set_blocking(False)
@@ -259,7 +258,7 @@ def update():
 #     t_start = time.ticks_ms()
 
     gol.compute()
-    gol.display(buf)
+    gol.display(screen)
 
     gen += 1
 
