@@ -117,13 +117,6 @@ def process_options():
 
 @micropython.native
 def refresh_level():
-    screen.pen = color.black
-    screen.rectangle(0, 57, 128, 14)
-    screen.pen = color.white
-    tw, th = screen.measure_text("Loading map...")
-    screen.text("Loading map...", (128 - tw) / 2, 57)
-    display.update()
-
     options, props = process_options()
     new_level, entities, startpoint = level_manager.generate_maze(options, 64, 64)
     new_level.initialise()
