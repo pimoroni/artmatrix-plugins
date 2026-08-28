@@ -1,0 +1,34 @@
+name: Package Manifests and Index
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: packaging-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Check manifests and index
+    runs-on: ubuntu-24.04
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Python
+      uses: actions/setup-python@8d9ed9ac5c53483de85588cdf95a591a75ab9f55
+      with:
+        python-version: '3.13'
+
+    - name: Check manifests and index
+      run: |
+        if ! python ci/generate_packages.py --check; then
+          echo "::error::Run \`python ci/generate_packages.py\` and commit the result."
+          exit 1
+        fi

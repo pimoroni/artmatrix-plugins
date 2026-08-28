@@ -1,0 +1,33 @@
+{
+  "plugins": [
+    "3d_pipes",
+    "after_yarrk",
+    "art_matrix_draw",
+    "bezier",
+    "blackhole",
+    "co2_matrix",
+    "earthquake_map",
+    "firework",
+    "galileo_thermometer",
+    "game_of_life",
+    "gravity_clock_classic",
+    "gravity_clock_vaporwave",
+    "iss_tracker",
+    "kritter",
+    "lava",
+    "maze",
+    "random_bots",
+    "random_shapes",
+    "random_triangles",
+    "solar_system",
+    "spirit_level",
+    "stars",
+    "terminal",
+    "this_is_fine",
+    "trilobite",
+    "tv_static",
+    "weather",
+    "who_arted",
+    "yt_subscriber_count"
+  ]
+}
