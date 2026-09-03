@@ -4,8 +4,8 @@ import time
 import json
 
 
+from daylightsaving import DaylightSavingPolicy, DaylightSaving
 from plugins.gravity_clock_classic import chromeball
-from plugins.gravity_clock_classic.daylightsaving import DaylightSavingPolicy, DaylightSaving
 
 GRAVITY_STRENGTH = 5
 seconds_gravity_vec = vec2(0, 0)
