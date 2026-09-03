@@ -20,10 +20,6 @@
     [
       "plugins/gravity_clock_classic/config.html",
       "config.html"
-    ],
-    [
-      "plugins/gravity_clock_classic/daylightsaving.py",
-      "daylightsaving.py"
     ]
   ]
 }

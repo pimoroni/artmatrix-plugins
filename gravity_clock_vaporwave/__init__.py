@@ -4,7 +4,7 @@ import time
 import json
 
 
-from plugins.gravity_clock_vaporwave.daylightsaving import DaylightSavingPolicy, DaylightSaving
+from daylightsaving import DaylightSavingPolicy, DaylightSaving
 
 GRAVITY_STRENGTH = 5
 seconds_gravity_vec = vec2(0, 0)

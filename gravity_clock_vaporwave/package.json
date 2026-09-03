@@ -8,10 +8,6 @@
     [
       "plugins/gravity_clock_vaporwave/config.html",
       "config.html"
-    ],
-    [
-      "plugins/gravity_clock_vaporwave/daylightsaving.py",
-      "daylightsaving.py"
     ]
   ]
 }
