@@ -1,10 +1,10 @@
-import json
 from fetch import AsyncFetch
 from random import randint, uniform, choice
 
+from plugin_config import plugin_config
+
 API_UPDATE_TIME = 60
 API_HOST = "www.googleapis.com"
-DATA_PATH = "/lib/plugins/yt_subscriber_count"
 
 palette = []
 # grab all the built in colours
@@ -13,13 +13,21 @@ for c in dir(color):
     if isinstance(ob, color):
         palette.append(ob)
 
-api_key = None
-channel_id = None
-channel_name_colour = (255, 0, 0)
-subscriber_count_colour = (255, 255, 255)
-background_colour = (0, 0, 0)
-animate_background = True
-has_details = False
+cfg = plugin_config("yt_subscriber_count", {
+    "api_key": None,
+    "channel_id": None,
+    "channel_name_colour": (255, 0, 0),
+    "subscriber_count_colour": (255, 255, 255),
+    "background_colour": (0, 0, 0),
+    "animate_background": True,
+})
+api_key = cfg["api_key"]
+channel_id = cfg["channel_id"]
+channel_name_colour = cfg["channel_name_colour"]
+subscriber_count_colour = cfg["subscriber_count_colour"]
+background_colour = cfg["background_colour"]
+animate_background = cfg["animate_background"]
+has_details = True if api_key and channel_id else False
 
 sub_count = None
 last_sub_count = None
@@ -30,28 +38,6 @@ confetti_particles = []
 
 cy = screen.height / 2
 cx = screen.width / 2
-
-
-def hex_to_rgb(s):
-    s = s.lstrip("#")
-    return (int(s[0:2], 16), int(s[2:4], 16), int(s[4:6], 16))
-
-
-try:
-    with open(f"{DATA_PATH}/config.json") as file:
-        config_file = json.load(file)
-        api_key = config_file["api_key"] or None
-        channel_id = config_file["channel_id"] or None
-        has_details = True if api_key and channel_id else False
-
-        channel_name_colour = hex_to_rgb(config_file["channel_name_colour"])
-        subscriber_count_colour = hex_to_rgb(config_file["subscriber_count_colour"])
-        background_colour = hex_to_rgb(config_file["background_colour"])
-        animate_background = "animate_background" in config_file
-except OSError:
-    pass
-except KeyError:
-    pass
 
 
 if has_details:

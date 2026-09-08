@@ -1,6 +1,7 @@
 import random
 import time
-import json
+
+from plugin_config import plugin_config
 
 bg = image.load("/lib/plugins/firework/assets/bg.png")
 fg = image.load("/lib/plugins/firework/assets/fg.png")
@@ -14,26 +15,20 @@ p = shape.circle(0, 0, 1)
 q = shape.circle(0, 0, 0.75)
 
 # These values are exposed to the web interface.
-frequencies = (0, 1, 1)  # Tuple containing the relative proportions of sparks with no children, with one generation of children and with two generations of children
-timing = 100  # How often a firework is launched, in the form of "1 in x chance every frame"
-gravity = 5  # Gravity level. Must be int.
-max_speed = 32  # Maximum speed of the fireworks.
-show_fps = False  # Displays framerate in the top left corner of the screen.
-
-try:
-    with open("/lib/plugins/firework/config.json") as f:
-        cfg = json.load(f)
-        frequencies = (
-            int(cfg["freq_0"] or 0),
-            int(cfg["freq_1"] or 1),
-            int(cfg["freq_2"] or 1),
-        )
-        timing = int(cfg["timing"] or 100)
-        gravity = int(cfg["gravity"] or 5)
-        max_speed = int(cfg["max_speed"] or 32)
-        show_fps = "show_fps" in cfg
-except OSError:
-    pass
+cfg = plugin_config("firework", {
+    "freq_0": 0,  # Relative proportion of sparks with no children
+    "freq_1": 1,  # Relative proportion of sparks with one generation of children
+    "freq_2": 1,  # Relative proportion of sparks with two generations of children
+    "timing": 100,  # How often a firework is launched, in the form of "1 in x chance every frame"
+    "gravity": 5,  # Gravity level. Must be int.
+    "max_speed": 32,  # Maximum speed of the fireworks.
+    "show_fps": False,  # Displays framerate in the top left corner of the screen.
+})
+frequencies = (cfg["freq_0"], cfg["freq_1"], cfg["freq_2"])
+timing = cfg["timing"]
+gravity = cfg["gravity"]
+max_speed = cfg["max_speed"]
+show_fps = cfg["show_fps"]
 
 try:
     with open("/lib/plugins/firework/config.html", "r", encoding="utf-8") as f:

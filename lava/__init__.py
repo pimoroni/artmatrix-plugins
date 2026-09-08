@@ -2,36 +2,26 @@ import time
 import random
 from array import array
 from plugins.lava import colorsys
-import json
+from plugin_config import plugin_config
 
 width = screen.width
 height = screen.height
 screen.antialias = image.X4
 
 
-def hex_to_rgb(s):
-    s = s.lstrip("#")
-    return (int(s[0:2], 16), int(s[2:4], 16), int(s[4:6], 16))
-
-
 # These variables are exposed to the editor.
-num_blobs = 4
-rainbow_mode = False  # Switches between mainly a single hue brightening at the centre and moving slightly colder at the edge, and a hue constantly changing with radius.
-start_colour = (255, 255, 0)  # Defines the main colour in single-colour mode, or the central colour in rainbow mode.
-min_radius = 10  # Minimum blob radius, roughly but not exactly in number of pixels
-max_radius = 20  # Maximum blob radius, same
-
-
-try:
-    with open("/lib/plugins/lava/config.json") as f:
-        cfg = json.load(f)
-        num_blobs = int(cfg["num_blobs"] or 4)
-        rainbow_mode = "rainbow_mode" in cfg
-        start_colour = hex_to_rgb(cfg["start_colour"])
-        min_radius = int(cfg["min_radius"] or 10)
-        max_radius = int(cfg["max_radius"] or 20)
-except OSError:
-    pass
+cfg = plugin_config("lava", {
+    "num_blobs": 4,
+    "rainbow_mode": False,  # Switches between mainly a single hue brightening at the centre and moving slightly colder at the edge, and a hue constantly changing with radius.
+    "start_colour": (255, 255, 0),  # Defines the main colour in single-colour mode, or the central colour in rainbow mode.
+    "min_radius": 10,  # Minimum blob radius, roughly but not exactly in number of pixels
+    "max_radius": 20,  # Maximum blob radius, same
+})
+num_blobs = cfg["num_blobs"]
+rainbow_mode = cfg["rainbow_mode"]
+start_colour = cfg["start_colour"]
+min_radius = cfg["min_radius"]
+max_radius = cfg["max_radius"]
 
 
 try:

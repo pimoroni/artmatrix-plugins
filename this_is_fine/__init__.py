@@ -2,7 +2,8 @@ import random
 import time
 import micropython
 from micropython import const
-import json
+
+from plugin_config import plugin_config
 
 # These need to be constants for the viper optimized block below.
 WIDTH = const(128 + 2)
@@ -16,18 +17,14 @@ screen.font = rom_font.awesome
 screen.pen = color.white
 
 # The following value is exposed to the web interface.
-message = "this is fine."  # Message, obvs.
-scroll = False  # Whether to scroll the message.
-pixel_size = 3  # Resolution of the fire in pixels. Max 3.
-
-try:
-    with open("/lib/plugins/this_is_fine/config.json") as f:
-        cfg = json.load(f)
-        message = cfg["message"] or "this is fine."
-        scroll = "scroll" in cfg
-        pixel_size = int(cfg["pixel_size"] or 3)
-except OSError:
-    pass
+cfg = plugin_config("this_is_fine", {
+    "message": "this is fine.",  # Message, obvs.
+    "scroll": False,  # Whether to scroll the message.
+    "pixel_size": 3,  # Resolution of the fire in pixels. Max 3.
+})
+message = cfg["message"]
+scroll = cfg["scroll"]
+pixel_size = cfg["pixel_size"]
 
 try:
     with open("/lib/plugins/this_is_fine/config.html", "r", encoding="utf-8") as f:

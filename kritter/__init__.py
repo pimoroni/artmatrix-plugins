@@ -2,9 +2,9 @@ import math
 import random
 import time
 from ulab import numpy as np
-import json
 
 from plugins.kritter import blob, draw_planet
+from plugin_config import plugin_config
 
 bg = image.load("/lib/plugins/kritter/assets/space.png")
 
@@ -26,36 +26,32 @@ rock_colours = [(112, 103, 93),
 screen.antialias = image.X4
 
 # These values are exposed to the web interface
-num_kritters = 5  # The number of kritters jumping around.
-num_planets = 10  # The number of planets to jump around on.
-num_targets = 10  # The number of invisible jump targets to trigger the kritter's jumps. Higher values means more jumping.
-jump_chaos = 30  # The max random variation from vertical, in degrees, on any given jump.
-gravity_strength = 5  # The strength of the planets' gravitational fields.
-planet_radius_min = 5  # Minimum radius in pixels for each planet.
-planet_radius_max = 12  # Maximum radius in pixels for each planet.
-planet_speed_min = 0.05  # Minimum scrolling speed for planets.
-planet_speed_max = 0.2  # Maximum scrolling speed for planets.
-planet_rotation_speed_min = 0.5  # Minimum rotation speed for planets in degrees per frame.
-planet_rotation_speed_max = 1.5  # Maximum rotation speed for planets in degrees per frame.
-show_fps = False  # Displays framerate in the top left corner of the screen.
-
-try:
-    with open("/lib/plugins/kritter/config.json") as f:
-        cfg = json.load(f)
-        num_kritters = int(cfg["num_kritters"] or 5)
-        num_planets = int(cfg["num_planets"] or 10)
-        num_targets = int(cfg["num_targets"] or 10)
-        jump_chaos = int(cfg["jump_chaos"] or 30)
-        gravity_strength = int(cfg["gravity_strength"] or 5)
-        planet_radius_min = int(cfg["planet_radius_min"] or 5)
-        planet_radius_max = int(cfg["planet_radius_max"] or 12)
-        planet_speed_min = float(cfg["planet_speed_min"] or 0.05)
-        planet_speed_max = float(cfg["planet_speed_max"] or 0.2)
-        planet_rotation_speed_min = float(cfg["planet_rotation_speed_min"] or 0.5)
-        planet_rotation_speed_max = float(cfg["planet_rotation_speed_max"] or 1.5)
-        show_fps = "show_fps" in cfg
-except OSError:
-    pass
+cfg = plugin_config("kritter", {
+    "num_kritters": 5,  # The number of kritters jumping around.
+    "num_planets": 10,  # The number of planets to jump around on.
+    "num_targets": 10,  # The number of invisible jump targets to trigger the kritter's jumps. Higher values means more jumping.
+    "jump_chaos": 30,  # The max random variation from vertical, in degrees, on any given jump.
+    "gravity_strength": 5,  # The strength of the planets' gravitational fields.
+    "planet_radius_min": 5,  # Minimum radius in pixels for each planet.
+    "planet_radius_max": 12,  # Maximum radius in pixels for each planet.
+    "planet_speed_min": 0.05,  # Minimum scrolling speed for planets.
+    "planet_speed_max": 0.2,  # Maximum scrolling speed for planets.
+    "planet_rotation_speed_min": 0.5,  # Minimum rotation speed for planets in degrees per frame.
+    "planet_rotation_speed_max": 1.5,  # Maximum rotation speed for planets in degrees per frame.
+    "show_fps": False,  # Displays framerate in the top left corner of the screen.
+})
+num_kritters = cfg["num_kritters"]
+num_planets = cfg["num_planets"]
+num_targets = cfg["num_targets"]
+jump_chaos = cfg["jump_chaos"]
+gravity_strength = cfg["gravity_strength"]
+planet_radius_min = cfg["planet_radius_min"]
+planet_radius_max = cfg["planet_radius_max"]
+planet_speed_min = cfg["planet_speed_min"]
+planet_speed_max = cfg["planet_speed_max"]
+planet_rotation_speed_min = cfg["planet_rotation_speed_min"]
+planet_rotation_speed_max = cfg["planet_rotation_speed_max"]
+show_fps = cfg["show_fps"]
 
 try:
     with open("/lib/plugins/kritter/config.html", "r", encoding="utf-8") as f:

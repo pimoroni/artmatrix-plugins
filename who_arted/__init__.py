@@ -1,7 +1,8 @@
 import time
 import random
 import math
-import json
+
+from plugin_config import plugin_config
 
 eyes_cream = color.rgb(255, 245, 208)
 eyes_black = color.rgb(20, 20, 20)
@@ -24,22 +25,18 @@ next_interval = 0
 next_duration = 0
 
 # This value is exposed to the web interface.
-max_interval = 30  # The maximum time between changes of look direction / expression.
-max_duration = 3  # The maximum time to hold Pearl's expression.
-piece = 0  # The piece to start on - 0 = lisa, 1 = scream,  2 = pearl
-cycle = True  # Whether to stay on the specified piece or cycle through all three.
-art_lifetime = 30  # The time in minutes between cycling art.
-
-try:
-    with open("/lib/plugins/who_arted/config.json") as f:
-        cfg = json.load(f)
-        max_interval = int(cfg["max_interval"] or 30)
-        max_duration = int(cfg["max_duration"] or 3)
-        piece = int(cfg["piece"])
-        art_lifetime = int(cfg["art_lifetime"] or 30)
-        cycle = "cycle" in cfg
-except OSError:
-    pass
+cfg = plugin_config("who_arted", {
+    "max_interval": 30,  # The maximum time between changes of look direction / expression.
+    "max_duration": 3,  # The maximum time to hold Pearl's expression.
+    "piece": 0,  # The piece to start on - 0 = lisa, 1 = scream,  2 = pearl
+    "cycle": True,  # Whether to stay on the specified piece or cycle through all three.
+    "art_lifetime": 30,  # The time in minutes between cycling art.
+})
+max_interval = cfg["max_interval"]
+max_duration = cfg["max_duration"]
+piece = cfg["piece"]
+cycle = cfg["cycle"]
+art_lifetime = cfg["art_lifetime"]
 
 try:
     with open("/lib/plugins/who_arted/config.html", "r", encoding="utf-8") as f:

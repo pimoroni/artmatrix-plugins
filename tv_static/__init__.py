@@ -1,19 +1,16 @@
 from random import getrandbits, randint
 import time
-import json
 
-grid = 32
-size = 4
-blocks_per_frame = 100
+from plugin_config import plugin_config
 
-try:
-    with open("/lib/plugins/tv_static/config.json") as f:
-        cfg = json.load(f)
-        grid = int(cfg["grid"] or 32)
-        size = int(cfg["size"] or 4)
-        blocks_per_frame = int(cfg["blocks_per_frame"] or 100)
-except OSError:
-    pass
+cfg = plugin_config("tv_static", {
+    "grid": 32,
+    "size": 4,
+    "blocks_per_frame": 100,
+})
+grid = cfg["grid"]
+size = cfg["size"]
+blocks_per_frame = cfg["blocks_per_frame"]
 
 try:
     with open("/lib/plugins/tv_static/config.html", "r", encoding="utf-8") as f:

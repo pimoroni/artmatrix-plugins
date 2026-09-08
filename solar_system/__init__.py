@@ -1,45 +1,36 @@
 import math
 import random
 import time
-import json
+
+from plugin_config import plugin_config
 
 # Settings
-num_planets = 5  # Number of planets in the system.
-min_planet_size = 0.2  # Minimum and maximum planet radius, naturally. The sun has a radius of 1.
-max_planet_size = 0.4
-max_radius = 7  # Maximum radius of the solar system. The view will always be zoomed out to fit, and this will also affect perspective - higher values mean more exaggerated perspective i.e. a wider angle lens. 5-10 gives a good naturalistic look.
-max_mins_per_orbit = 10  # Designed for very slow orbits but there's no reason they couldn't be fast if you wanted. Not exact, but I timed a 4 minute orbit at 4:03 so they're close enough for the right feel.
-min_mins_per_orbit = 4
-max_mins_per_rotation = 4  # As above, but for the spin of the planets themselves.
-min_mins_per_rotation = 1
-background = 0  # 1 to 5, or 0 for random
-sun_colour = (255, 220, 0)
-fps_limit = 30
-show_fps = False
-
-
-def hex_to_rgb(s):
-    s = s.lstrip("#")
-    return (int(s[0:2], 16), int(s[2:4], 16), int(s[4:6], 16))
-
-
-try:
-    with open("/lib/plugins/solar_system/config.json") as f:
-        cfg = json.load(f)
-        num_planets = int(cfg["num_planets"] or 5)
-        min_planet_size = float(cfg["min_planet_size"] or 0.2)
-        max_planet_size = float(cfg["max_planet_size"] or 0.4)
-        max_radius = float(cfg["max_radius"] or 7)
-        max_mins_per_orbit = float(cfg["max_mins_per_orbit"] or 10)
-        min_mins_per_orbit = float(cfg["min_mins_per_orbit"] or 4)
-        max_mins_per_rotation = float(cfg["max_mins_per_rotation"] or 4)
-        min_mins_per_rotation = float(cfg["min_mins_per_rotation"] or 1)
-        background = int(cfg["background"] or 0)
-        sun_colour = hex_to_rgb(cfg["sun_colour"] or "#ffdc00")
-        fps_limit = int(cfg["fps_limit"] or 30)
-        show_fps = "show_fps" in cfg
-except OSError:
-    pass
+cfg = plugin_config("solar_system", {
+    "num_planets": 5,  # Number of planets in the system.
+    "min_planet_size": 0.2,  # Minimum and maximum planet radius, naturally. The sun has a radius of 1.
+    "max_planet_size": 0.4,
+    "max_radius": 7.0,  # Maximum radius of the solar system. The view will always be zoomed out to fit, and this will also affect perspective - higher values mean more exaggerated perspective i.e. a wider angle lens. 5-10 gives a good naturalistic look.
+    "max_mins_per_orbit": 10.0,  # Designed for very slow orbits but there's no reason they couldn't be fast if you wanted. Not exact, but I timed a 4 minute orbit at 4:03 so they're close enough for the right feel.
+    "min_mins_per_orbit": 4.0,
+    "max_mins_per_rotation": 4.0,  # As above, but for the spin of the planets themselves.
+    "min_mins_per_rotation": 1.0,
+    "background": 0,  # 1 to 5, or 0 for random
+    "sun_colour": (255, 220, 0),
+    "fps_limit": 30,
+    "show_fps": False,
+})
+num_planets = cfg["num_planets"]
+min_planet_size = cfg["min_planet_size"]
+max_planet_size = cfg["max_planet_size"]
+max_radius = cfg["max_radius"]
+max_mins_per_orbit = cfg["max_mins_per_orbit"]
+min_mins_per_orbit = cfg["min_mins_per_orbit"]
+max_mins_per_rotation = cfg["max_mins_per_rotation"]
+min_mins_per_rotation = cfg["min_mins_per_rotation"]
+background = cfg["background"]
+sun_colour = cfg["sun_colour"]
+fps_limit = cfg["fps_limit"]
+show_fps = cfg["show_fps"]
 
 try:
     with open("/lib/plugins/solar_system/config.html", "r", encoding="utf-8") as f:

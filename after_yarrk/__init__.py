@@ -1,9 +1,9 @@
 import math
 import time
 import random
-import json
 
 from plugins.after_yarrk import vector_sprite
+from plugin_config import plugin_config
 
 # Setting up a colour palette to use to draw the ships and sea
 white = color.rgb(255, 255, 255)
@@ -20,32 +20,28 @@ dark_red = color.rgb(64, 0, 0)
 ocean = color.rgb(13, 17, 38)  # color.rgb(26, 34, 76)
 
 # These values are exposed to the web interface
-global_scale = 0.2  # Overall scale of all ships and waves.
-num_ships = 5  # Number of ships total
-sailing_angle = 330  # Angle of sail - NOTE: doesn't change the angle the ships are pointing. 0 is in the x+ direction
-bob_amount = 5  # How much movement is added with the wing flapping motion.
-travel_speed = 0.5  # How fast the ships move across the screen.
-spawn_border = 25  # How many pixels outside outside the screen edges ships spawn / despawn. Tweak this if your other settings changes have made ships pop in / out
-animation_speed = 25  # The speed of the wing flapping animation and associated bobbing movement. Must be an integer.
-wave_animation_speed = 20
-fps_limiter = True  # Locks the simulation to max 30fps.
-show_fps = False  # Displays framerate in the top left corner of the screen.
-
-try:
-    with open("/lib/plugins/after_yarrk/config.json") as f:
-        cfg = json.load(f)
-        global_scale = float(cfg["global_scale"] or 0.2)
-        num_ships = int(cfg["num_ships"] or 5)
-        sailing_angle = int(cfg["sailing_angle"] or 330)
-        bob_amount = float(cfg["bob_amount"] or 5)
-        travel_speed = float(cfg["travel_speed"] or 0.5)
-        spawn_border = int(cfg["spawn_border"] or 25)
-        animation_speed = int(cfg["animation_speed"] or 25)
-        wave_animation_speed = int(cfg["wave_animation_speed"] or 20)
-        fps_limiter = "fps_limiter" in cfg
-        show_fps = "show_fps" in cfg
-except OSError:
-    pass
+cfg = plugin_config("after_yarrk", {
+    "global_scale": 0.2,  # Overall scale of all ships and waves.
+    "num_ships": 5,  # Number of ships total
+    "sailing_angle": 330,  # Angle of sail - NOTE: doesn't change the angle the ships are pointing. 0 is in the x+ direction
+    "bob_amount": 5.0,  # How much movement is added with the wing flapping motion.
+    "travel_speed": 0.5,  # How fast the ships move across the screen.
+    "spawn_border": 25,  # How many pixels outside outside the screen edges ships spawn / despawn. Tweak this if your other settings changes have made ships pop in / out
+    "animation_speed": 25,  # The speed of the wing flapping animation and associated bobbing movement. Must be an integer.
+    "wave_animation_speed": 20,
+    "fps_limiter": True,  # Locks the simulation to max 30fps.
+    "show_fps": False,  # Displays framerate in the top left corner of the screen.
+})
+global_scale = cfg["global_scale"]
+num_ships = cfg["num_ships"]
+sailing_angle = cfg["sailing_angle"]
+bob_amount = cfg["bob_amount"]
+travel_speed = cfg["travel_speed"]
+spawn_border = cfg["spawn_border"]
+animation_speed = cfg["animation_speed"]
+wave_animation_speed = cfg["wave_animation_speed"]
+fps_limiter = cfg["fps_limiter"]
+show_fps = cfg["show_fps"]
 
 
 try:

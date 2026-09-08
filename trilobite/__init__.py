@@ -1,7 +1,7 @@
 import random
 import math
 import time
-import json
+from plugin_config import plugin_config
 
 width = 128
 height = 128
@@ -17,20 +17,16 @@ sand.pen = sand_light
 sand.clear()
 
 # These values are exposed in the web interface.
-num_trilobites = 1  # The number of trilobites (and ammonites for them to eat).
-trilobite_speed_max = 0.4  # The trilobite's max movement speed.
-trilobite_speed_min = 0.2  # The trilobites' minimum movement speed.
-show_fps = False  # Displays framerate in the top left corner of the screen.
-
-try:
-    with open("/lib/plugins/trilobite/config.json") as f:
-        cfg = json.load(f)
-        num_trilobites = int(cfg["num_trilobites"] or 1)
-        trilobite_speed_max = float(cfg["trilobite_speed_max"] or 0.4)
-        trilobite_speed_min = float(cfg["trilobite_speed_min"] or 0.2)
-        show_fps = "show_fps" in cfg
-except OSError:
-    pass
+cfg = plugin_config("trilobite", {
+    "num_trilobites": 1,
+    "trilobite_speed_max": 0.4,
+    "trilobite_speed_min": 0.2,
+    "show_fps": False,
+})
+num_trilobites = cfg["num_trilobites"]
+trilobite_speed_max = cfg["trilobite_speed_max"]
+trilobite_speed_min = cfg["trilobite_speed_min"]
+show_fps = cfg["show_fps"]
 
 try:
     with open("/lib/plugins/trilobite/config.html", "r", encoding="utf-8") as f:

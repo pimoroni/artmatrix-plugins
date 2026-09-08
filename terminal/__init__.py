@@ -1,25 +1,16 @@
 import random
 import time
-import json
 
-background = (0, 0, 0)
-terminal_text = (0, 128, 0)
-terminal_speed = 250
+from plugin_config import plugin_config
 
-
-def hex_to_rgb(s):
-    s = s.lstrip("#")
-    return (int(s[0:2], 16), int(s[2:4], 16), int(s[4:6], 16))
-
-
-try:
-    with open("/lib/plugins/terminal/config.json") as f:
-        cfg = json.load(f)
-        background = hex_to_rgb(cfg["background"])
-        terminal_text = hex_to_rgb(cfg["terminal_text"])
-        terminal_speed = int(cfg["terminal_speed"] or 250)
-except OSError:
-    pass
+cfg = plugin_config("terminal", {
+    "background": (0, 0, 0),
+    "terminal_text": (0, 128, 0),
+    "terminal_speed": 250,
+})
+background = cfg["background"]
+terminal_text = cfg["terminal_text"]
+terminal_speed = cfg["terminal_speed"]
 
 try:
     with open("/lib/plugins/terminal/config.html", "r", encoding="utf-8") as f:

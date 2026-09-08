@@ -7,6 +7,7 @@ import json
 from plugins.maze import renderer
 from plugins.maze import entity_manager
 from plugins.maze import level_manager
+from plugin_config import plugin_config
 
 screen.font = font.sins
 screen.pen = color.black
@@ -65,21 +66,16 @@ player_height = 0.6  # Height of the player from the floor, in blocks. Limit fro
 draw_props = True
 
 # Options
-maze_period = 5  # The number of minutes between changes, 0 for no change. Only applies when preset is random.
-preset = "random"  # Options: lv426, lost_empire, neon, random
-show_fps = True
-
-
-try:
-    with open("/lib/plugins/maze/config.json") as f:
-        cfg = json.load(f)
-        maze_period = int(cfg["maze_period"] or 5)
-        preset = cfg["preset"] or "random"
-        if preset != "random" and preset not in presets:
-            preset = "random"
-        show_fps = "show_fps" in cfg
-except OSError:
-    pass
+cfg = plugin_config("maze", {
+    "maze_period": 5,  # The number of minutes between changes, 0 for no change. Only applies when preset is random.
+    "preset": "random",  # Options: lv426, lost_empire, neon, random
+    "show_fps": True,
+})
+maze_period = cfg["maze_period"]
+preset = cfg["preset"]
+if preset != "random" and preset not in presets:
+    preset = "random"
+show_fps = cfg["show_fps"]
 
 
 try:

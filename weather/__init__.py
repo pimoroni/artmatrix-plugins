@@ -1,22 +1,23 @@
 import time
-import json
 from fetch import AsyncFetch, HTTPException
 import math
 from random import randint, uniform
 
+from plugin_config import plugin_config
+
 CX = screen.width / 2
 CY = screen.height / 2
 
-lat = None
-long = None
-
-try:
-    with open("/lib/plugins/weather/config.json") as f:
-        cfg = json.load(f)
-        lat = float(cfg["lat"])
-        long = float(cfg["lng"])
-except (OSError, ValueError, KeyError, TypeError):
-    pass
+cfg = plugin_config("weather", {
+    "lat": None,
+    "lng": None,
+})
+lat = cfg["lat"]
+long = cfg["lng"]
+if lat is not None:
+    lat = float(lat)
+if long is not None:
+    long = float(long)
 
 try:
     with open("/lib/plugins/weather/config.html", "r", encoding="utf-8") as f:

@@ -1,11 +1,11 @@
 import math
 import random
 import time
-import json
 
 
 from daylightsaving import DaylightSavingPolicy, DaylightSaving
 from plugins.gravity_clock_classic import chromeball
+from plugin_config import plugin_config
 
 GRAVITY_STRENGTH = 5
 seconds_gravity_vec = vec2(0, 0)
@@ -20,58 +20,44 @@ screen.antialias = image.X2
 screen.font = rom_font.sins
 
 # These values are exposed to the web interface
-region = "eu"
-tz_offset = 0
-hours_colour = (184, 115, 51)  # The colour for the hour balls. NOTE this is a tuple not a color.rgb because the values are manipulated to get darker and lighter versions, and you can't pull the r, g and b values from a color brush.
-minutes_colour = (171, 171, 70)  # The colour for the minute balls. NOTE this is a tuple not a color.rgb because the values are manipulated to get darker and lighter versions, and you can't pull the r, g and b values from a color brush.
-seconds_colour = (96, 96, 96)  # The colour for the second balls. NOTE this is a tuple not a color.rgb because the values are manipulated to get darker and lighter versions, and you can't pull the r, g and b values from a color brush.
-hour_hand_colour = (184, 115, 51)  # The colour for the hour hand.
-minute_hand_colour = (220, 200, 82)  # The colour for the minute hand.
-second_hand_colour = (192, 192, 192)  # The colour for the second hand.
-num_balls_hour = 1  # The number of hour balls to display.
-num_balls_minute = 5  # The number of minute balls to display.
-num_balls_second = 10  # The number of second balls to display.
-max_hour_size = 800  # Maximum size for the hour balls.
-min_hour_size = 800  # Minimum size for the hour balls.
-max_minute_size = 700  # Maximum size for the minute balls.
-min_minute_size = 500  # Minimum size for the minute balls.
-max_second_size = 470  # Maximum size for the second balls.
-min_second_size = 200  # Minimum size for the second balls.
-show_fps = False  # Displays framerate in the top left corner of the screen.
-
-
-def hex_to_rgb(s):
-    s = s.lstrip("#")
-    return (int(s[0:2], 16), int(s[2:4], 16), int(s[4:6], 16))
-
-
-try:
-    with open("/lib/plugins/gravity_clock_classic/config.json") as f:
-        cfg = json.load(f)
-
-        region = cfg["region"] or "eu"
-        tz_offset = int(cfg["tz_offset"] or 0)
-
-        hours_colour = hex_to_rgb(cfg["hours_colour"])
-        minutes_colour = hex_to_rgb(cfg["minutes_colour"])
-        seconds_colour = hex_to_rgb(cfg["seconds_colour"])
-
-        hour_hand_colour = hex_to_rgb(cfg["hour_hand_colour"])
-        minute_hand_colour = hex_to_rgb(cfg["minute_hand_colour"])
-        second_hand_colour = hex_to_rgb(cfg["second_hand_colour"])
-
-        num_balls_hour = int(cfg["num_balls_hour"] or 1)
-        num_balls_minute = int(cfg["num_balls_minute"] or 5)
-        num_balls_second = int(cfg["num_balls_second"] or 10)
-        max_hour_size = int(cfg["max_hour_size"] or 800)
-        min_hour_size = int(cfg["min_hour_size"] or 800)
-        max_minute_size = int(cfg["max_minute_size"] or 700)
-        min_minute_size = int(cfg["min_minute_size"] or 500)
-        max_second_size = int(cfg["max_second_size"] or 470)
-        min_second_size = int(cfg["min_second_size"] or 200)
-        show_fps = "show_fps" in cfg
-except OSError:
-    pass
+cfg = plugin_config("gravity_clock_classic", {
+    "region": "eu",
+    "tz_offset": 0,
+    "hours_colour": (184, 115, 51),  # The colour for the hour balls. NOTE this is a tuple not a color.rgb because the values are manipulated to get darker and lighter versions, and you can't pull the r, g and b values from a color brush.
+    "minutes_colour": (171, 171, 70),  # The colour for the minute balls. NOTE this is a tuple not a color.rgb because the values are manipulated to get darker and lighter versions, and you can't pull the r, g and b values from a color brush.
+    "seconds_colour": (96, 96, 96),  # The colour for the second balls. NOTE this is a tuple not a color.rgb because the values are manipulated to get darker and lighter versions, and you can't pull the r, g and b values from a color brush.
+    "hour_hand_colour": (184, 115, 51),  # The colour for the hour hand.
+    "minute_hand_colour": (220, 200, 82),  # The colour for the minute hand.
+    "second_hand_colour": (192, 192, 192),  # The colour for the second hand.
+    "num_balls_hour": 1,  # The number of hour balls to display.
+    "num_balls_minute": 5,  # The number of minute balls to display.
+    "num_balls_second": 10,  # The number of second balls to display.
+    "max_hour_size": 800,  # Maximum size for the hour balls.
+    "min_hour_size": 800,  # Minimum size for the hour balls.
+    "max_minute_size": 700,  # Maximum size for the minute balls.
+    "min_minute_size": 500,  # Minimum size for the minute balls.
+    "max_second_size": 470,  # Maximum size for the second balls.
+    "min_second_size": 200,  # Minimum size for the second balls.
+    "show_fps": False,  # Displays framerate in the top left corner of the screen.
+})
+region = cfg["region"]
+tz_offset = cfg["tz_offset"]
+hours_colour = cfg["hours_colour"]
+minutes_colour = cfg["minutes_colour"]
+seconds_colour = cfg["seconds_colour"]
+hour_hand_colour = cfg["hour_hand_colour"]
+minute_hand_colour = cfg["minute_hand_colour"]
+second_hand_colour = cfg["second_hand_colour"]
+num_balls_hour = cfg["num_balls_hour"]
+num_balls_minute = cfg["num_balls_minute"]
+num_balls_second = cfg["num_balls_second"]
+max_hour_size = cfg["max_hour_size"]
+min_hour_size = cfg["min_hour_size"]
+max_minute_size = cfg["max_minute_size"]
+min_minute_size = cfg["min_minute_size"]
+max_second_size = cfg["max_second_size"]
+min_second_size = cfg["min_second_size"]
+show_fps = cfg["show_fps"]
 
 
 try:

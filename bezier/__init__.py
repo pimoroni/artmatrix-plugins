@@ -1,38 +1,29 @@
 import random
 import time
-import json
+
+from plugin_config import plugin_config
 
 screen.antialias = image.X4
 
 # These values are exposed to the web interface.
-curves = 1  # Number of separate loops to display, minimum 1
-points = 5  # Number of control points each loop is made up of, minimum 2
-num_segs = 10  # Number of line segments in each cureve, minimum 1
-trail_length = 3  # Length of ghostly trail left, 0 = no trail, 5 = no fade
-max_speed = 1  # Points will move at random speeds between this value and half of this value.
-thickness = 2  # Line thickness - note line will become less smooth as thickness goes up.
-colour = (0, 0, 0)  # Colour of the loop(s). If set to 0, 0, 0 the loops will be rainbow coloured.
-show_fps = False  # Displays framerate in the top left corner of the screen.
-
-
-def hex_to_rgb(s):
-    s = s.lstrip("#")
-    return (int(s[0:2], 16), int(s[2:4], 16), int(s[4:6], 16))
-
-
-try:
-    with open("/lib/plugins/bezier/config.json") as f:
-        cfg = json.load(f)
-        curves = int(cfg["curves"])
-        points = int(cfg["points"])
-        num_segs = int(cfg["num_segs"])
-        trail_length = int(cfg["trail_length"])
-        max_speed = float(cfg["max_speed"])
-        thickness = int(cfg["thickness"])
-        colour = hex_to_rgb(cfg["colour"])
-        show_fps = "show_fps" in cfg
-except OSError:
-    pass
+cfg = plugin_config("bezier", {
+    "curves": 1,  # Number of separate loops to display, minimum 1
+    "points": 5,  # Number of control points each loop is made up of, minimum 2
+    "num_segs": 10,  # Number of line segments in each cureve, minimum 1
+    "trail_length": 3,  # Length of ghostly trail left, 0 = no trail, 5 = no fade
+    "max_speed": 1.0,  # Points will move at random speeds between this value and half of this value.
+    "thickness": 2,  # Line thickness - note line will become less smooth as thickness goes up.
+    "colour": (0, 0, 0),  # Colour of the loop(s). If set to 0, 0, 0 the loops will be rainbow coloured.
+    "show_fps": False,  # Displays framerate in the top left corner of the screen.
+})
+curves = cfg["curves"]
+points = cfg["points"]
+num_segs = cfg["num_segs"]
+trail_length = cfg["trail_length"]
+max_speed = cfg["max_speed"]
+thickness = cfg["thickness"]
+colour = cfg["colour"]
+show_fps = cfg["show_fps"]
 
 try:
     with open("/lib/plugins/bezier/config.html", "r", encoding="utf-8") as f:
