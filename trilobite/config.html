@@ -1,17 +1,17 @@
 <form method="post" action="/config?plugin={{ plugin }}">
   <label>Number of trilobites
     <small>Trilobites (and ammonites for them to eat)</small>
-    <input type="number" name="num_trilobites" min="1" step="1" value="{{ placeholder.num_trilobites }}">
+    <input type="number" name="num_trilobites" min="1" max="10" step="1" value="{{ placeholder.num_trilobites }}">
   </label>
 
   <label>Trilobite speed (max)
     <small>Maximum movement speed</small>
-    <input type="number" name="trilobite_speed_max" min="0" step="0.1" value="{{ placeholder.trilobite_speed_max }}">
+    <input type="number" name="trilobite_speed_max" min="0" max="1" step="0.1" value="{{ placeholder.trilobite_speed_max }}">
   </label>
 
   <label>Trilobite speed (min)
     <small>Minimum movement speed</small>
-    <input type="number" name="trilobite_speed_min" min="0" step="0.1" value="{{ placeholder.trilobite_speed_min }}">
+    <input type="number" name="trilobite_speed_min" min="0" max="1" step="0.1" value="{{ placeholder.trilobite_speed_min }}">
   </label>
 
   <label>Show FPS counter

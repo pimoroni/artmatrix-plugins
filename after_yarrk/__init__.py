@@ -28,7 +28,7 @@ cfg = plugin_config("after_yarrk", {
     "travel_speed": 0.5,  # How fast the ships move across the screen.
     "spawn_border": 25,  # How many pixels outside outside the screen edges ships spawn / despawn. Tweak this if your other settings changes have made ships pop in / out
     "animation_speed": 25,  # The speed of the wing flapping animation and associated bobbing movement. Must be an integer.
-    "wave_animation_speed": 20,
+    "wave_animation_speed": 25,
     "fps_limiter": True,  # Locks the simulation to max 30fps.
     "show_fps": False,  # Displays framerate in the top left corner of the screen.
 })

@@ -11,7 +11,7 @@
 
   <label>Change interval
     <small>Minutes between scene changes. 0 for no change. Only applies when the preset is Random</small>
-    <input type="number" name="maze_period" min="0" step="1" value="{{ placeholder.maze_period }}">
+    <input type="number" name="maze_period" min="0" max="60" step="1" value="{{ placeholder.maze_period }}">
   </label>
 
   <label>Show FPS

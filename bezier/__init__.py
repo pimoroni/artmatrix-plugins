@@ -12,7 +12,7 @@ cfg = plugin_config("bezier", {
     "num_segs": 10,  # Number of line segments in each cureve, minimum 1
     "trail_length": 3,  # Length of ghostly trail left, 0 = no trail, 5 = no fade
     "max_speed": 1.0,  # Points will move at random speeds between this value and half of this value.
-    "thickness": 2,  # Line thickness - note line will become less smooth as thickness goes up.
+    "thickness": 3,  # Line thickness - note line will become less smooth as thickness goes up.
     "colour": (0, 0, 0),  # Colour of the loop(s). If set to 0, 0, 0 the loops will be rainbow coloured.
     "show_fps": False,  # Displays framerate in the top left corner of the screen.
 })

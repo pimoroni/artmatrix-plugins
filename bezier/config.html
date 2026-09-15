@@ -1,17 +1,17 @@
 <form method="post" action="/config?plugin={{ plugin }}">
   <label>Curves
     <small>Number of separate loops (min 1)</small>
-    <input type="number" name="curves" min="1" value="{{ placeholder.curves }}">
+    <input type="number" name="curves" min="1" max="3" value="{{ placeholder.curves }}">
   </label>
 
   <label>Points
     <small>Control points per loop (min 2)</small>
-    <input type="number" name="points" min="2" value="{{ placeholder.points }}">
+    <input type="number" name="points" min="2" max="10" value="{{ placeholder.points }}">
   </label>
 
   <label>Segments
     <small>Line segments per curve (min 1)</small>
-    <input type="number" name="num_segs" min="1" value="{{ placeholder.num_segs }}">
+    <input type="number" name="num_segs" min="1" max="20" value="{{ placeholder.num_segs }}">
   </label>
 
   <label>Trail length
@@ -21,12 +21,12 @@
 
   <label>Max speed
     <small>Points move between this and half this</small>
-    <input type="number" name="max_speed" min="1" step="0.5" value="{{ placeholder.max_speed }}">
+    <input type="number" name="max_speed" min="1" max="5" step="0.5" value="{{ placeholder.max_speed }}">
   </label>
 
   <label>Thickness
     <small>Higher = less smooth</small>
-    <input type="number" name="thickness" min="1" value="{{ placeholder.thickness }}">
+    <input type="number" name="thickness" min="1" max="10" value="{{ placeholder.thickness }}">
   </label>
 
   <label>Colour

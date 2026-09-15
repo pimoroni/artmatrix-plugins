@@ -8,19 +8,19 @@
     <small>Min / max planet radius. The sun has a radius of 1.</small>
     <div>
       <input type="number" name="min_planet_size" min="0" step="any" value="{{ placeholder.min_planet_size }}">
-      <input type="number" name="max_planet_size" min="0" step="any" value="{{ placeholder.max_planet_size }}">
+      <input type="number" name="max_planet_size" min="0" max="0.6" step="any" value="{{ placeholder.max_planet_size }}">
     </div>
   </label>
 
   <label>Max radius
     <small>Size of the system. Also affects perspective - higher = wider-angle look. 5–10 is naturalistic.</small>
-    <input type="number" name="max_radius" min="1" step="any" value="{{ placeholder.max_radius }}">
+    <input type="number" name="max_radius" min="1" max="10" step="any" value="{{ placeholder.max_radius }}">
   </label>
 
   <label>Minutes per orbit
     <small>Min / max time for a planet to complete one orbit.</small>
     <div>
-      <input type="number" name="min_mins_per_orbit" min="0" step="any" value="{{ placeholder.min_mins_per_orbit }}">
+      <input type="number" name="min_mins_per_orbit" min="0.1" step="any" value="{{ placeholder.min_mins_per_orbit }}">
       <input type="number" name="max_mins_per_orbit" min="0" step="any" value="{{ placeholder.max_mins_per_orbit }}">
     </div>
   </label>
@@ -28,7 +28,7 @@
   <label>Minutes per rotation
     <small>Min / max time for a planet to spin once.</small>
     <div>
-      <input type="number" name="min_mins_per_rotation" min="0" step="any" value="{{ placeholder.min_mins_per_rotation }}">
+      <input type="number" name="min_mins_per_rotation" min="0.1" step="any" value="{{ placeholder.min_mins_per_rotation }}">
       <input type="number" name="max_mins_per_rotation" min="0" step="any" value="{{ placeholder.max_mins_per_rotation }}">
     </div>
   </label>

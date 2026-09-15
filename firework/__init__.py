@@ -19,7 +19,7 @@ cfg = plugin_config("firework", {
     "freq_0": 0,  # Relative proportion of sparks with no children
     "freq_1": 1,  # Relative proportion of sparks with one generation of children
     "freq_2": 1,  # Relative proportion of sparks with two generations of children
-    "timing": 100,  # How often a firework is launched, in the form of "1 in x chance every frame"
+    "timing": 20,  # How often a firework is launched, in the form of "1 in x chance every frame"
     "gravity": 5,  # Gravity level. Must be int.
     "max_speed": 32,  # Maximum speed of the fireworks.
     "show_fps": False,  # Displays framerate in the top left corner of the screen.
