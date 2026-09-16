@@ -12,13 +12,6 @@ grid = cfg["grid"]
 size = cfg["size"]
 blocks_per_frame = cfg["blocks_per_frame"]
 
-try:
-    with open("/lib/plugins/tv_static/config.html", "r", encoding="utf-8") as f:
-        config_html = f.read()
-except OSError as e:
-    print(e)
-    config_html = None
-
 
 FRAME_TARGET = 33.3
 last = None

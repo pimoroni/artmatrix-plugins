@@ -28,13 +28,6 @@ trilobite_speed_max = cfg["trilobite_speed_max"]
 trilobite_speed_min = cfg["trilobite_speed_min"]
 show_fps = cfg["show_fps"]
 
-try:
-    with open("/lib/plugins/trilobite/config.html", "r", encoding="utf-8") as f:
-        config_html = f.read()
-except OSError as e:
-    print(e)
-    config_html = None
-
 
 class Ammonite:
     def __init__(self, speed):

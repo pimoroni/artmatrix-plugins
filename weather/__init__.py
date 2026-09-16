@@ -19,12 +19,6 @@ if lat is not None:
 if long is not None:
     long = float(long)
 
-try:
-    with open("/lib/plugins/weather/config.html", "r", encoding="utf-8") as f:
-        config_html = f.read()
-except OSError as e:
-    print(e)
-    config_html = None
 
 has_location = True
 if None in (lat, long):

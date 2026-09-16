@@ -78,13 +78,6 @@ if preset != "random" and preset not in presets:
 show_fps = cfg["show_fps"]
 
 
-try:
-    with open("/lib/plugins/maze/config.html", "r", encoding="utf-8") as f:
-        config_html = f.read()
-except OSError as e:
-    print(e)
-    config_html = None
-
 angles = (0, math.pi / 2, math.pi, math.pi + math.pi / 2)
 
 

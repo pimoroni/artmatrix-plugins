@@ -38,13 +38,6 @@ piece = cfg["piece"]
 cycle = cfg["cycle"]
 art_lifetime = cfg["art_lifetime"]
 
-try:
-    with open("/lib/plugins/who_arted/config.html", "r", encoding="utf-8") as f:
-        config_html = f.read()
-except OSError as e:
-    print(e)
-    config_html = None
-
 
 def update():
     global last_ticks, next_interval, next_duration, active, piece, changer_last_ticks

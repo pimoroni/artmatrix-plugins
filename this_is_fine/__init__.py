@@ -26,13 +26,6 @@ message = cfg["message"]
 scroll = cfg["scroll"]
 pixel_size = cfg["pixel_size"]
 
-try:
-    with open("/lib/plugins/this_is_fine/config.html", "r", encoding="utf-8") as f:
-        config_html = f.read()
-except OSError as e:
-    print(e)
-    config_html = None
-
 
 @micropython.viper
 def make_heat() -> ptr32:     # noqa: F821

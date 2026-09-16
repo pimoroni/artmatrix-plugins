@@ -30,13 +30,6 @@ gravity = cfg["gravity"]
 max_speed = cfg["max_speed"]
 show_fps = cfg["show_fps"]
 
-try:
-    with open("/lib/plugins/firework/config.html", "r", encoding="utf-8") as f:
-        config_html = f.read()
-except OSError as e:
-    print(e)
-    config_html = None
-
 
 @micropython.native
 def create_spark():

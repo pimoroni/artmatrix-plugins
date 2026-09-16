@@ -53,13 +53,6 @@ planet_rotation_speed_min = cfg["planet_rotation_speed_min"]
 planet_rotation_speed_max = cfg["planet_rotation_speed_max"]
 show_fps = cfg["show_fps"]
 
-try:
-    with open("/lib/plugins/kritter/config.html", "r", encoding="utf-8") as f:
-        config_html = f.read()
-except OSError as e:
-    print(e)
-    config_html = None
-
 
 class Planet:
     def __init__(self, pos=None):

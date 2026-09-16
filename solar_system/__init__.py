@@ -32,12 +32,6 @@ sun_colour = cfg["sun_colour"]
 fps_limit = cfg["fps_limit"]
 show_fps = cfg["show_fps"]
 
-try:
-    with open("/lib/plugins/solar_system/config.html", "r", encoding="utf-8") as f:
-        config_html = f.read()
-except OSError as e:
-    print(e)
-    config_html = None
 
 viewing_distance = max_radius + 1
 max_orbital_radians_per_frame = (((1 / max_mins_per_orbit) / 60) / fps_limit) * 2 * math.pi

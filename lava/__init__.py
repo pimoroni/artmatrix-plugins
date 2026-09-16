@@ -24,14 +24,6 @@ min_radius = cfg["min_radius"]
 max_radius = cfg["max_radius"]
 
 
-try:
-    with open("/lib/plugins/lava/config.html", "r", encoding="utf-8") as f:
-        config_html = f.read()
-except OSError as e:
-    print(e)
-    config_html = None
-
-
 def clamp(v, maxval, minval):
     return max(minval, min(maxval, v))
 

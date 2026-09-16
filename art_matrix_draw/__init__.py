@@ -11,12 +11,6 @@ try:
 except OSError:
     uploaded_image = None
 
-try:
-    with open("/lib/plugins/art_matrix_draw/config.html", "r", encoding="utf-8") as f:
-        config_html = f.read()
-except OSError:
-    config_html = None
-
 
 def centre_text(text, cy=None, max_size=12, min_size=1, padding=4):
     max_width = screen.width - padding * 2

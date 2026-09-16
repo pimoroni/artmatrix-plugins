@@ -44,13 +44,6 @@ fps_limiter = cfg["fps_limiter"]
 show_fps = cfg["show_fps"]
 
 
-try:
-    with open("/lib/plugins/after_yarrk/config.html", "r", encoding="utf-8") as f:
-        config_html = f.read()
-except OSError as e:
-    print(e)
-    config_html = None
-
 screen.antialias = image.X4
 
 

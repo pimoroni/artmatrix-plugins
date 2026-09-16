@@ -25,13 +25,6 @@ thickness = cfg["thickness"]
 colour = cfg["colour"]
 show_fps = cfg["show_fps"]
 
-try:
-    with open("/lib/plugins/bezier/config.html", "r", encoding="utf-8") as f:
-        config_html = f.read()
-except OSError as e:
-    print(e)
-    config_html = None
-
 
 class BezierPoint:
     def __init__(self, rect):

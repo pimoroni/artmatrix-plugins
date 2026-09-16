@@ -60,13 +60,6 @@ min_second_size = cfg["min_second_size"]
 show_fps = cfg["show_fps"]
 
 
-try:
-    with open("/lib/plugins/gravity_clock_classic/config.html", "r", encoding="utf-8") as f:
-        config_html = f.read()
-except OSError as e:
-    print(e)
-    config_html = None
-
 # These are the different Daylight Saving time zones, according to the Wikipedia article.
 # Timezones are incredibly complex, we've covered the main ones here.
 # "zonename": (hemisphere, week, month, weekday, hour, timezone, minutes clocks change by)

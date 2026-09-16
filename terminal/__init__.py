@@ -12,13 +12,6 @@ background = cfg["background"]
 terminal_text = cfg["terminal_text"]
 terminal_speed = cfg["terminal_speed"]
 
-try:
-    with open("/lib/plugins/terminal/config.html", "r", encoding="utf-8") as f:
-        config_html = f.read()
-except OSError as e:
-    print(e)
-    config_html = None
-
 
 class Terminal:
     lines = []
