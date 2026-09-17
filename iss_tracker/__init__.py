@@ -28,7 +28,7 @@ coastline_lats = []
 iss_path = []
 long, lat = None, None
 
-iss_sprite = image.load("lib/plugins/iss_tracker/icon.png")
+iss_sprite = image.load("/lib/plugins/iss_tracker/icon.png")
 
 api_data = AsyncFetch(API_HOST, 80, use_tls=False, debug=True)
 api_data.fetch(f"{ISS_JSON}", interval=UPDATE_INTERVAL)
@@ -63,7 +63,7 @@ def error(fetch):
 
 def load_coastlines():
 
-    with open("lib/plugins/iss_tracker/world.geo.json", "r") as f:
+    with open("/lib/plugins/iss_tracker/world.geo.json", "r") as f:
         data = json.loads(f.read())
         for country in data:
             for polygon in country["polygons"]:
