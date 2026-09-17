@@ -16,7 +16,7 @@ screen.antialias = image.X4
 
 HOST = "earthquake.usgs.gov"
 PATH = "/fdsnws/event/1/query?format=geojson&limit=10&orderby=time&minmagnitude=4"
-GEOJSON_FILE = "/lib/plugins/iss_tracker/world.geo.json"
+GEOJSON_FILE = "/lib/plugins/earthquake_map/world.geo.json"
 
 screen.font = rom_font.sins
 
