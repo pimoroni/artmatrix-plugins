@@ -165,7 +165,6 @@ def update():
         if draw_props:
             renderer.draw_entities(render_queue, player1, entity_manager.entity_list)
         renderer.render(render_queue, player1, current_level, entity_manager.entity_list, fog_levels, texture_size)
-        gc.collect()
 
         last_frame = now
 
