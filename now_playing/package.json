@@ -1,0 +1,20 @@
+{
+  "name": "Now Playing",
+  "version": "1.0.0",
+  "description": "Album art for what's playing on your Spotify",
+  "author": "Pimoroni",
+  "urls": [
+    [
+      "plugins/now_playing/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/now_playing/config.html",
+      "config.html"
+    ],
+    [
+      "plugins/now_playing/thumbnail.png",
+      "thumbnail.png"
+    ]
+  ]
+}

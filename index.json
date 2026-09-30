@@ -16,6 +16,7 @@
     "kritter": "Kritter",
     "lava": "Lava",
     "maze": "Maze",
+    "now_playing": "Now Playing",
     "random_bots": "Random Bots",
     "random_shapes": "Random Shapes",
     "random_triangles": "Random Triangles",
@@ -93,6 +94,10 @@
     },
     "maze": {
       "description": "A 3D walk through randomly generated mazes",
+      "author": "Pimoroni"
+    },
+    "now_playing": {
+      "description": "Album art for what's playing on your Spotify",
       "author": "Pimoroni"
     },
     "random_bots": {
