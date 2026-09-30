@@ -1,5 +1,8 @@
 {
+  "name": "Who Arted",
   "version": "1.0.0",
+  "description": "Famous paintings that come to life",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/who_arted/__init__.py",
@@ -24,6 +27,10 @@
     [
       "plugins/who_arted/config.html",
       "config.html"
+    ],
+    [
+      "plugins/who_arted/thumbnail.png",
+      "thumbnail.png"
     ]
   ]
 }

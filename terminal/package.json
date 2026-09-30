@@ -1,5 +1,8 @@
 {
+  "name": "Terminal",
   "version": "1.0.0",
+  "description": "Scrolling green text like an old terminal",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/terminal/__init__.py",
@@ -8,6 +11,10 @@
     [
       "plugins/terminal/config.html",
       "config.html"
+    ],
+    [
+      "plugins/terminal/thumbnail.png",
+      "thumbnail.png"
     ]
   ]
 }

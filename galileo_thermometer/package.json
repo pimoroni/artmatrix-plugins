@@ -1,9 +1,16 @@
 {
+  "name": "Galileo Thermometer",
   "version": "1.0.0",
+  "description": "A Galileo thermometer read from a Multi-Sensor Stick",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/galileo_thermometer/__init__.py",
       "__init__.py"
+    ],
+    [
+      "plugins/galileo_thermometer/thumbnail.png",
+      "thumbnail.png"
     ]
   ]
 }

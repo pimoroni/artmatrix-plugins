@@ -1,9 +1,16 @@
 {
+  "name": "Game of Life",
   "version": "1.0.0",
+  "description": "Conway's Game of Life",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/game_of_life/__init__.py",
       "__init__.py"
+    ],
+    [
+      "plugins/game_of_life/thumbnail.png",
+      "thumbnail.png"
     ]
   ]
 }

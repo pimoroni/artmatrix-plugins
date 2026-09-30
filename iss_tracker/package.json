@@ -1,5 +1,8 @@
 {
+  "name": "ISS Tracker",
   "version": "1.0.0",
+  "description": "Where the International Space Station is right now",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/iss_tracker/__init__.py",
@@ -8,6 +11,10 @@
     [
       "plugins/iss_tracker/icon.png",
       "icon.png"
+    ],
+    [
+      "plugins/iss_tracker/thumbnail.png",
+      "thumbnail.png"
     ],
     [
       "plugins/iss_tracker/world.geo.json",

@@ -1,5 +1,8 @@
 {
+  "name": "After Yarrk",
   "version": "1.0.0",
+  "description": "Pirate ships bobbing across the sea",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/after_yarrk/__init__.py",
@@ -8,6 +11,10 @@
     [
       "plugins/after_yarrk/config.html",
       "config.html"
+    ],
+    [
+      "plugins/after_yarrk/thumbnail.png",
+      "thumbnail.png"
     ],
     [
       "plugins/after_yarrk/vector_sprite.py",

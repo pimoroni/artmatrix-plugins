@@ -1,5 +1,8 @@
 {
+  "name": "Lava",
   "version": "1.0.0",
+  "description": "A lava lamp of slowly merging blobs",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/lava/__init__.py",
@@ -12,6 +15,10 @@
     [
       "plugins/lava/config.html",
       "config.html"
+    ],
+    [
+      "plugins/lava/thumbnail.png",
+      "thumbnail.png"
     ]
   ]
 }

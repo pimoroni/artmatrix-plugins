@@ -1,9 +1,16 @@
 {
+  "name": "Random Shapes",
   "version": "1.0.0",
+  "description": "Random abstract shapes from DiceBear",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/random_shapes/__init__.py",
       "__init__.py"
+    ],
+    [
+      "plugins/random_shapes/thumbnail.png",
+      "thumbnail.png"
     ]
   ]
 }

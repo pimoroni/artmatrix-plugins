@@ -11,6 +11,12 @@ INDEX_NAME = "index.json"
 INITIAL_VERSION = "1.0.0"
 TARGET_PREFIX = "plugins"
 NOT_PLUGINS = {"ci", "docs"}
+# the plugin's picture, shipped with it for the settings page
+THUMBNAIL = "thumbnail.png"
+# shown on the install page's cards, so every plugin needs both
+DETAILS = ("description", "author")
+# three lines on a phone-width card
+DESCRIPTION_MAX = 60
 EXCLUDE_NAMES = {MANIFEST_NAME, "config.json", ".DS_Store", "Thumbs.db"}
 EXCLUDE_SUFFIXES = {".pyc", ".mpy", ".swp"}
 EXCLUDE_TAILS = ("_tokens.json",)
@@ -45,22 +51,34 @@ def plugin_files(plugin):
     return sorted(path.relative_to(plugin).as_posix() for path in files)
 
 
-def current_version(plugin):
-    try:
-        manifest = json.loads((plugin / MANIFEST_NAME).read_text())
-    except (OSError, ValueError):
-        return INITIAL_VERSION
-
-    version = manifest.get("version")
-    return version if isinstance(version, str) and version else INITIAL_VERSION
-
-
 def manifest_for(plugin):
-    files = plugin_files(plugin)
-    return {
-        "version": current_version(plugin),
-        "urls": [[f"{TARGET_PREFIX}/{plugin.name}/{path}", path] for path in files],
-    }
+    # The display name, version, description and author are the plugin author's to
+    # set, so all four are read back out of the manifest this overwrites.
+    try:
+        existing = json.loads((plugin / MANIFEST_NAME).read_text())
+    except (OSError, ValueError):
+        existing = {}
+
+    name = existing.get("name")
+    version = existing.get("version")
+
+    manifest = {}
+    if isinstance(name, str) and name.strip():
+        manifest["name"] = name
+    else:
+        manifest["name"] = " ".join(word[:1].upper() + word[1:] for word in plugin.name.split("_"))
+
+    manifest["version"] = version if isinstance(version, str) and version else INITIAL_VERSION
+
+    # no fallback for these, validate_index() fails a plugin without them
+    for field in DETAILS:
+        value = existing.get(field)
+        if isinstance(value, str) and value.strip():
+            manifest[field] = value
+
+    manifest["urls"] = [[f"{TARGET_PREFIX}/{plugin.name}/{path}", path] for path in plugin_files(plugin)]
+
+    return manifest
 
 
 def serialise(manifest):
@@ -68,21 +86,28 @@ def serialise(manifest):
 
 
 def index_for(plugins):
-    return {"plugins": [plugin.name for plugin in plugins]}
+    # details sits beside plugins rather than inside it: firmware already out there
+    # reads each plugins value as the display name string
+    manifests = {plugin.name: manifest_for(plugin) for plugin in plugins}
+    return {"plugins": {name: manifest["name"] for name, manifest in manifests.items()},
+            "details": {name: {field: manifest.get(field) for field in DETAILS}
+                        for name, manifest in manifests.items()}}
 
 
 def validate_index(index, plugins):
     if not isinstance(index, dict):
         return ["index is not a JSON object"]
 
-    names = index.get("plugins")
-    if not isinstance(names, list):
-        return ["'plugins' is missing or is not a list"]
+    catalogue = index.get("plugins")
+    if not isinstance(catalogue, dict):
+        return ["'plugins' is missing or is not an object"]
 
     problems = []
 
-    if not names:
+    if not catalogue:
         problems.append("'plugins' is empty, which would empty every device's catalogue")
+
+    names = list(catalogue)
 
     for name in names:
         if not isinstance(name, str) or not name:
@@ -90,11 +115,32 @@ def validate_index(index, plugins):
         elif name.strip() != name or "/" in name or name.startswith("."):
             problems.append(f"plugin name {name!r} is not a usable directory name")
 
-    if len(set(names)) != len(names):
-        problems.append("'plugins' contains duplicate names")
+        display = catalogue[name]
+        if not isinstance(display, str) or not display.strip():
+            problems.append(f"display name {display!r} for {name!r} is not a non-empty string")
 
     if names != sorted(names):
         problems.append("'plugins' is not sorted")
+
+    details = index.get("details")
+    if not isinstance(details, dict):
+        problems.append("'details' is missing or is not an object")
+        details = {}
+
+    for name in names:
+        entry = details.get(name)
+        if not isinstance(entry, dict):
+            problems.append(f"'{name}' has no entry in 'details'")
+            continue
+
+        for field in DETAILS:
+            value = entry.get(field)
+            if not isinstance(value, str) or not value.strip():
+                problems.append(f"'{name}' has no {field}, set one in {name}/{MANIFEST_NAME}")
+
+        description = entry.get("description")
+        if isinstance(description, str) and len(description) > DESCRIPTION_MAX:
+            problems.append(f"'{name}' description is {len(description)} characters, the limit is {DESCRIPTION_MAX}")
 
     installable = {plugin.name for plugin in plugins if (plugin / MANIFEST_NAME).is_file()}
     for name in names:

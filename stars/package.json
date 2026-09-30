@@ -1,9 +1,16 @@
 {
+  "name": "Stars",
   "version": "1.0.0",
+  "description": "Flying through a starfield",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/stars/__init__.py",
       "__init__.py"
+    ],
+    [
+      "plugins/stars/thumbnail.png",
+      "thumbnail.png"
     ]
   ]
 }

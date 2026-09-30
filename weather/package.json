@@ -1,5 +1,8 @@
 {
+  "name": "Weather",
   "version": "1.0.0",
+  "description": "The current weather for your location",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/weather/__init__.py",
@@ -8,6 +11,10 @@
     [
       "plugins/weather/config.html",
       "config.html"
+    ],
+    [
+      "plugins/weather/thumbnail.png",
+      "thumbnail.png"
     ]
   ]
 }

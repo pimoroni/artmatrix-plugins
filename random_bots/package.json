@@ -1,9 +1,16 @@
 {
+  "name": "Random Bots",
   "version": "1.0.0",
+  "description": "Random robot portraits from DiceBear",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/random_bots/__init__.py",
       "__init__.py"
+    ],
+    [
+      "plugins/random_bots/thumbnail.png",
+      "thumbnail.png"
     ]
   ]
 }

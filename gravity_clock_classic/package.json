@@ -1,5 +1,8 @@
 {
+  "name": "Gravity Clock Classic",
   "version": "1.0.0",
+  "description": "Chrome balls pulled round a clock face by gravity",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/gravity_clock_classic/__init__.py",
@@ -20,6 +23,10 @@
     [
       "plugins/gravity_clock_classic/config.html",
       "config.html"
+    ],
+    [
+      "plugins/gravity_clock_classic/thumbnail.png",
+      "thumbnail.png"
     ]
   ]
 }

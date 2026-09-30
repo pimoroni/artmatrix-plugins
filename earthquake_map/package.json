@@ -1,9 +1,16 @@
 {
+  "name": "Earthquake Map",
   "version": "1.0.0",
+  "description": "Recent earthquakes from USGS on a world map",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/earthquake_map/__init__.py",
       "__init__.py"
+    ],
+    [
+      "plugins/earthquake_map/thumbnail.png",
+      "thumbnail.png"
     ],
     [
       "plugins/earthquake_map/world.geo.json",

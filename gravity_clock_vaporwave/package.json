@@ -1,5 +1,8 @@
 {
+  "name": "Gravity Clock Vaporwave",
   "version": "1.0.0",
+  "description": "The gravity clock with a vaporwave look",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/gravity_clock_vaporwave/__init__.py",
@@ -8,6 +11,10 @@
     [
       "plugins/gravity_clock_vaporwave/config.html",
       "config.html"
+    ],
+    [
+      "plugins/gravity_clock_vaporwave/thumbnail.png",
+      "thumbnail.png"
     ]
   ]
 }

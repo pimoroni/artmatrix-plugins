@@ -1,5 +1,8 @@
 {
+  "name": "Trilobite",
   "version": "1.0.0",
+  "description": "Trilobites wandering across the seabed",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/trilobite/__init__.py",
@@ -24,6 +27,10 @@
     [
       "plugins/trilobite/config.html",
       "config.html"
+    ],
+    [
+      "plugins/trilobite/thumbnail.png",
+      "thumbnail.png"
     ]
   ]
 }

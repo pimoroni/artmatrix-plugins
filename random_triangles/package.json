@@ -1,9 +1,16 @@
 {
+  "name": "Random Triangles",
   "version": "1.0.0",
+  "description": "Random triangle patterns from DiceBear",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/random_triangles/__init__.py",
       "__init__.py"
+    ],
+    [
+      "plugins/random_triangles/thumbnail.png",
+      "thumbnail.png"
     ]
   ]
 }

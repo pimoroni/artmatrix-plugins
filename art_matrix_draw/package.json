@@ -1,5 +1,8 @@
 {
+  "name": "Art Matrix Draw",
   "version": "1.0.0",
+  "description": "Draw a picture in your browser and show it",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/art_matrix_draw/__init__.py",
@@ -8,6 +11,10 @@
     [
       "plugins/art_matrix_draw/config.html",
       "config.html"
+    ],
+    [
+      "plugins/art_matrix_draw/thumbnail.png",
+      "thumbnail.png"
     ]
   ]
 }

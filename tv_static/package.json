@@ -1,5 +1,8 @@
 {
+  "name": "TV Static",
   "version": "1.0.0",
+  "description": "The static of an untuned TV",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/tv_static/__init__.py",
@@ -8,6 +11,10 @@
     [
       "plugins/tv_static/config.html",
       "config.html"
+    ],
+    [
+      "plugins/tv_static/thumbnail.png",
+      "thumbnail.png"
     ]
   ]
 }

@@ -1,5 +1,8 @@
 {
+  "name": "Maze",
   "version": "1.0.0",
+  "description": "A 3D walk through randomly generated mazes",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/maze/__init__.py",
@@ -80,6 +83,10 @@
     [
       "plugins/maze/renderer.py",
       "renderer.py"
+    ],
+    [
+      "plugins/maze/thumbnail.png",
+      "thumbnail.png"
     ]
   ]
 }

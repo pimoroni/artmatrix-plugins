@@ -1,9 +1,16 @@
 {
+  "name": "3D Pipes",
   "version": "1.0.0",
+  "description": "The classic pipes screensaver",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/3d_pipes/__init__.py",
       "__init__.py"
+    ],
+    [
+      "plugins/3d_pipes/thumbnail.png",
+      "thumbnail.png"
     ]
   ]
 }

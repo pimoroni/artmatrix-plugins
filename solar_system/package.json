@@ -1,5 +1,8 @@
 {
+  "name": "Solar System",
   "version": "1.0.0",
+  "description": "Planets orbiting around their sun",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/solar_system/__init__.py",
@@ -32,6 +35,10 @@
     [
       "plugins/solar_system/config.html",
       "config.html"
+    ],
+    [
+      "plugins/solar_system/thumbnail.png",
+      "thumbnail.png"
     ]
   ]
 }

@@ -1,5 +1,8 @@
 {
+  "name": "Bezier",
   "version": "1.0.0",
+  "description": "Smooth B\u00e9zier curves looping round the screen",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/bezier/__init__.py",
@@ -8,6 +11,10 @@
     [
       "plugins/bezier/config.html",
       "config.html"
+    ],
+    [
+      "plugins/bezier/thumbnail.png",
+      "thumbnail.png"
     ]
   ]
 }

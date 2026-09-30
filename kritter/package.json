@@ -1,5 +1,8 @@
 {
+  "name": "Kritter",
   "version": "1.0.0",
+  "description": "Watch the kritters hop between planets",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/kritter/__init__.py",
@@ -20,6 +23,10 @@
     [
       "plugins/kritter/draw_planet.py",
       "draw_planet.py"
+    ],
+    [
+      "plugins/kritter/thumbnail.png",
+      "thumbnail.png"
     ]
   ]
 }

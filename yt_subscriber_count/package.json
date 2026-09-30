@@ -1,5 +1,8 @@
 {
+  "name": "YouTube Subscriber Count",
   "version": "1.0.0",
+  "description": "A YouTube channel's live subscriber count",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/yt_subscriber_count/__init__.py",
@@ -8,6 +11,10 @@
     [
       "plugins/yt_subscriber_count/config.html",
       "config.html"
+    ],
+    [
+      "plugins/yt_subscriber_count/thumbnail.png",
+      "thumbnail.png"
     ]
   ]
 }

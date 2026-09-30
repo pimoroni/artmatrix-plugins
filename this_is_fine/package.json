@@ -1,5 +1,8 @@
 {
+  "name": "This is Fine",
   "version": "1.0.0",
+  "description": "The \"this is fine\" fire, with your own message",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/this_is_fine/__init__.py",
@@ -8,6 +11,10 @@
     [
       "plugins/this_is_fine/config.html",
       "config.html"
+    ],
+    [
+      "plugins/this_is_fine/thumbnail.png",
+      "thumbnail.png"
     ]
   ]
 }

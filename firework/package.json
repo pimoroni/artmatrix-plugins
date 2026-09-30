@@ -1,5 +1,8 @@
 {
+  "name": "Firework",
   "version": "1.0.0",
+  "description": "Fireworks bursting in the night sky",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/firework/__init__.py",
@@ -16,6 +19,10 @@
     [
       "plugins/firework/config.html",
       "config.html"
+    ],
+    [
+      "plugins/firework/thumbnail.png",
+      "thumbnail.png"
     ]
   ]
 }

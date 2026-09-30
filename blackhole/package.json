@@ -1,9 +1,16 @@
 {
+  "name": "Blackhole",
   "version": "1.0.0",
+  "description": "A clock whose hands orbit a black hole",
+  "author": "Pimoroni",
   "urls": [
     [
       "plugins/blackhole/__init__.py",
       "__init__.py"
+    ],
+    [
+      "plugins/blackhole/thumbnail.png",
+      "thumbnail.png"
     ]
   ]
 }

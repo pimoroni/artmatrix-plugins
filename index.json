@@ -1,33 +1,151 @@
 {
-  "plugins": [
-    "3d_pipes",
-    "after_yarrk",
-    "art_matrix_draw",
-    "bezier",
-    "blackhole",
-    "co2_matrix",
-    "earthquake_map",
-    "firework",
-    "galileo_thermometer",
-    "game_of_life",
-    "gravity_clock_classic",
-    "gravity_clock_vaporwave",
-    "iss_tracker",
-    "kritter",
-    "lava",
-    "maze",
-    "random_bots",
-    "random_shapes",
-    "random_triangles",
-    "solar_system",
-    "spirit_level",
-    "stars",
-    "terminal",
-    "this_is_fine",
-    "trilobite",
-    "tv_static",
-    "weather",
-    "who_arted",
-    "yt_subscriber_count"
-  ]
+  "plugins": {
+    "3d_pipes": "3D Pipes",
+    "after_yarrk": "After Yarrk",
+    "art_matrix_draw": "Art Matrix Draw",
+    "bezier": "Bezier",
+    "blackhole": "Blackhole",
+    "co2_matrix": "CO2 Matrix",
+    "earthquake_map": "Earthquake Map",
+    "firework": "Firework",
+    "galileo_thermometer": "Galileo Thermometer",
+    "game_of_life": "Game of Life",
+    "gravity_clock_classic": "Gravity Clock Classic",
+    "gravity_clock_vaporwave": "Gravity Clock Vaporwave",
+    "iss_tracker": "ISS Tracker",
+    "kritter": "Kritter",
+    "lava": "Lava",
+    "maze": "Maze",
+    "random_bots": "Random Bots",
+    "random_shapes": "Random Shapes",
+    "random_triangles": "Random Triangles",
+    "solar_system": "Solar System",
+    "spirit_level": "Spirit Level",
+    "stars": "Stars",
+    "terminal": "Terminal",
+    "this_is_fine": "This is Fine",
+    "trilobite": "Trilobite",
+    "tv_static": "TV Static",
+    "weather": "Weather",
+    "who_arted": "Who Arted",
+    "yt_subscriber_count": "YouTube Subscriber Count"
+  },
+  "details": {
+    "3d_pipes": {
+      "description": "The classic pipes screensaver",
+      "author": "Pimoroni"
+    },
+    "after_yarrk": {
+      "description": "Pirate ships bobbing across the sea",
+      "author": "Pimoroni"
+    },
+    "art_matrix_draw": {
+      "description": "Draw a picture in your browser and show it",
+      "author": "Pimoroni"
+    },
+    "bezier": {
+      "description": "Smooth B\u00e9zier curves looping round the screen",
+      "author": "Pimoroni"
+    },
+    "blackhole": {
+      "description": "A clock whose hands orbit a black hole",
+      "author": "Pimoroni"
+    },
+    "co2_matrix": {
+      "description": "The CO2 level from an SCD41 breakout",
+      "author": "Pimoroni"
+    },
+    "earthquake_map": {
+      "description": "Recent earthquakes from USGS on a world map",
+      "author": "Pimoroni"
+    },
+    "firework": {
+      "description": "Fireworks bursting in the night sky",
+      "author": "Pimoroni"
+    },
+    "galileo_thermometer": {
+      "description": "A Galileo thermometer read from a Multi-Sensor Stick",
+      "author": "Pimoroni"
+    },
+    "game_of_life": {
+      "description": "Conway's Game of Life",
+      "author": "Pimoroni"
+    },
+    "gravity_clock_classic": {
+      "description": "Chrome balls pulled round a clock face by gravity",
+      "author": "Pimoroni"
+    },
+    "gravity_clock_vaporwave": {
+      "description": "The gravity clock with a vaporwave look",
+      "author": "Pimoroni"
+    },
+    "iss_tracker": {
+      "description": "Where the International Space Station is right now",
+      "author": "Pimoroni"
+    },
+    "kritter": {
+      "description": "Watch the kritters hop between planets",
+      "author": "Pimoroni"
+    },
+    "lava": {
+      "description": "A lava lamp of slowly merging blobs",
+      "author": "Pimoroni"
+    },
+    "maze": {
+      "description": "A 3D walk through randomly generated mazes",
+      "author": "Pimoroni"
+    },
+    "random_bots": {
+      "description": "Random robot portraits from DiceBear",
+      "author": "Pimoroni"
+    },
+    "random_shapes": {
+      "description": "Random abstract shapes from DiceBear",
+      "author": "Pimoroni"
+    },
+    "random_triangles": {
+      "description": "Random triangle patterns from DiceBear",
+      "author": "Pimoroni"
+    },
+    "solar_system": {
+      "description": "Planets orbiting around their sun",
+      "author": "Pimoroni"
+    },
+    "spirit_level": {
+      "description": "A spirit level using an LSM6DS3 motion sensor",
+      "author": "Pimoroni"
+    },
+    "stars": {
+      "description": "Flying through a starfield",
+      "author": "Pimoroni"
+    },
+    "terminal": {
+      "description": "Scrolling green text like an old terminal",
+      "author": "Pimoroni"
+    },
+    "this_is_fine": {
+      "description": "The \"this is fine\" fire, with your own message",
+      "author": "Pimoroni"
+    },
+    "trilobite": {
+      "description": "Trilobites wandering across the seabed",
+      "author": "Pimoroni"
+    },
+    "tv_static": {
+      "description": "The static of an untuned TV",
+      "author": "Pimoroni"
+    },
+    "weather": {
+      "description": "The current weather for your location",
+      "author": "Pimoroni"
+    },
+    "who_arted": {
+      "description": "Famous paintings that come to life",
+      "author": "Pimoroni"
+    },
+    "yt_subscriber_count": {
+      "description": "A YouTube channel's live subscriber count",
+      "author": "Pimoroni"
+    }
+  }
 }
