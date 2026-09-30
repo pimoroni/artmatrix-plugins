@@ -1,3 +1,4 @@
+import config
 import ubinascii
 
 cx = screen.width / 2
@@ -53,7 +54,7 @@ def update():
         screen.pen = color.blue
         centre_text("visit", cy - 10, 1)
         screen.pen = color.white
-        centre_text("artmatrix.local", cy + 5, 2)
+        centre_text(f"{config.wifi_hostname}.local", cy + 5, 2)
         screen.pen = color.blue
         centre_text("to create your", cy + 40, 1)
         centre_text("work of art", cy + 50, 1)

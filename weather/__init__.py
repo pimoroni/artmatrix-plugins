@@ -1,3 +1,4 @@
+import config
 import time
 from fetch import AsyncFetch, HTTPException
 import math
@@ -262,6 +263,6 @@ def update():
         draw_rainy(t)
         centre_text("Setup needed", CY - 50)
         centre_text("visit", CY - 10, 1)
-        centre_text("artmatrix.local", CY + 5, 2)
+        centre_text(f"{config.wifi_hostname}.local", CY + 5, 2)
         centre_text("to configure", CY + 40, 1)
         centre_text("plugin", CY + 50, 1)

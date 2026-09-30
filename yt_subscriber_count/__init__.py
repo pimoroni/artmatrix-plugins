@@ -1,3 +1,4 @@
+import config
 from fetch import AsyncFetch
 from random import randint, uniform, choice
 
@@ -176,7 +177,7 @@ def update():
         screen.pen = color.blue
         centre_text("visit", cy - 10, 1)
         screen.pen = color.white
-        centre_text("artmatrix.local", cy + 5, 2)
+        centre_text(f"{config.wifi_hostname}.local", cy + 5, 2)
         screen.pen = color.blue
         centre_text("to configure", cy + 40, 1)
         centre_text("plugin", cy + 50, 1)
