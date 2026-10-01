@@ -14,7 +14,6 @@
     "gravity_clock_vaporwave": "Gravity Clock Vaporwave",
     "iss_tracker": "ISS Tracker",
     "kritter": "Kritter",
-    "lava": "Lava",
     "maze": "Maze",
     "now_playing": "Now Playing",
     "random_bots": "Random Bots",
@@ -86,10 +85,6 @@
     },
     "kritter": {
       "description": "Watch the kritters hop between planets",
-      "author": "Pimoroni"
-    },
-    "lava": {
-      "description": "A lava lamp of slowly merging blobs",
       "author": "Pimoroni"
     },
     "maze": {
