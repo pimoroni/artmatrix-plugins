@@ -13,14 +13,6 @@
       "assets/entities/player.json"
     ],
     [
-      "plugins/maze/assets/levels/test_level.json",
-      "assets/levels/test_level.json"
-    ],
-    [
-      "plugins/maze/assets/levels/test_level_bare.json",
-      "assets/levels/test_level_bare.json"
-    ],
-    [
       "plugins/maze/assets/tex/ceil_scifi.png",
       "assets/tex/ceil_scifi.png"
     ],

@@ -1,4 +1,3 @@
-import json
 from plugins.maze import maze_manager
 
 tilemap = None
@@ -131,51 +130,16 @@ class Level:
 
 class Map:
     @micropython.native
-    def __init__(self, maps, x_size=0, y_size=0):
+    def __init__(self, maps, x_size, y_size):
         texture, endpoint, walkable, height, backface = maps
 
-        if x_size and y_size:
-            self.x_size = x_size
-            self.y_size = y_size
-            self.texture_map = texture
-            self.endpoint_map = endpoint
-            self.walkable_map = walkable
-            self.height_map = height
-            self.backface_map = backface
-            return
-
-        self.y_size = len(texture) - 1
-        self.x_size = len(texture[1])
-        self.texture_map = self.parse_map(texture, 1)
-        self.endpoint_map = self.parse_map(endpoint)
-        self.walkable_map = self.parse_map(walkable)
-        self.height_map = self.parse_map(height)
-        self.backface_map = self.parse_map(backface)
-
-    def parse_map(self, map_data, addition=0):
-        output = bytearray()
-        _ = map_data.pop(0)
-        for row in map_data:
-            for square in row:
-                if square == " ":
-                    output.append(0)
-                else:
-                    try:
-                        value = int(square, 16)
-                    except ValueError:
-                        value = 1
-
-                    output.append(value + addition)
-        return output
-
-
-@micropython.native
-def load(filename):
-    with open(filename, "r") as file:
-        data = file.read()
-    render_flags, maps, floor_map, ceil_map, texture_path, floor_path, ceil_path, skybox_path, draw_fog, fog_resolution, fog_colour, background_colour, gradient = json.loads(data)
-    level_map = Map(maps)
-    return Level(render_flags, level_map, floor_map, ceil_map, texture_path, floor_path, ceil_path, skybox_path, draw_fog, fog_resolution, fog_colour, background_colour, gradient)
+        self.x_size = x_size
+        self.y_size = y_size
+        self.texture_map = texture
+        self.endpoint_map = endpoint
+        self.walkable_map = walkable
+        self.height_map = height
+        self.backface_map = backface
 
 
 @micropython.native
