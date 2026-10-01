@@ -100,7 +100,7 @@ class Trilobite:
         self.leave_track()
         self.target.draw()
         transform = mat3().translate(self.x, self.y).rotate(self.angle + 90).translate(-12, -12)
-        screen.pen = brush.image(trilo_sprite, transform)
+        screen.pen = brush.image(trilo_sprite)
         trilo_body = shape.rectangle(0, 0, 24, 24)
         trilo_body.transform = transform
         screen.shape(trilo_body)
