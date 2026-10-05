@@ -7,7 +7,6 @@ screen.antialias = image.X4
 
 FRAME_TARGET = 40
 last = None
-show_bounds = False
 
 grid = 8
 cam_dist = 15
@@ -21,7 +20,6 @@ pitch_sin = math.sin(math.radians(pitch))
 pitch_cos = math.cos(math.radians(pitch))
 
 SIZE = grid
-half = SIZE / 2
 centre = (grid - 1) / 2
 NUM_PIPES = 2
 
@@ -42,23 +40,6 @@ PALETTE = [
 
 HIGHLIGHT = color.rgb(255, 255, 255, 90)
 
-
-corners = [
-    (-half, -half, -half),
-    (half, -half, -half),
-    (half, half, -half),
-    (-half, half, -half),
-    (-half, -half, half),
-    (half, -half, half),
-    (half, half, half),
-    (-half, half, half),
-]
-
-edges = [
-    (0, 1), (1, 2), (2, 3), (3, 0),
-    (4, 5), (5, 6), (6, 7), (7, 4),
-    (0, 4), (1, 5), (2, 6), (3, 7),
-]
 
 directions = [(+1, 0, 0), (-1, 0, 0), (0, +1, 0), (0, -1, 0), (0, 0, +1), (0, 0, -1)]
 
@@ -197,12 +178,3 @@ def update():
 
             # draw the highlight
             draw(highlight)
-
-        screen.pen = color.white
-        # debug, showing the bounds
-        if show_bounds:
-            for edge in edges:
-                c1, c2 = edge
-                x1, y1, d1 = points[c1]
-                x2, y2, d2 = points[c2]
-                screen.line(x1, y1, x2, y2)
