@@ -48,7 +48,9 @@ render_list = []
 pipes = []
 
 
-def new_pipe(colour):
+def new_pipe():
+    taken = [p[3] for p in pipes]
+    colour = choice([c for c in PALETTE if c not in taken])
     pos = (randint(0, grid - 1), randint(0, grid - 1), randint(0, grid - 1))
     pipes.append([pos, choice(directions), transform_points(pos[0] - centre, pos[1] - centre, pos[2] - centre), colour])
     used_cells.add(pos)
@@ -135,13 +137,9 @@ def step(pipe):
     return valid
 
 
-points = []
-for corner in corners:
-    points.append(transform_points(*corner))
-
 # create the initial pipes
 for _ in range(NUM_PIPES):
-    new_pipe(choice(PALETTE))
+    new_pipe()
 
 
 def update():
@@ -159,7 +157,7 @@ def update():
                 render_list.clear()
                 pipes.clear()
                 for _ in range(NUM_PIPES):
-                    new_pipe(choice(PALETTE))
+                    new_pipe()
 
         # store some of the functions locally for loop performance +.
         draw = screen.shape
