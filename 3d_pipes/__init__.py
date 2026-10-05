@@ -106,17 +106,15 @@ def step(pipe):
     valid = can_move(*next_cell)
 
     # if the moving in the same dir is not valid
-    # cycle through the directions until we find one that is
+    # pick one of the free directions at random
     if not valid:
-        hx, hy, hz = pipe[0]
-        for direction in directions:
-            dx, dy, dz = direction
-            next_cell = (hx + dx, hy + dy, hz + dz)
-            valid = can_move(*next_cell)
-            if valid:
-                pipe[1] = direction
-                pipe[0] = next_cell
-                break
+        free = [d for d in directions if can_move(hx + d[0], hy + d[1], hz + d[2])]
+        valid = bool(free)
+        if valid:
+            direction = choice(free)
+            next_cell = (hx + direction[0], hy + direction[1], hz + direction[2])
+            pipe[1] = direction
+            pipe[0] = next_cell
     else:
         pipe[0] = next_cell
         pipe[1] = (dx, dy, dz)
