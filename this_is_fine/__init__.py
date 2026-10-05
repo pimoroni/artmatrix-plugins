@@ -85,11 +85,15 @@ def draw(heat: ptr32, graphics: ptr32, pixel_size: int):  # noqa: F821
                 graphics[x + 1 + (128 * y)] = colour
                 graphics[x + 1 + (128 * (y + 1))] = colour
             if pixel_size > 2:
-                graphics[x + (128 * (y - 1))] = colour
-                graphics[x + 1 + (128 * (y - 1))] = colour
-                graphics[x - 1 + (128 * y)] = colour
-                graphics[x - 1 + (128 * (y + 1))] = colour
-                graphics[x - 1 + (128 * (y - 1))] = colour
+                # row -1 and column -1 fall outside the buffer
+                if y > 0:
+                    graphics[x + (128 * (y - 1))] = colour
+                    graphics[x + 1 + (128 * (y - 1))] = colour
+                if x > 0:
+                    graphics[x - 1 + (128 * y)] = colour
+                    graphics[x - 1 + (128 * (y + 1))] = colour
+                    if y > 0:
+                        graphics[x - 1 + (128 * (y - 1))] = colour
 
             x += pixel_size
         y += pixel_size
