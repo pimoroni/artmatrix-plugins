@@ -39,6 +39,8 @@ PALETTE = [
     (0.7, 0.7, 1.0),   # pale violet
 ]
 
+HIGHLIGHT = color.rgb(255, 255, 255, 90)
+
 
 corners = [
     (-half, -half, -half),
@@ -139,7 +141,10 @@ def step(pipe):
         colour = color.rgb(r * alpha, g * alpha, b * alpha)
 
         sort_key = (-z, x, y, next_cell)
-        cell = (x, y, colour, (px, py), changed_dir, (ex, ey))
+        body = shape.line(vec2(x, y), vec2(px, py), 4)
+        highlight = shape.line(vec2(px - 1 - ex, py - 1 - ey), vec2(x - 1 + ex, y - 1 + ey), 1)
+        joint = (shape.circle(px, py, 4), shape.circle(px - 1, py - 1, 2)) if changed_dir else None
+        cell = (colour, body, highlight, joint)
 
         used_cells.add(next_cell)
         insort(render_list, (sort_key, cell))
@@ -178,28 +183,21 @@ def update():
 
         # store some of the functions locally for loop performance +.
         draw = screen.shape
-        line = shape.line
-        v = vec2
-        hc = color.rgb(255, 255, 255, 90)
-        cir = shape.circle
 
         # drawing
-        for c in render_list:
-            x, y, colour, prev, changed_dir, ext = c[1]
-            px, py = prev
+        for _, (colour, body, highlight, joint) in render_list:
             screen.pen = colour
-            draw(line(v(x, y), v(px, py), 4))
-            if changed_dir:
-                draw(cir(px, py, 4))
-                screen.pen = hc
-                draw(cir(px - 1, py - 1, 2))
+            draw(body)
+            if joint:
+                draw(joint[0])
+                screen.pen = HIGHLIGHT
+                draw(joint[1])
 
             # highlight colour
-            screen.pen = hc
+            screen.pen = HIGHLIGHT
 
             # draw the highlight
-            ex, ey = ext
-            draw(line(v(px - 1 - ex, py - 1 - ey), v(x - 1 + ex, y - 1 + ey), 1))
+            draw(highlight)
 
         screen.pen = color.white
         # debug, showing the bounds
