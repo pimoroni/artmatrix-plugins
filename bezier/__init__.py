@@ -113,12 +113,6 @@ class BezierLoop:
             seg = shape.line(self.segments[i].x, self.segments[i].y, self.segments[(i + 1) % len(self.segments)].x, self.segments[(i + 1) % len(self.segments)].y, thickness)
             screen.shape(seg)
 
-    def draw_points(self):
-        for i in range(len(self.segments)):
-            if i % self.num_segs == 0:
-                screen.pen = color.white
-                screen.circle(self.segments[i], 2)
-
 
 def lerp(pointa, pointb, t):
     x = pointa.x + t * (pointb.x - pointa.x)
