@@ -1,31 +1,23 @@
 <form method="post" action="/config?plugin={{ plugin }}">
-  <label>Spark frequencies
-    <small>Relative proportions of sparks with 0 / 1 / 2 generations of children</small>
-    <div>
-      <input type="number" name="freq_0" min="0" max="10" step="1" value="{{ placeholder.frequencies[0] }}">
-      <input type="number" name="freq_1" min="0" max="10" step="1" value="{{ placeholder.frequencies[1] }}">
-      <input type="number" name="freq_2" min="0" max="10" step="1" value="{{ placeholder.frequencies[2] }}">
+  <fieldset>
+    <legend>Fireworks</legend>
+    <small>How many go up</small>
+    <div class="presets">
+      <label><input type="radio" name="timing" value="100" {{ "checked" if placeholder.timing == 100 else "" }}>Low</label>
+      <label><input type="radio" name="timing" value="60" {{ "checked" if placeholder.timing == 60 else "" }}>Medium</label>
+      <label><input type="radio" name="timing" value="30" {{ "checked" if placeholder.timing == 30 else "" }}>High</label>
+      <label><input type="radio" name="timing" value="15" {{ "checked" if placeholder.timing == 15 else "" }}>Very high</label>
     </div>
-  </label>
+  </fieldset>
 
-  <label>Timing
-    <small>Launch chance per frame: "1 in x".</small>
-    <input type="number" name="timing" min="1" max="20" step="1" value="{{ placeholder.timing }}">
-  </label>
-
-  <label>Gravity
-    <small>Gravity level (whole number)</small>
-    <input type="number" name="gravity" min="0" max="20" step="1" value="{{ placeholder.gravity }}">
-  </label>
-
-  <label>Max speed
-    <small>Maximum speed of the fireworks</small>
-    <input type="number" name="max_speed" min="0" max="64" step="1" value="{{ placeholder.max_speed }}">
-  </label>
-
-  <label>Show FPS
-    <input type="checkbox" name="show_fps" {{ "checked" if placeholder.show_fps else "" }}>
-  </label>
+  <fieldset>
+    <legend>Launch height</legend>
+    <div class="presets">
+      <label><input type="radio" name="max_speed" value="20" {{ "checked" if placeholder.max_speed == 20 else "" }}>Low</label>
+      <label><input type="radio" name="max_speed" value="32" {{ "checked" if placeholder.max_speed == 32 else "" }}>Medium</label>
+      <label><input type="radio" name="max_speed" value="48" {{ "checked" if placeholder.max_speed == 48 else "" }}>High</label>
+    </div>
+  </fieldset>
 
   <button type="submit">Apply</button>
 </form>

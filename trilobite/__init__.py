@@ -19,14 +19,13 @@ sand.clear()
 # These values are exposed in the web interface.
 cfg = plugin_config("trilobite", {
     "num_trilobites": 1,
-    "trilobite_speed_max": 0.2,
-    "trilobite_speed_min": 0.1,
-    "show_fps": False,
+    "trilobite_speed": 0.2,
 })
 num_trilobites = cfg["num_trilobites"]
-trilobite_speed_max = cfg["trilobite_speed_max"]
-trilobite_speed_min = cfg["trilobite_speed_min"]
-show_fps = cfg["show_fps"]
+trilobite_speed = cfg["trilobite_speed"]
+trilobite_speed_max = trilobite_speed
+trilobite_speed_min = trilobite_speed / 2
+show_fps = False
 
 
 class Ammonite:

@@ -15,7 +15,7 @@
   </label>
 
   <label>Timezone
-    <small>Your timezone. Stored as an hour offset from GMT.</small>
+    <small>Your timezone.</small>
     <select name="tz_offset">
       <option value="-12" {{ "selected" if placeholder.tz_offset == -12 else "" }}>GMT-12 (Baker Island, Howland Island)</option>
       <option value="-11" {{ "selected" if placeholder.tz_offset == -11 else "" }}>GMT-11 (American Samoa, Niue, Midway)</option>
@@ -45,65 +45,22 @@
     </select>
   </label>
 
-  <label>Hour ball colour
-    <input type="color" name="hours_colour" value="{{ '#%02x%02x%02x' % placeholder.hours_colour }}">
-  </label>
-
-  <label>Minute ball colour
-    <input type="color" name="minutes_colour" value="{{ '#%02x%02x%02x' % placeholder.minutes_colour }}">
-  </label>
-
-  <label>Second ball colour
-    <input type="color" name="seconds_colour" value="{{ '#%02x%02x%02x' % placeholder.seconds_colour }}">
-  </label>
-
-  <label>Hour hand colour
-    <input type="color" name="hour_hand_colour" value="{{ '#%02x%02x%02x' % placeholder.hour_hand_colour }}">
-  </label>
-
-  <label>Minute hand colour
-    <input type="color" name="minute_hand_colour" value="{{ '#%02x%02x%02x' % placeholder.minute_hand_colour }}">
-  </label>
-
-  <label>Second hand colour
-    <input type="color" name="second_hand_colour" value="{{ '#%02x%02x%02x' % placeholder.second_hand_colour }}">
+  <label>Colours
+    <small>Hour / minute / second, for the balls and their hands.</small>
+    <div class="field-row">
+      <input type="color" name="hours_colour" value="{{ '#%02x%02x%02x' % placeholder.hours_colour }}">
+      <input type="color" name="minutes_colour" value="{{ '#%02x%02x%02x' % placeholder.minutes_colour }}">
+      <input type="color" name="seconds_colour" value="{{ '#%02x%02x%02x' % placeholder.seconds_colour }}">
+    </div>
   </label>
 
   <label>Number of balls
     <small>Hour / minute / second balls to display.</small>
-    <div>
+    <div class="field-row">
       <input type="number" name="num_balls_hour" min="1" max="10" step="1" value="{{ placeholder.num_balls_hour }}">
       <input type="number" name="num_balls_minute" min="1" max="10" step="1" value="{{ placeholder.num_balls_minute }}">
       <input type="number" name="num_balls_second" min="1" max="10" step="1" value="{{ placeholder.num_balls_second }}">
     </div>
-  </label>
-
-  <label>Hour ball size
-    <small>Min / max size for the hour balls.</small>
-    <div>
-      <input type="number" name="min_hour_size" min="1" max="1000" step="1" value="{{ placeholder.min_hour_size }}">
-      <input type="number" name="max_hour_size" min="1" max="1000" step="1" value="{{ placeholder.max_hour_size }}">
-    </div>
-  </label>
-
-  <label>Minute ball size
-    <small>Min / max size for the minute balls.</small>
-    <div>
-      <input type="number" name="min_minute_size" min="1" max="1000" step="1" value="{{ placeholder.min_minute_size }}">
-      <input type="number" name="max_minute_size" min="1" max="1000" step="1" value="{{ placeholder.max_minute_size }}">
-    </div>
-  </label>
-
-  <label>Second ball size
-    <small>Min / max size for the second balls.</small>
-    <div>
-      <input type="number" name="min_second_size" min="1" max="1000" step="1" value="{{ placeholder.min_second_size }}">
-      <input type="number" name="max_second_size" min="1" max="1000" step="1" value="{{ placeholder.max_second_size }}">
-    </div>
-  </label>
-
-  <label>Show FPS
-    <input type="checkbox" name="show_fps" {{ "checked" if placeholder.show_fps else "" }}>
   </label>
 
   <button type="submit">Apply</button>

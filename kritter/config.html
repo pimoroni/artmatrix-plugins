@@ -1,56 +1,22 @@
 <form method="post" action="/config?plugin={{ plugin }}">
-  <label>Number of kritters
-    <small>How many kritters jumping around</small>
-    <input type="number" name="num_kritters" min="1" max="10" step="1" value="{{ placeholder.num_kritters }}">
-  </label>
-
-  <label>Number of planets
-    <small>How many planets to jump around on</small>
-    <input type="number" name="num_planets" min="1" max="15" step="1" value="{{ placeholder.num_planets }}">
-  </label>
-
-  <label>Number of targets
-    <small>Invisible jump targets - higher means more jumping</small>
-    <input type="number" name="num_targets" min="1" max="30" step="1" value="{{ placeholder.num_targets }}">
-  </label>
-
-  <label>Jump chaos
-    <small>Max random variation from vertical per jump, in degrees</small>
-    <input type="number" name="jump_chaos" min="0" max="80" step="1" value="{{ placeholder.jump_chaos }}">
-  </label>
-
-  <label>Gravity strength
-    <small>Strength of the planets' gravitational fields</small>
-    <input type="number" name="gravity_strength" min="0" max="10" step="1" value="{{ placeholder.gravity_strength }}">
-  </label>
-
-  <label>Planet radius
-    <small>Min / max planet radius in pixels</small>
-    <div>
-      <input type="number" name="planet_radius_min" min="1" max="15" step="1" value="{{ placeholder.planet_radius_min }}">
-      <input type="number" name="planet_radius_max" min="1" max="15" step="1" value="{{ placeholder.planet_radius_max }}">
+  <fieldset>
+    <legend>Kritters</legend>
+    <div class="presets">
+      <label><input type="radio" name="num_kritters" value="1" {{ "checked" if placeholder.num_kritters == 1 else "" }}>1</label>
+      <label><input type="radio" name="num_kritters" value="3" {{ "checked" if placeholder.num_kritters == 3 else "" }}>3</label>
+      <label><input type="radio" name="num_kritters" value="5" {{ "checked" if placeholder.num_kritters == 5 else "" }}>5</label>
+      <label><input type="radio" name="num_kritters" value="10" {{ "checked" if placeholder.num_kritters == 10 else "" }}>10</label>
     </div>
-  </label>
+  </fieldset>
 
-  <label>Planet speed
-    <small>Min / max scrolling speed for planets</small>
-    <div>
-      <input type="number" name="planet_speed_min" min="0" max="0.5" step="0.01" value="{{ placeholder.planet_speed_min }}">
-      <input type="number" name="planet_speed_max" min="0" max="0.5" step="0.01" value="{{ placeholder.planet_speed_max }}">
+  <fieldset>
+    <legend>Planets</legend>
+    <div class="presets">
+      <label><input type="radio" name="num_planets" value="5" {{ "checked" if placeholder.num_planets == 5 else "" }}>5</label>
+      <label><input type="radio" name="num_planets" value="10" {{ "checked" if placeholder.num_planets == 10 else "" }}>10</label>
+      <label><input type="radio" name="num_planets" value="15" {{ "checked" if placeholder.num_planets == 15 else "" }}>15</label>
     </div>
-  </label>
-
-  <label>Planet rotation speed
-    <small>Min / max rotation speed for planets in degrees per frame</small>
-    <div>
-      <input type="number" name="planet_rotation_speed_min" min="0" max="5" step="0.1" value="{{ placeholder.planet_rotation_speed_min }}">
-      <input type="number" name="planet_rotation_speed_max" min="0" max="5" step="0.1" value="{{ placeholder.planet_rotation_speed_max }}">
-    </div>
-  </label>
-
-  <label>Show FPS
-    <input type="checkbox" name="show_fps" {{ "checked" if placeholder.show_fps else "" }}>
-  </label>
+  </fieldset>
 
   <button type="submit">Apply</button>
 </form>

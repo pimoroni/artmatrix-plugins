@@ -23,17 +23,9 @@ cfg = plugin_config("gravity_clock_vaporwave", {
     "minutes_colour": (255, 193, 0),  # The colour for the minute balls and ray. NOTE this is a tuple not a color.rgb so the value survives the round trip to the web interface.
     "seconds_colour": (92, 236, 255),  # The colour for the second balls and ray. NOTE this is a tuple not a color.rgb so the value survives the round trip to the web interface.
     "border_colour": (255, 255, 255),  # The colour of the border. NOTE this is a tuple not a color.rgb so the value survives the round trip to the web interface.
-    "line_thickness": 2,  # Thickness to draw the linework.
     "num_balls_hour": 1,  # The number of hour balls to display.
     "num_balls_minute": 5,  # The number of minute balls to display.
     "num_balls_second": 10,  # The number of second balls to display.
-    "max_hour_size": 800,  # Maximum size for the hour balls.
-    "min_hour_size": 800,  # Minimum size for the hour balls.
-    "max_minute_size": 700,  # Maximum size for the minute balls.
-    "min_minute_size": 500,  # Minimum size for the minute balls.
-    "max_second_size": 470,  # Maximum size for the second balls.
-    "min_second_size": 200,  # Minimum size for the second balls.
-    "show_fps": False,  # Displays framerate in the top left corner of the screen.
     "show_border": True,  # Displays the squircle border the balls collide with.
     "show_glow": False,  # Displays a neon glow around all screen elements. NOTE this comes with a serious framerate hit.
 })
@@ -43,17 +35,17 @@ hours_colour = cfg["hours_colour"]
 minutes_colour = cfg["minutes_colour"]
 seconds_colour = cfg["seconds_colour"]
 border_colour = cfg["border_colour"]
-line_thickness = cfg["line_thickness"]
+line_thickness = 2
 num_balls_hour = cfg["num_balls_hour"]
 num_balls_minute = cfg["num_balls_minute"]
 num_balls_second = cfg["num_balls_second"]
-max_hour_size = cfg["max_hour_size"]
-min_hour_size = cfg["min_hour_size"]
-max_minute_size = cfg["max_minute_size"]
-min_minute_size = cfg["min_minute_size"]
-max_second_size = cfg["max_second_size"]
-min_second_size = cfg["min_second_size"]
-show_fps = cfg["show_fps"]
+max_hour_size = 800
+min_hour_size = 800
+max_minute_size = 700
+min_minute_size = 500
+max_second_size = 470
+min_second_size = 200
+show_fps = False
 show_border = cfg["show_border"]
 show_glow = cfg["show_glow"]
 

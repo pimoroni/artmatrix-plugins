@@ -1,18 +1,23 @@
 <form method="post" action="/config?plugin={{ plugin }}">
-  <label>Grid
-    <small>Grid resolution (max 128)</small>
-    <input type="number" name="grid" min="1" max="128" step="1" value="{{ placeholder.grid }}">
-  </label>
+  <fieldset>
+    <legend>Block size</legend>
+    <div class="presets">
+      <label><input type="radio" name="size" value="1" {{ "checked" if placeholder.size == 1 else "" }}>1 px</label>
+      <label><input type="radio" name="size" value="2" {{ "checked" if placeholder.size == 2 else "" }}>2 px</label>
+      <label><input type="radio" name="size" value="4" {{ "checked" if placeholder.size == 4 else "" }}>4 px</label>
+      <label><input type="radio" name="size" value="8" {{ "checked" if placeholder.size == 8 else "" }}>8 px</label>
+      <label><input type="radio" name="size" value="16" {{ "checked" if placeholder.size == 16 else "" }}>16 px</label>
+    </div>
+  </fieldset>
 
-  <label>Block size
-    <small>On-screen size of each pixel</small>
-    <input type="number" name="size" min="1" step="1" value="{{ placeholder.size }}">
-  </label>
-
-  <label>Blocks per frame
-    <small>How many pixels change each frame</small>
-    <input type="number" name="blocks_per_frame" min="1" step="1" value="{{ placeholder.blocks_per_frame }}">
-  </label>
+  <fieldset>
+    <legend>Flicker</legend>
+    <div class="presets">
+      <label><input type="radio" name="flicker" value="low" {{ "checked" if placeholder.flicker == "low" else "" }}>Low</label>
+      <label><input type="radio" name="flicker" value="medium" {{ "checked" if placeholder.flicker == "medium" else "" }}>Medium</label>
+      <label><input type="radio" name="flicker" value="high" {{ "checked" if placeholder.flicker == "high" else "" }}>High</label>
+    </div>
+  </fieldset>
 
   <button type="submit">Apply</button>
 </form>

@@ -69,13 +69,12 @@ draw_props = True
 cfg = plugin_config("maze", {
     "maze_period": 5,  # The number of minutes between changes, 0 for no change. Only applies when preset is random.
     "preset": "random",  # Options: lv426, lost_empire, neon, random
-    "show_fps": False,
 })
 maze_period = cfg["maze_period"]
 preset = cfg["preset"]
 if preset != "random" and preset not in presets:
     preset = "random"
-show_fps = cfg["show_fps"]
+show_fps = False
 
 
 angles = (0, math.pi / 2, math.pi, math.pi + math.pi / 2)

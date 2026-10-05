@@ -26,16 +26,14 @@ next_duration = 0
 
 # This value is exposed to the web interface.
 cfg = plugin_config("who_arted", {
-    "max_interval": 30,  # The maximum time between changes of look direction / expression.
-    "max_duration": 3,  # The maximum time to hold Pearl's expression.
-    "piece": 0,  # The piece to start on - 0 = lisa, 1 = scream,  2 = pearl
-    "cycle": True,  # Whether to stay on the specified piece or cycle through all three.
+    "artwork": "cycle",  # "0" = lisa, "1" = scream, "2" = pearl, or "cycle" for all three in turn.
     "art_lifetime": 30,  # The time in minutes between cycling art.
 })
-max_interval = cfg["max_interval"]
-max_duration = cfg["max_duration"]
-piece = cfg["piece"]
-cycle = cfg["cycle"]
+max_interval = 30
+max_duration = 3
+artwork = cfg["artwork"]
+cycle = artwork == "cycle"
+piece = 0 if cycle else int(artwork)
 art_lifetime = cfg["art_lifetime"]
 
 

@@ -26,38 +26,25 @@ cfg = plugin_config("gravity_clock_classic", {
     "hours_colour": (184, 115, 51),  # The colour for the hour balls. NOTE this is a tuple not a color.rgb because the values are manipulated to get darker and lighter versions, and you can't pull the r, g and b values from a color brush.
     "minutes_colour": (171, 171, 70),  # The colour for the minute balls. NOTE this is a tuple not a color.rgb because the values are manipulated to get darker and lighter versions, and you can't pull the r, g and b values from a color brush.
     "seconds_colour": (96, 96, 96),  # The colour for the second balls. NOTE this is a tuple not a color.rgb because the values are manipulated to get darker and lighter versions, and you can't pull the r, g and b values from a color brush.
-    "hour_hand_colour": (184, 115, 51),  # The colour for the hour hand.
-    "minute_hand_colour": (220, 200, 82),  # The colour for the minute hand.
-    "second_hand_colour": (192, 192, 192),  # The colour for the second hand.
     "num_balls_hour": 1,  # The number of hour balls to display.
     "num_balls_minute": 5,  # The number of minute balls to display.
     "num_balls_second": 10,  # The number of second balls to display.
-    "max_hour_size": 800,  # Maximum size for the hour balls.
-    "min_hour_size": 800,  # Minimum size for the hour balls.
-    "max_minute_size": 700,  # Maximum size for the minute balls.
-    "min_minute_size": 500,  # Minimum size for the minute balls.
-    "max_second_size": 470,  # Maximum size for the second balls.
-    "min_second_size": 200,  # Minimum size for the second balls.
-    "show_fps": False,  # Displays framerate in the top left corner of the screen.
 })
 region = cfg["region"]
 tz_offset = cfg["tz_offset"]
 hours_colour = cfg["hours_colour"]
 minutes_colour = cfg["minutes_colour"]
 seconds_colour = cfg["seconds_colour"]
-hour_hand_colour = cfg["hour_hand_colour"]
-minute_hand_colour = cfg["minute_hand_colour"]
-second_hand_colour = cfg["second_hand_colour"]
 num_balls_hour = cfg["num_balls_hour"]
 num_balls_minute = cfg["num_balls_minute"]
 num_balls_second = cfg["num_balls_second"]
-max_hour_size = cfg["max_hour_size"]
-min_hour_size = cfg["min_hour_size"]
-max_minute_size = cfg["max_minute_size"]
-min_minute_size = cfg["min_minute_size"]
-max_second_size = cfg["max_second_size"]
-min_second_size = cfg["min_second_size"]
-show_fps = cfg["show_fps"]
+max_hour_size = 800
+min_hour_size = 800
+max_minute_size = 700
+min_minute_size = 500
+max_second_size = 470
+min_second_size = 200
+show_fps = False
 
 
 # These are the different Daylight Saving time zones, according to the Wikipedia article.
@@ -233,7 +220,7 @@ class Clock:
         screen.shape(minute_hand_shape)
 
         minute_hand_shape.transform = minute_hand_transform
-        screen.pen = color.rgb(*minute_hand_colour)
+        screen.pen = color.rgb(*minutes_colour)
         screen.shape(minute_hand_shape)
 
         second_hand_transform = mat3().translate(64, 64).rotate(self.second_rotation)
@@ -244,7 +231,7 @@ class Clock:
         screen.shape(second_hand_shape)
 
         second_hand_shape.transform = second_hand_transform
-        screen.pen = color.rgb(*second_hand_colour)
+        screen.pen = color.rgb(*seconds_colour)
         screen.shape(second_hand_shape)
 
         hour_hand_transform = mat3().translate(64, 64).scale(1.5).rotate(self.hour_rotation)
@@ -255,7 +242,7 @@ class Clock:
         screen.shape(hour_hand)
 
         hour_hand.transform = hour_hand_transform
-        screen.pen = color.rgb(*hour_hand_colour)
+        screen.pen = color.rgb(*hours_colour)
         screen.shape(hour_hand)
 
 

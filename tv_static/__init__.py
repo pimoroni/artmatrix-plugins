@@ -4,13 +4,13 @@ import time
 from plugin_config import plugin_config
 
 cfg = plugin_config("tv_static", {
-    "grid": 32,
     "size": 4,
-    "blocks_per_frame": 100,
+    "flicker": "medium",
 })
-grid = cfg["grid"]
 size = cfg["size"]
-blocks_per_frame = cfg["blocks_per_frame"]
+flicker = cfg["flicker"]
+grid = 128 // size
+blocks_per_frame = int(grid * grid * {"low": 0.05, "medium": 0.1, "high": 0.2}.get(flicker, 0.1))
 
 
 FRAME_TARGET = 33.3

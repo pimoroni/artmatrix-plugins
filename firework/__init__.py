@@ -16,19 +16,14 @@ q = shape.circle(0, 0, 0.75)
 
 # These values are exposed to the web interface.
 cfg = plugin_config("firework", {
-    "freq_0": 0,  # Relative proportion of sparks with no children
-    "freq_1": 1,  # Relative proportion of sparks with one generation of children
-    "freq_2": 1,  # Relative proportion of sparks with two generations of children
-    "timing": 20,  # How often a firework is launched, in the form of "1 in x chance every frame"
-    "gravity": 5,  # Gravity level. Must be int.
+    "timing": 60,  # How often a firework is launched, in the form of "1 in x chance every frame"
     "max_speed": 32,  # Maximum speed of the fireworks.
-    "show_fps": False,  # Displays framerate in the top left corner of the screen.
 })
-frequencies = (cfg["freq_0"], cfg["freq_1"], cfg["freq_2"])
+frequencies = (0, 1, 1)
 timing = cfg["timing"]
-gravity = cfg["gravity"]
+gravity = 5
 max_speed = cfg["max_speed"]
-show_fps = cfg["show_fps"]
+show_fps = False
 
 
 @micropython.native

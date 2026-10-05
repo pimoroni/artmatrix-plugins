@@ -41,10 +41,14 @@
     <input type="checkbox" name="show_track_title" {{ "checked" if placeholder.Settings.show_title else "" }}>
   </label>
 
-  <label>Scroll speed
-    <small>Speed of the scrolling track title</small>
-    <input type="number" name="scroll_speed" min="30" max="100" value="{{ placeholder.Settings.scroll_speed }}">
-  </label>
+  <fieldset>
+    <legend>Scroll speed</legend>
+    <div class="presets">
+      <label><input type="radio" name="scroll_speed" value="30" {{ "checked" if placeholder.Settings.scroll_speed == 30 else "" }}>Slow</label>
+      <label><input type="radio" name="scroll_speed" value="50" {{ "checked" if placeholder.Settings.scroll_speed == 50 else "" }}>Medium</label>
+      <label><input type="radio" name="scroll_speed" value="80" {{ "checked" if placeholder.Settings.scroll_speed == 80 else "" }}>Fast</label>
+    </div>
+  </fieldset>
 
   <label>Album art directory
     <small>Where downloaded covers are stored</small>

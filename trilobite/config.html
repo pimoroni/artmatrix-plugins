@@ -1,22 +1,23 @@
 <form method="post" action="/config?plugin={{ plugin }}">
-  <label>Number of trilobites
-    <small>Trilobites (and ammonites for them to eat)</small>
-    <input type="number" name="num_trilobites" min="1" max="10" step="1" value="{{ placeholder.num_trilobites }}">
-  </label>
+  <fieldset>
+    <legend>Trilobites</legend>
+    <small>Each one comes with an ammonite to eat</small>
+    <div class="presets">
+      <label><input type="radio" name="num_trilobites" value="1" {{ "checked" if placeholder.num_trilobites == 1 else "" }}>1</label>
+      <label><input type="radio" name="num_trilobites" value="2" {{ "checked" if placeholder.num_trilobites == 2 else "" }}>2</label>
+      <label><input type="radio" name="num_trilobites" value="5" {{ "checked" if placeholder.num_trilobites == 5 else "" }}>5</label>
+      <label><input type="radio" name="num_trilobites" value="10" {{ "checked" if placeholder.num_trilobites == 10 else "" }}>10</label>
+    </div>
+  </fieldset>
 
-  <label>Trilobite speed (max)
-    <small>Maximum movement speed</small>
-    <input type="number" name="trilobite_speed_max" min="0" max="1" step="0.1" value="{{ placeholder.trilobite_speed_max }}">
-  </label>
-
-  <label>Trilobite speed (min)
-    <small>Minimum movement speed</small>
-    <input type="number" name="trilobite_speed_min" min="0" max="1" step="0.1" value="{{ placeholder.trilobite_speed_min }}">
-  </label>
-
-  <label>Show FPS counter
-    <input type="checkbox" name="show_fps" {{ "checked" if placeholder.show_fps else "" }}>
-  </label>
+  <fieldset>
+    <legend>Speed</legend>
+    <div class="presets">
+      <label><input type="radio" name="trilobite_speed" value="0.1" {{ "checked" if placeholder.trilobite_speed == 0.1 else "" }}>Slow</label>
+      <label><input type="radio" name="trilobite_speed" value="0.2" {{ "checked" if placeholder.trilobite_speed == 0.2 else "" }}>Medium</label>
+      <label><input type="radio" name="trilobite_speed" value="0.4" {{ "checked" if placeholder.trilobite_speed == 0.4 else "" }}>Fast</label>
+    </div>
+  </fieldset>
 
   <button type="submit">Apply</button>
 </form>

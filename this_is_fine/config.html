@@ -4,10 +4,14 @@
     <input type="text" name="message" value="{{ placeholder.message }}">
   </label>
 
-  <label>Pixel size
-    <small>Resolution of the fire in pixels (max 3)</small>
-    <input type="number" name="pixel_size" min="1" max="3" step="1" value="{{ placeholder.pixel_size }}">
-  </label>
+  <fieldset>
+    <legend>Fire detail</legend>
+    <div class="presets">
+      <label><input type="radio" name="pixel_size" value="3" {{ "checked" if placeholder.pixel_size == 3 else "" }}>Low</label>
+      <label><input type="radio" name="pixel_size" value="2" {{ "checked" if placeholder.pixel_size == 2 else "" }}>Medium</label>
+      <label><input type="radio" name="pixel_size" value="1" {{ "checked" if placeholder.pixel_size == 1 else "" }}>High</label>
+    </div>
+  </fieldset>
 
   <label>Scroll text
     <input type="checkbox" name="scroll" {{ "checked" if placeholder.scroll else "" }}>

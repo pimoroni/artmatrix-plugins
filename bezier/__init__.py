@@ -9,21 +9,20 @@ screen.antialias = image.X4
 cfg = plugin_config("bezier", {
     "curves": 1,  # Number of separate loops to display, minimum 1
     "points": 5,  # Number of control points each loop is made up of, minimum 2
-    "num_segs": 10,  # Number of line segments in each cureve, minimum 1
     "trail_length": 3,  # Length of ghostly trail left, 0 = no trail, 5 = no fade
     "max_speed": 1.0,  # Points will move at random speeds between this value and half of this value.
-    "thickness": 3,  # Line thickness - note line will become less smooth as thickness goes up.
-    "colour": (0, 0, 0),  # Colour of the loop(s). If set to 0, 0, 0 the loops will be rainbow coloured.
-    "show_fps": False,  # Displays framerate in the top left corner of the screen.
+    "colour": (255, 255, 255),  # Colour of the loop(s) when rainbow is off.
+    "rainbow": True,
 })
 curves = cfg["curves"]
 points = cfg["points"]
-num_segs = cfg["num_segs"]
+num_segs = 10
 trail_length = cfg["trail_length"]
 max_speed = cfg["max_speed"]
-thickness = cfg["thickness"]
+thickness = 3
 colour = cfg["colour"]
-show_fps = cfg["show_fps"]
+rainbow = cfg["rainbow"]
+show_fps = False
 
 
 class BezierPoint:
@@ -108,7 +107,7 @@ class BezierLoop:
 
         screen.pen = color.rgb(self.colour[0], self.colour[1], self.colour[2])
         for i in range(len(self.segments)):
-            if self.colour[0] + self.colour[1] + self.colour[2] == 0:
+            if rainbow:
                 hue = (1 / len(self.segments)) * i * 255
                 screen.pen = color.hsv(hue, 255, 255)
             seg = shape.line(self.segments[i].x, self.segments[i].y, self.segments[(i + 1) % len(self.segments)].x, self.segments[(i + 1) % len(self.segments)].y, thickness)

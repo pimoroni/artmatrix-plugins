@@ -1,42 +1,51 @@
 <form method="post" action="/config?plugin={{ plugin }}">
-  <label>Curves
-    <small>Number of separate loops (min 1)</small>
-    <input type="number" name="curves" min="1" max="3" value="{{ placeholder.curves }}">
-  </label>
+  <fieldset>
+    <legend>Curves</legend>
+    <div class="presets">
+      <label><input type="radio" name="curves" value="1" {{ "checked" if placeholder.curves == 1 else "" }}>1</label>
+      <label><input type="radio" name="curves" value="2" {{ "checked" if placeholder.curves == 2 else "" }}>2</label>
+      <label><input type="radio" name="curves" value="3" {{ "checked" if placeholder.curves == 3 else "" }}>3</label>
+    </div>
+  </fieldset>
 
-  <label>Points
-    <small>Control points per loop (min 2)</small>
-    <input type="number" name="points" min="2" max="10" value="{{ placeholder.points }}">
-  </label>
+  <fieldset>
+    <legend>Points per curve</legend>
+    <small>More points make more complex shapes</small>
+    <div class="presets">
+      <label><input type="radio" name="points" value="3" {{ "checked" if placeholder.points == 3 else "" }}>3</label>
+      <label><input type="radio" name="points" value="5" {{ "checked" if placeholder.points == 5 else "" }}>5</label>
+      <label><input type="radio" name="points" value="7" {{ "checked" if placeholder.points == 7 else "" }}>7</label>
+      <label><input type="radio" name="points" value="10" {{ "checked" if placeholder.points == 10 else "" }}>10</label>
+    </div>
+  </fieldset>
 
-  <label>Segments
-    <small>Line segments per curve (min 1)</small>
-    <input type="number" name="num_segs" min="1" max="20" value="{{ placeholder.num_segs }}">
-  </label>
+  <fieldset>
+    <legend>Trail</legend>
+    <div class="presets">
+      <label><input type="radio" name="trail_length" value="0" {{ "checked" if placeholder.trail_length == 0 else "" }}>None</label>
+      <label><input type="radio" name="trail_length" value="1" {{ "checked" if placeholder.trail_length == 1 else "" }}>Short</label>
+      <label><input type="radio" name="trail_length" value="3" {{ "checked" if placeholder.trail_length == 3 else "" }}>Medium</label>
+      <label><input type="radio" name="trail_length" value="4" {{ "checked" if placeholder.trail_length == 4 else "" }}>Long</label>
+      <label><input type="radio" name="trail_length" value="5" {{ "checked" if placeholder.trail_length == 5 else "" }}>Forever</label>
+    </div>
+  </fieldset>
 
-  <label>Trail length
-    <small>0 = no trail, 5 = no fade</small>
-    <input type="number" name="trail_length" min="0" max="5" value="{{ placeholder.trail_length }}">
-  </label>
+  <fieldset>
+    <legend>Speed</legend>
+    <div class="presets">
+      <label><input type="radio" name="max_speed" value="0.5" {{ "checked" if placeholder.max_speed == 0.5 else "" }}>Slow</label>
+      <label><input type="radio" name="max_speed" value="1.0" {{ "checked" if placeholder.max_speed == 1.0 else "" }}>Medium</label>
+      <label><input type="radio" name="max_speed" value="2.0" {{ "checked" if placeholder.max_speed == 2.0 else "" }}>Fast</label>
+    </div>
+  </fieldset>
 
-  <label>Max speed
-    <small>Points move between this and half this</small>
-    <input type="number" name="max_speed" min="1" max="5" step="0.5" value="{{ placeholder.max_speed }}">
-  </label>
-
-  <label>Thickness
-    <small>Higher = less smooth</small>
-    <input type="number" name="thickness" min="1" max="10" value="{{ placeholder.thickness }}">
-  </label>
-
-  <label>Colour
-    <small>Black (#000000) = rainbow</small>
-    <input type="color" name="colour" value="{{ '#%02x%02x%02x' % placeholder.colour }}">
-  </label>
-
-  <label>Show FPS
-    <input type="checkbox" name="show_fps" {{ "checked" if placeholder.show_fps else "" }}>
-  </label>
+  <fieldset>
+    <legend>Colour</legend>
+    <div class="colour-row">
+      <input type="color" name="colour" aria-label="Colour" value="{{ '#%02x%02x%02x' % placeholder.colour }}">
+      <label><input type="checkbox" name="rainbow" {{ "checked" if placeholder.rainbow else "" }}>Rainbow</label>
+    </div>
+  </fieldset>
 
   <button type="submit">Apply</button>
 </form>

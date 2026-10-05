@@ -1,56 +1,47 @@
 <form method="post" action="/config?plugin={{ plugin }}">
-  <label>Number of planets
-    <small>How many planets orbit the sun.</small>
-    <input type="number" name="num_planets" min="1" step="1" value="{{ placeholder.num_planets }}">
-  </label>
-
-  <label>Planet size range
-    <small>Min / max planet radius. The sun has a radius of 1.</small>
-    <div>
-      <input type="number" name="min_planet_size" min="0" step="any" value="{{ placeholder.min_planet_size }}">
-      <input type="number" name="max_planet_size" min="0" max="0.6" step="any" value="{{ placeholder.max_planet_size }}">
+  <fieldset>
+    <legend>Planets</legend>
+    <div class="presets">
+      <label><input type="radio" name="num_planets" value="3" {{ "checked" if placeholder.num_planets == 3 else "" }}>3</label>
+      <label><input type="radio" name="num_planets" value="5" {{ "checked" if placeholder.num_planets == 5 else "" }}>5</label>
+      <label><input type="radio" name="num_planets" value="7" {{ "checked" if placeholder.num_planets == 7 else "" }}>7</label>
+      <label><input type="radio" name="num_planets" value="9" {{ "checked" if placeholder.num_planets == 9 else "" }}>9</label>
     </div>
-  </label>
+  </fieldset>
 
-  <label>Max radius
-    <small>Size of the system. Also affects perspective - higher = wider-angle look. 5–10 is naturalistic.</small>
-    <input type="number" name="max_radius" min="1" max="10" step="any" value="{{ placeholder.max_radius }}">
-  </label>
+  <fieldset>
+    <legend>Planet size</legend>
+    <div class="presets">
+      <label><input type="radio" name="planet_size" value="small" {{ "checked" if placeholder.planet_size == "small" else "" }}>Small</label>
+      <label><input type="radio" name="planet_size" value="mixed" {{ "checked" if placeholder.planet_size == "mixed" else "" }}>Mixed</label>
+      <label><input type="radio" name="planet_size" value="large" {{ "checked" if placeholder.planet_size == "large" else "" }}>Large</label>
+    </div>
+  </fieldset>
 
   <label>Minutes per orbit
-    <small>Min / max time for a planet to complete one orbit.</small>
-    <div>
+    <small>Fastest / slowest planet</small>
+    <div class="field-row">
       <input type="number" name="min_mins_per_orbit" min="0.1" step="any" value="{{ placeholder.min_mins_per_orbit }}">
       <input type="number" name="max_mins_per_orbit" min="0" step="any" value="{{ placeholder.max_mins_per_orbit }}">
     </div>
   </label>
 
-  <label>Minutes per rotation
-    <small>Min / max time for a planet to spin once.</small>
-    <div>
-      <input type="number" name="min_mins_per_rotation" min="0.1" step="any" value="{{ placeholder.min_mins_per_rotation }}">
-      <input type="number" name="max_mins_per_rotation" min="0" step="any" value="{{ placeholder.max_mins_per_rotation }}">
+  <fieldset>
+    <legend>Background</legend>
+    <div class="presets">
+      <label><input type="radio" name="background" value="0" {{ "checked" if placeholder.background == 0 else "" }}>Random</label>
+      <label><input type="radio" name="background" value="1" {{ "checked" if placeholder.background == 1 else "" }}>1</label>
+      <label><input type="radio" name="background" value="2" {{ "checked" if placeholder.background == 2 else "" }}>2</label>
+      <label><input type="radio" name="background" value="3" {{ "checked" if placeholder.background == 3 else "" }}>3</label>
+      <label><input type="radio" name="background" value="4" {{ "checked" if placeholder.background == 4 else "" }}>4</label>
+      <label><input type="radio" name="background" value="5" {{ "checked" if placeholder.background == 5 else "" }}>5</label>
     </div>
-  </label>
-
-  <label>Background
-    <small>1 to 5, or 0 for random.</small>
-    <input type="number" name="background" min="0" max="5" step="1" value="{{ placeholder.background }}">
-  </label>
+  </fieldset>
 
   <label>Sun colour
     <small>Pick the sun's colour.</small>
     <input type="color" name="sun_colour"
            value="{{ '#%02x%02x%02x' % placeholder.sun_colour }}">
-  </label>
-
-  <label>FPS limit
-    <small>Maximum frames per second.</small>
-    <input type="number" name="fps_limit" min="1" step="1" value="{{ placeholder.fps_limit }}">
-  </label>
-
-  <label>Show FPS
-    <input type="checkbox" name="show_fps" {{ "checked" if placeholder.show_fps else "" }}>
   </label>
 
   <button type="submit">Apply</button>

@@ -24,24 +24,18 @@ cfg = plugin_config("after_yarrk", {
     "global_scale": 0.2,  # Overall scale of all ships and waves.
     "num_ships": 5,  # Number of ships total
     "sailing_angle": 330,  # Angle of sail - NOTE: doesn't change the angle the ships are pointing. 0 is in the x+ direction
-    "bob_amount": 5.0,  # How much movement is added with the wing flapping motion.
     "travel_speed": 0.5,  # How fast the ships move across the screen.
-    "spawn_border": 25,  # How many pixels outside outside the screen edges ships spawn / despawn. Tweak this if your other settings changes have made ships pop in / out
-    "animation_speed": 25,  # The speed of the wing flapping animation and associated bobbing movement. Must be an integer.
-    "wave_animation_speed": 25,
-    "fps_limiter": True,  # Locks the simulation to max 30fps.
-    "show_fps": False,  # Displays framerate in the top left corner of the screen.
 })
 global_scale = cfg["global_scale"]
 num_ships = cfg["num_ships"]
 sailing_angle = cfg["sailing_angle"]
-bob_amount = cfg["bob_amount"]
+bob_amount = 5.0
 travel_speed = cfg["travel_speed"]
-spawn_border = cfg["spawn_border"]
-animation_speed = cfg["animation_speed"]
-wave_animation_speed = cfg["wave_animation_speed"]
-fps_limiter = cfg["fps_limiter"]
-show_fps = cfg["show_fps"]
+spawn_border = 25
+animation_speed = 25
+wave_animation_speed = 25
+fps_limiter = True
+show_fps = False
 
 
 screen.antialias = image.X4

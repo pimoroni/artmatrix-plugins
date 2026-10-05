@@ -1,31 +1,23 @@
 <form method="post" action="/config?plugin={{ plugin }}">
-  <label>Max interval
-    <small>Maximum time between changes of look direction / expression (seconds)</small>
-    <input type="number" name="max_interval" min="1" step="1" value="{{ placeholder.max_interval }}">
-  </label>
+  <fieldset>
+    <legend>Artwork</legend>
+    <div class="presets">
+      <label><input type="radio" name="artwork" value="0" {{ "checked" if placeholder.artwork == "0" else "" }}>Lisa</label>
+      <label><input type="radio" name="artwork" value="1" {{ "checked" if placeholder.artwork == "1" else "" }}>Scream</label>
+      <label><input type="radio" name="artwork" value="2" {{ "checked" if placeholder.artwork == "2" else "" }}>Pearl</label>
+      <label><input type="radio" name="artwork" value="cycle" {{ "checked" if placeholder.artwork == "cycle" else "" }}>All in turn</label>
+    </div>
+  </fieldset>
 
-  <label>Max duration
-    <small>Maximum time to hold Pearl's expression (seconds)</small>
-    <input type="number" name="max_duration" min="1" step="1" value="{{ placeholder.max_duration }}">
-  </label>
-
-  <label>Starting piece
-    <small>Which artwork to start on</small>
-    <select name="piece">
-      <option value="0" {{ "selected" if placeholder.piece == 0 else "" }}>Lisa</option>
-      <option value="1" {{ "selected" if placeholder.piece == 1 else "" }}>Scream</option>
-      <option value="2" {{ "selected" if placeholder.piece == 2 else "" }}>Pearl</option>
-    </select>
-  </label>
-
-  <label>Art lifetime
-    <small>Minutes between cycling art</small>
-    <input type="number" name="art_lifetime" min="1" step="1" value="{{ placeholder.art_lifetime }}">
-  </label>
-
-<label>Cycle through all pieces
-    <input type="checkbox" name="cycle" {{ "checked" if placeholder.cycle else "" }}>
-  </label>
+  <fieldset>
+    <legend>Change artwork every</legend>
+    <small>When showing all in turn</small>
+    <div class="presets">
+      <label><input type="radio" name="art_lifetime" value="10" {{ "checked" if placeholder.art_lifetime == 10 else "" }}>10 min</label>
+      <label><input type="radio" name="art_lifetime" value="30" {{ "checked" if placeholder.art_lifetime == 30 else "" }}>30 min</label>
+      <label><input type="radio" name="art_lifetime" value="60" {{ "checked" if placeholder.art_lifetime == 60 else "" }}>1 hour</label>
+    </div>
+  </fieldset>
 
   <button type="submit">Apply</button>
 </form>

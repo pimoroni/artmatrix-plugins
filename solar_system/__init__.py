@@ -7,30 +7,24 @@ from plugin_config import plugin_config
 # Settings
 cfg = plugin_config("solar_system", {
     "num_planets": 5,  # Number of planets in the system.
-    "min_planet_size": 0.2,  # Minimum and maximum planet radius, naturally. The sun has a radius of 1.
-    "max_planet_size": 0.4,
-    "max_radius": 7.0,  # Maximum radius of the solar system. The view will always be zoomed out to fit, and this will also affect perspective - higher values mean more exaggerated perspective i.e. a wider angle lens. 5-10 gives a good naturalistic look.
+    "planet_size": "mixed",  # "small", "mixed" or "large"
     "max_mins_per_orbit": 10.0,  # Designed for very slow orbits but there's no reason they couldn't be fast if you wanted. Not exact, but I timed a 4 minute orbit at 4:03 so they're close enough for the right feel.
     "min_mins_per_orbit": 4.0,
-    "max_mins_per_rotation": 4.0,  # As above, but for the spin of the planets themselves.
-    "min_mins_per_rotation": 1.0,
     "background": 0,  # 1 to 5, or 0 for random
     "sun_colour": (255, 220, 0),
-    "fps_limit": 30,
-    "show_fps": False,
 })
 num_planets = cfg["num_planets"]
-min_planet_size = cfg["min_planet_size"]
-max_planet_size = cfg["max_planet_size"]
-max_radius = cfg["max_radius"]
+planet_size = cfg["planet_size"]
+min_planet_size, max_planet_size = {"small": (0.1, 0.25), "mixed": (0.2, 0.4), "large": (0.35, 0.6)}.get(planet_size, (0.2, 0.4))
+max_radius = 7.0
 max_mins_per_orbit = cfg["max_mins_per_orbit"]
 min_mins_per_orbit = cfg["min_mins_per_orbit"]
-max_mins_per_rotation = cfg["max_mins_per_rotation"]
-min_mins_per_rotation = cfg["min_mins_per_rotation"]
+max_mins_per_rotation = 4.0
+min_mins_per_rotation = 1.0
 background = cfg["background"]
 sun_colour = cfg["sun_colour"]
-fps_limit = cfg["fps_limit"]
-show_fps = cfg["show_fps"]
+fps_limit = 30
+show_fps = False
 
 
 viewing_distance = max_radius + 1
@@ -39,9 +33,7 @@ min_orbital_radians_per_frame = (((1 / min_mins_per_orbit) / 60) / fps_limit) * 
 max_rotational_radians_per_frame = (((1 / max_mins_per_rotation) / 60) / fps_limit) * 2 * math.pi
 min_rotational_radians_per_frame = (((1 / min_mins_per_rotation) / 60) / fps_limit) * 2 * math.pi
 
-if background == 0:
-    background = random.randint(1, 5)
-background_img = image.load(f"/lib/plugins/solar_system/assets/space{background}.png")
+background_img = image.load(f"/lib/plugins/solar_system/assets/space{background or random.randint(1, 5)}.png")
 tilemap = image.load("/lib/plugins/solar_system/assets/planet.png")
 tilemap = tilemap.spritesheet(16, 4)
 
