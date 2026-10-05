@@ -19,8 +19,8 @@ sand.clear()
 # These values are exposed in the web interface.
 cfg = plugin_config("trilobite", {
     "num_trilobites": 1,
-    "trilobite_speed_max": 0.4,
-    "trilobite_speed_min": 0.2,
+    "trilobite_speed_max": 0.2,
+    "trilobite_speed_min": 0.1,
     "show_fps": False,
 })
 num_trilobites = cfg["num_trilobites"]
@@ -112,10 +112,16 @@ for _i in range(num_trilobites):
     trilobites.append(Trilobite())
 
 last_ticks = time.ticks_ms()
+trails_cleared = time.ticks_ms()
 
 
 def update():
-    global last_ticks
+    global last_ticks, trails_cleared
+
+    if time.ticks_diff(time.ticks_ms(), trails_cleared) > 300000:
+        sand.pen = sand_light
+        sand.clear()
+        trails_cleared = time.ticks_ms()
 
     screen.blit(sand, vec2(0, 0))
 
