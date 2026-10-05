@@ -51,7 +51,10 @@ pipes = []
 def new_pipe():
     taken = [p[3] for p in pipes]
     colour = choice([c for c in PALETTE if c not in taken])
-    pos = (randint(0, grid - 1), randint(0, grid - 1), randint(0, grid - 1))
+    while True:
+        pos = (randint(0, grid - 1), randint(0, grid - 1), randint(0, grid - 1))
+        if pos not in used_cells:
+            break
     pipes.append([pos, choice(directions), transform_points(pos[0] - centre, pos[1] - centre, pos[2] - centre), colour])
     used_cells.add(pos)
 
@@ -106,23 +109,23 @@ def step(pipe):
     if valid:
         x, y, z = transform_points(next_cell[0] - centre, next_cell[1] - centre, next_cell[2] - centre)
 
-        # grab  the previous values from used_cells instead of transforming again
+        # reuse the previous point instead of transforming it again
         px, py, _ = pipe[2]
 
         changed_dir = (last_dir != pipe[1])
 
-        alpha_norm = (z - SIZE / 4) / (cam_dist * 2 - SIZE)
-        alpha = (1 - alpha_norm) * 255
-        alpha = min(max(0, alpha), 255)
+        depth_norm = (z - SIZE / 4) / (cam_dist * 2 - SIZE)
+        brightness = (1 - depth_norm) * 255
+        brightness = min(max(0, brightness), 255)
 
         # extend the highlight by a small amount
         ex = (x - px) * 0.10
         ey = (y - py) * 0.10
 
         r, g, b = pipe[3]
-        colour = color.rgb(r * alpha, g * alpha, b * alpha)
+        colour = color.rgb(r * brightness, g * brightness, b * brightness)
 
-        sort_key = (-z, x, y, next_cell)
+        sort_key = (-z, next_cell)
         body = shape.line(vec2(x, y), vec2(px, py), 4)
         highlight = shape.line(vec2(px - 1 - ex, py - 1 - ey), vec2(x - 1 + ex, y - 1 + ey), 1)
         joint = (shape.circle(px, py, 4), shape.circle(px - 1, py - 1, 2)) if changed_dir else None
@@ -158,6 +161,7 @@ def update():
                 pipes.clear()
                 for _ in range(NUM_PIPES):
                     new_pipe()
+                break
 
         # store some of the functions locally for loop performance +.
         draw = screen.shape
