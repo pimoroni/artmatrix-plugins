@@ -20,8 +20,9 @@ yaw_cos = math.cos(math.radians(yaw))
 pitch_sin = math.sin(math.radians(pitch))
 pitch_cos = math.cos(math.radians(pitch))
 
-SIZE = 8
+SIZE = grid
 half = SIZE / 2
+centre = (grid - 1) / 2
 NUM_PIPES = 2
 
 cx = screen.width / 2
@@ -68,7 +69,7 @@ pipes = []
 
 def new_pipe(colour):
     pos = (randint(0, grid - 1), randint(0, grid - 1), randint(0, grid - 1))
-    pipes.append([pos, choice(directions), transform_points(pos[0] - half, pos[1] - half, pos[2] - half), colour])
+    pipes.append([pos, choice(directions), transform_points(pos[0] - centre, pos[1] - centre, pos[2] - centre), colour])
     used_cells.add(pos)
 
 
@@ -120,7 +121,7 @@ def step(pipe):
         pipe[1] = (dx, dy, dz)
 
     if valid:
-        x, y, z = transform_points(next_cell[0] - half, next_cell[1] - half, next_cell[2] - half)
+        x, y, z = transform_points(next_cell[0] - centre, next_cell[1] - centre, next_cell[2] - centre)
 
         # grab  the previous values from used_cells instead of transforming again
         px, py, _ = pipe[2]
