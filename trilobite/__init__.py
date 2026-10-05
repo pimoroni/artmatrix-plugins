@@ -12,7 +12,7 @@ trilo_sprite = image.load("/lib/plugins/trilobite/assets/trilobite.png")
 ammo_sprite = image.load("/lib/plugins/trilobite/assets/ammonite.png")
 track_sprite = SpriteSheet("/lib/plugins/trilobite/assets/track.png", 5, 1)
 sand = image(128, 128)
-sand_light = color.rgb(252, 248, 177)
+sand_light = color.rgb(126, 124, 88)
 sand.pen = sand_light
 sand.clear()
 
