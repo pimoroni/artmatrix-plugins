@@ -427,4 +427,4 @@ def update():
         centre_text(f"{config.wifi_hostname}.local", cy + 5, 2)
         screen.pen = color.blue
         centre_text("to configure", cy + 40, 1)
-        centre_text("plugin", cy + 50, 1)
+        centre_text("Now Playing", cy + 50, 1)
