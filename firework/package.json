@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Fireworks bursting in the night sky",
   "author": "Pimoroni",
+  "requires_internet": false,
   "urls": [
     [
       "plugins/firework/__init__.py",

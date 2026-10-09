@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Trilobites wandering across the seabed",
   "author": "Pimoroni",
+  "requires_internet": false,
   "urls": [
     [
       "plugins/trilobite/__init__.py",

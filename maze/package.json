@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A 3D walk through randomly generated mazes",
   "author": "Pimoroni",
+  "requires_internet": false,
   "urls": [
     [
       "plugins/maze/__init__.py",

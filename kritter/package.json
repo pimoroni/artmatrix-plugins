@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Watch the kritters hop between planets",
   "author": "Pimoroni",
+  "requires_internet": false,
   "urls": [
     [
       "plugins/kritter/__init__.py",

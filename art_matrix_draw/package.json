@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Draw a picture in your browser and show it",
   "author": "Pimoroni",
+  "requires_internet": false,
   "urls": [
     [
       "plugins/art_matrix_draw/__init__.py",

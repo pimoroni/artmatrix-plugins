@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Random abstract shapes from DiceBear",
   "author": "Pimoroni",
+  "requires_internet": true,
   "urls": [
     [
       "plugins/random_shapes/__init__.py",

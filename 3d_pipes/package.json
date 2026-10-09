@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "The classic pipes screensaver",
   "author": "Pimoroni",
+  "requires_internet": false,
   "urls": [
     [
       "plugins/3d_pipes/__init__.py",

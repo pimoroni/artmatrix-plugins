@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Where the International Space Station is right now",
   "author": "Pimoroni",
+  "requires_internet": true,
   "urls": [
     [
       "plugins/iss_tracker/__init__.py",

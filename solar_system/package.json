@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Planets orbiting around their sun",
   "author": "Pimoroni",
+  "requires_internet": false,
   "urls": [
     [
       "plugins/solar_system/__init__.py",

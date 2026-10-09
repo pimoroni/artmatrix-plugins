@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A spirit level using an LSM6DS3 motion sensor",
   "author": "Pimoroni",
+  "requires_internet": false,
   "urls": [
     [
       "plugins/spirit_level/__init__.py",

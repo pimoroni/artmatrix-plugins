@@ -52,8 +52,8 @@ def plugin_files(plugin):
 
 
 def manifest_for(plugin):
-    # The display name, version, description and author are the plugin author's to
-    # set, so all four are read back out of the manifest this overwrites.
+    # The display name, version, description, author and requires_internet are the
+    # plugin author's to set, so all are read back out of the manifest this overwrites.
     try:
         existing = json.loads((plugin / MANIFEST_NAME).read_text())
     except (OSError, ValueError):
@@ -75,6 +75,10 @@ def manifest_for(plugin):
         value = existing.get(field)
         if isinstance(value, str) and value.strip():
             manifest[field] = value
+
+    # no fallback, a wrong guess would mislead offline users, main() fails without it
+    if isinstance(existing.get("requires_internet"), bool):
+        manifest["requires_internet"] = existing["requires_internet"]
 
     manifest["urls"] = [[f"{TARGET_PREFIX}/{plugin.name}/{path}", path] for path in plugin_files(plugin)]
 
@@ -190,10 +194,16 @@ def main():
 
     stale = []
     written = []
+    problems = []
 
     for plugin in plugins:
         manifest_path = plugin / MANIFEST_NAME
-        wanted = serialise(manifest_for(plugin))
+        manifest = manifest_for(plugin)
+        wanted = serialise(manifest)
+
+        # untracked plugins are left out of the index, so validate_index() never sees them
+        if "requires_internet" not in manifest:
+            problems.append(f"'{plugin.name}' has no requires_internet, set true or false in {plugin.name}/{MANIFEST_NAME}")
 
         try:
             current = manifest_path.read_text()
@@ -208,7 +218,7 @@ def main():
                 written.append(plugin.name)
 
         if not args.quiet:
-            count = len(manifest_for(plugin)["urls"])
+            count = len(manifest["urls"])
             size = total_bytes(plugin)
             note = "  <-- large, slow to install" if size > SIZE_WARN_BYTES else ""
             print(f"{plugin.name:<24} {count:>3} files  {size / 1024:>7.1f} kB{note}")
@@ -235,7 +245,7 @@ def main():
     if index_stale and not args.check:
         index_path.write_text(wanted_index)
 
-    problems = validate_index(json.loads(wanted_index), shippable)
+    problems += validate_index(json.loads(wanted_index), shippable)
     if problems:
         print("", file=sys.stderr)
         print(f"{INDEX_NAME} would not be safe to publish:", file=sys.stderr)

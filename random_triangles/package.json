@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Random triangle patterns from DiceBear",
   "author": "Pimoroni",
+  "requires_internet": true,
   "urls": [
     [
       "plugins/random_triangles/__init__.py",

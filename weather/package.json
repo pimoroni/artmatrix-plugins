@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "The current weather for your location",
   "author": "Pimoroni",
+  "requires_internet": true,
   "urls": [
     [
       "plugins/weather/__init__.py",

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Pirate ships bobbing across the sea",
   "author": "Pimoroni",
+  "requires_internet": false,
   "urls": [
     [
       "plugins/after_yarrk/__init__.py",

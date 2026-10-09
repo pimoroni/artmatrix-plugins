@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Album art for what's playing on your Spotify",
   "author": "Pimoroni",
+  "requires_internet": true,
   "urls": [
     [
       "plugins/now_playing/__init__.py",

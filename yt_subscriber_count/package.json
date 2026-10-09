@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A YouTube channel's live subscriber count",
   "author": "Pimoroni",
+  "requires_internet": true,
   "urls": [
     [
       "plugins/yt_subscriber_count/__init__.py",

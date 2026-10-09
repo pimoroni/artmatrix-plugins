@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Recent earthquakes from USGS on a world map",
   "author": "Pimoroni",
+  "requires_internet": true,
   "urls": [
     [
       "plugins/earthquake_map/__init__.py",

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "The CO2 level from an SCD41 breakout",
   "author": "Pimoroni",
+  "requires_internet": false,
   "urls": [
     [
       "plugins/co2_matrix/__init__.py",

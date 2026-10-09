@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Conway's Game of Life",
   "author": "Pimoroni",
+  "requires_internet": false,
   "urls": [
     [
       "plugins/game_of_life/__init__.py",

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Random robot portraits from DiceBear",
   "author": "Pimoroni",
+  "requires_internet": true,
   "urls": [
     [
       "plugins/random_bots/__init__.py",

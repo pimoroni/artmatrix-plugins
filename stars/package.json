@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Flying through a starfield",
   "author": "Pimoroni",
+  "requires_internet": false,
   "urls": [
     [
       "plugins/stars/__init__.py",

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "The static of an untuned TV",
   "author": "Pimoroni",
+  "requires_internet": false,
   "urls": [
     [
       "plugins/tv_static/__init__.py",

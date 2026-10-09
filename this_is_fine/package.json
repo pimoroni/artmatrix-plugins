@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "The \"this is fine\" fire, with your own message",
   "author": "Pimoroni",
+  "requires_internet": false,
   "urls": [
     [
       "plugins/this_is_fine/__init__.py",
