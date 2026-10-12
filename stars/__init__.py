@@ -2,10 +2,23 @@ from math import atan2, degrees, sqrt
 from random import getrandbits
 import time
 
+from plugin_config import plugin_config
+
 CX = int(screen.width / 2)
 CY = int(screen.height / 2)
 BITS = 8
 BLACK = color.rgb(0, 0, 0)
+
+# These values are exposed to the web interface.
+cfg = plugin_config("stars", {
+    "speed": 1.0,  # 0.5 slow, 1.0 normal, 2.0 fast
+    "stars": 60,  # 30 sparse, 60 normal, 75 dense
+    "trail_colour": (89, 125, 206),
+})
+speed = cfg["speed"]
+stars = cfg["stars"]
+trail_colour = cfg["trail_colour"]
+TRAIL = color.rgb(trail_colour[0], trail_colour[1], trail_colour[2])
 
 FRAME_TARGET = 16
 last = None
@@ -28,7 +41,7 @@ class Star:
         Star.Stars.append(self)
 
     def step(self):
-        self.z -= 1
+        self.z -= speed
         if self.z < abs(self.x) or self.z < abs(self.y):
             self.x = getrandbits(BITS) - CX + 0.0001
             self.y = getrandbits(BITS) - CY + 0.0001
@@ -60,7 +73,7 @@ class Star:
             sl = Star.Stars
             for star in sl:
                 star.step()
-            screen.pen = color.blue
+            screen.pen = TRAIL
             for star in sl:
                 screen.shape(star.tail)
             screen.pen = color.white
@@ -68,7 +81,7 @@ class Star:
                 screen.shape(star.dot)
 
 
-for _ in range(60):
+for _ in range(stars):
     Star()
 
 

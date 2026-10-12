@@ -10,6 +10,10 @@
       "__init__.py"
     ],
     [
+      "plugins/stars/config.html",
+      "config.html"
+    ],
+    [
       "plugins/stars/thumbnail.png",
       "thumbnail.png"
     ]

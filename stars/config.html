@@ -1,0 +1,26 @@
+<form method="post" action="/config?plugin={{ plugin }}">
+  <fieldset>
+    <legend>Speed</legend>
+    <div class="presets">
+      <label><input type="radio" name="speed" value="0.5" {{ "checked" if placeholder.speed == 0.5 else "" }}>Slow</label>
+      <label><input type="radio" name="speed" value="1.0" {{ "checked" if placeholder.speed == 1.0 else "" }}>Normal</label>
+      <label><input type="radio" name="speed" value="2.0" {{ "checked" if placeholder.speed == 2.0 else "" }}>Fast</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Density</legend>
+    <div class="presets">
+      <label><input type="radio" name="stars" value="30" {{ "checked" if placeholder.stars == 30 else "" }}>Sparse</label>
+      <label><input type="radio" name="stars" value="60" {{ "checked" if placeholder.stars == 60 else "" }}>Normal</label>
+      <label><input type="radio" name="stars" value="75" {{ "checked" if placeholder.stars == 75 else "" }}>Dense</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Trail colour</legend>
+    <input type="color" name="trail_colour" aria-label="Trail colour" value="{{ '#%02x%02x%02x' % placeholder.trail_colour }}">
+  </fieldset>
+
+  <button type="submit">Apply</button>
+</form>
