@@ -1,3 +1,4 @@
+from math import atan2, degrees, sqrt
 from random import getrandbits
 import time
 
@@ -21,6 +22,8 @@ class Star:
         self.py = self.y
         self.z = CX
         self.size = 0.4
+        self.dot = shape.regular_polygon(0, 0, 1, 12)
+        self.tail = shape.line(vec2(0, 0), vec2(1, 0), 1)
 
         Star.Stars.append(self)
 
@@ -39,11 +42,12 @@ class Star:
 
         self.size = (CX - self.z) / 8
 
-    def draw(self):
-        screen.pen = color.white
-        screen.circle(self.x + CX, self.y + CY, self.size)
-        screen.pen = color.blue
-        screen.line(self.x + CX, self.y + CY, self.px + CX, self.py + CY)
+        dx = self.px - self.x
+        dy = self.py - self.y
+        size = self.size or 0.001
+        m = mat3.trs(self.x + CX, self.y + CY, degrees(atan2(dy, dx)), size)
+        self.dot.transform = m
+        self.tail.transform = m.scale(sqrt(dx * dx + dy * dy) / size, 1 / size)
 
     @staticmethod
     def update():
@@ -56,7 +60,12 @@ class Star:
             sl = Star.Stars
             for star in sl:
                 star.step()
-                star.draw()
+            screen.pen = color.blue
+            for star in sl:
+                screen.shape(star.tail)
+            screen.pen = color.white
+            for star in sl:
+                screen.shape(star.dot)
 
 
 for _ in range(60):
