@@ -1,0 +1,40 @@
+<form method="post" action="/config?plugin={{ plugin }}">
+  <fieldset>
+    <legend>Pace</legend>
+    <div class="presets">
+      <label><input type="radio" name="pace" value="1" {{ "checked" if placeholder.pace == 1 else "" }}>Slow</label>
+      <label><input type="radio" name="pace" value="2" {{ "checked" if placeholder.pace == 2 else "" }}>Steady</label>
+      <label><input type="radio" name="pace" value="3" {{ "checked" if placeholder.pace == 3 else "" }}>Busy</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Dish size</legend>
+    <div class="presets">
+      <label><input type="radio" name="dish" value="4" {{ "checked" if placeholder.dish == 4 else "" }}>4 cells</label>
+      <label><input type="radio" name="dish" value="6" {{ "checked" if placeholder.dish == 6 else "" }}>6 cells</label>
+      <label><input type="radio" name="dish" value="8" {{ "checked" if placeholder.dish == 8 else "" }}>8 cells</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Nucleus</legend>
+    <div class="presets">
+      <label><input type="radio" name="nucleus" value="1" {{ "checked" if placeholder.nucleus == 1 else "" }}>Show</label>
+      <label><input type="radio" name="nucleus" value="0" {{ "checked" if placeholder.nucleus == 0 else "" }}>Hide</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Theme</legend>
+    <div class="presets">
+      <label><input type="radio" name="theme" value="mono" {{ "checked" if placeholder.theme == "mono" else "" }}>Mono</label>
+      <label><input type="radio" name="theme" value="glow" {{ "checked" if placeholder.theme == "glow" else "" }}>Glow</label>
+      <label><input type="radio" name="theme" value="violet" {{ "checked" if placeholder.theme == "violet" else "" }}>Violet</label>
+      <label><input type="radio" name="theme" value="plankton" {{ "checked" if placeholder.theme == "plankton" else "" }}>Plankton</label>
+      <label><input type="radio" name="theme" value="agar" {{ "checked" if placeholder.theme == "agar" else "" }}>Agar</label>
+    </div>
+  </fieldset>
+
+  <button type="submit">Apply</button>
+</form>

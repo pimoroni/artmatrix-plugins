@@ -1,0 +1,23 @@
+<form method="post" action="/config?plugin={{ plugin }}">
+  <fieldset>
+    <legend>Colour scheme</legend>
+    <div class="presets">
+      <label><input type="radio" name="scheme" value="deep_sea" {{ "checked" if placeholder.scheme == "deep_sea" else "" }}>Deep sea</label>
+      <label><input type="radio" name="scheme" value="pond" {{ "checked" if placeholder.scheme == "pond" else "" }}>Pond</label>
+      <label><input type="radio" name="scheme" value="moonlit" {{ "checked" if placeholder.scheme == "moonlit" else "" }}>Moonlit</label>
+      <label><input type="radio" name="scheme" value="lagoon" {{ "checked" if placeholder.scheme == "lagoon" else "" }}>Lagoon</label>
+      <label><input type="radio" name="scheme" value="sunset" {{ "checked" if placeholder.scheme == "sunset" else "" }}>Sunset</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Rain</legend>
+    <div class="presets">
+      <label><input type="radio" name="rain" value="1" {{ "checked" if placeholder.rain == 1 else "" }}>Light</label>
+      <label><input type="radio" name="rain" value="2" {{ "checked" if placeholder.rain == 2 else "" }}>Steady</label>
+      <label><input type="radio" name="rain" value="4" {{ "checked" if placeholder.rain == 4 else "" }}>Heavy</label>
+    </div>
+  </fieldset>
+
+  <button type="submit">Apply</button>
+</form>

@@ -1,0 +1,40 @@
+<form method="post" action="/config?plugin={{ plugin }}">
+  <fieldset>
+    <legend>Colour scheme</legend>
+    <div class="presets">
+      <label><input type="radio" name="scheme" value="ocean" {{ "checked" if placeholder.scheme == "ocean" else "" }}>Ocean</label>
+      <label><input type="radio" name="scheme" value="lava" {{ "checked" if placeholder.scheme == "lava" else "" }}>Lava</label>
+      <label><input type="radio" name="scheme" value="aurora" {{ "checked" if placeholder.scheme == "aurora" else "" }}>Aurora</label>
+      <label><input type="radio" name="scheme" value="marble" {{ "checked" if placeholder.scheme == "marble" else "" }}>Marble</label>
+      <label><input type="radio" name="scheme" value="monochrome" {{ "checked" if placeholder.scheme == "monochrome" else "" }}>Monochrome</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Strength</legend>
+    <div class="presets">
+      <label><input type="radio" name="strength" value="6" {{ "checked" if placeholder.strength == 6 else "" }}>Subtle</label>
+      <label><input type="radio" name="strength" value="12" {{ "checked" if placeholder.strength == 12 else "" }}>Bold</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Speed</legend>
+    <div class="presets">
+      <label><input type="radio" name="speed" value="1" {{ "checked" if placeholder.speed == 1 else "" }}>Slow</label>
+      <label><input type="radio" name="speed" value="2" {{ "checked" if placeholder.speed == 2 else "" }}>Medium</label>
+      <label><input type="radio" name="speed" value="4" {{ "checked" if placeholder.speed == 4 else "" }}>Fast</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Swirl size</legend>
+    <div class="presets">
+      <label><input type="radio" name="scale" value="5.0" {{ "checked" if placeholder.scale == 5.0 else "" }}>Small</label>
+      <label><input type="radio" name="scale" value="3.1" {{ "checked" if placeholder.scale == 3.1 else "" }}>Medium</label>
+      <label><input type="radio" name="scale" value="2.0" {{ "checked" if placeholder.scale == 2.0 else "" }}>Large</label>
+    </div>
+  </fieldset>
+
+  <button type="submit">Apply</button>
+</form>

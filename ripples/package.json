@@ -1,0 +1,21 @@
+{
+  "name": "Ripples",
+  "version": "1.0.0",
+  "description": "Raindrops rippling across a pool of water",
+  "author": "Pimoroni",
+  "requires_internet": false,
+  "urls": [
+    [
+      "plugins/ripples/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/ripples/config.html",
+      "config.html"
+    ],
+    [
+      "plugins/ripples/thumbnail.png",
+      "thumbnail.png"
+    ]
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Domain Warp",
+  "version": "1.0.0",
+  "description": "Swirling marbled noise in a choice of colours",
+  "author": "Pimoroni",
+  "requires_internet": false,
+  "urls": [
+    [
+      "plugins/domain_warp/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/domain_warp/config.html",
+      "config.html"
+    ],
+    [
+      "plugins/domain_warp/thumbnail.png",
+      "thumbnail.png"
+    ]
+  ]
+}

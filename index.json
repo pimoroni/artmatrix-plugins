@@ -5,7 +5,10 @@
     "art_matrix_draw": "Art Matrix Draw",
     "bezier": "Bezier",
     "blackhole": "Blackhole",
+    "cells": "Cells",
     "co2_matrix": "CO2 Matrix",
+    "contours": "Contours",
+    "domain_warp": "Domain Warp",
     "earthquake_map": "Earthquake Map",
     "firework": "Firework",
     "galileo_thermometer": "Galileo Thermometer",
@@ -13,12 +16,15 @@
     "gravity_clock_classic": "Gravity Clock Classic",
     "gravity_clock_vaporwave": "Gravity Clock Vaporwave",
     "iss_tracker": "ISS Tracker",
+    "kaleidoscope": "Kaleidoscope",
     "kritter": "Kritter",
     "maze": "Maze",
+    "neon_corridor": "Neon Corridor",
     "now_playing": "Now Playing",
     "random_bots": "Random Bots",
     "random_shapes": "Random Shapes",
     "random_triangles": "Random Triangles",
+    "ripples": "Ripples",
     "solar_system": "Solar System",
     "spirit_level": "Spirit Level",
     "stars": "Stars",
@@ -51,8 +57,20 @@
       "description": "A clock whose hands orbit a black hole",
       "author": "Pimoroni"
     },
+    "cells": {
+      "description": "Glowing cells dividing in a dish",
+      "author": "Pimoroni"
+    },
     "co2_matrix": {
       "description": "The CO2 level from an SCD41 breakout",
+      "author": "Pimoroni"
+    },
+    "contours": {
+      "description": "Drifting contour lines, like a map of shifting hills",
+      "author": "Pimoroni"
+    },
+    "domain_warp": {
+      "description": "Swirling marbled noise in a choice of colours",
       "author": "Pimoroni"
     },
     "earthquake_map": {
@@ -83,12 +101,20 @@
       "description": "Where the International Space Station is right now",
       "author": "Pimoroni"
     },
+    "kaleidoscope": {
+      "description": "Vibrating-plate wave patterns that morph and pulse",
+      "author": "Pimoroni"
+    },
     "kritter": {
       "description": "Watch the kritters hop between planets",
       "author": "Pimoroni"
     },
     "maze": {
       "description": "A 3D walk through randomly generated mazes",
+      "author": "Pimoroni"
+    },
+    "neon_corridor": {
+      "description": "An endless walk down a neon-lit corridor",
       "author": "Pimoroni"
     },
     "now_playing": {
@@ -105,6 +131,10 @@
     },
     "random_triangles": {
       "description": "Random triangle patterns from DiceBear",
+      "author": "Pimoroni"
+    },
+    "ripples": {
+      "description": "Raindrops rippling across a pool of water",
       "author": "Pimoroni"
     },
     "solar_system": {

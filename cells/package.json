@@ -1,0 +1,21 @@
+{
+  "name": "Cells",
+  "version": "1.0.0",
+  "description": "Glowing cells dividing in a dish",
+  "author": "Pimoroni",
+  "requires_internet": false,
+  "urls": [
+    [
+      "plugins/cells/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/cells/config.html",
+      "config.html"
+    ],
+    [
+      "plugins/cells/thumbnail.png",
+      "thumbnail.png"
+    ]
+  ]
+}

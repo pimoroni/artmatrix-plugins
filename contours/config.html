@@ -1,0 +1,31 @@
+<form method="post" action="/config?plugin={{ plugin }}">
+  <fieldset>
+    <legend>Style</legend>
+    <div class="presets">
+      <label><input type="radio" name="style" value="lines" {{ "checked" if placeholder.style == "lines" else "" }}>Lines</label>
+      <label><input type="radio" name="style" value="solid" {{ "checked" if placeholder.style == "solid" else "" }}>Solid</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Colour scheme</legend>
+    <div class="presets">
+      <label><input type="radio" name="scheme" value="amber" {{ "checked" if placeholder.scheme == "amber" else "" }}>Amber</label>
+      <label><input type="radio" name="scheme" value="sea" {{ "checked" if placeholder.scheme == "sea" else "" }}>Sea</label>
+      <label><input type="radio" name="scheme" value="moss" {{ "checked" if placeholder.scheme == "moss" else "" }}>Moss</label>
+      <label><input type="radio" name="scheme" value="neon" {{ "checked" if placeholder.scheme == "neon" else "" }}>Neon</label>
+      <label><input type="radio" name="scheme" value="mono" {{ "checked" if placeholder.scheme == "mono" else "" }}>Mono</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Speed</legend>
+    <div class="presets">
+      <label><input type="radio" name="speed" value="1" {{ "checked" if placeholder.speed == 1 else "" }}>Slow</label>
+      <label><input type="radio" name="speed" value="2" {{ "checked" if placeholder.speed == 2 else "" }}>Medium</label>
+      <label><input type="radio" name="speed" value="4" {{ "checked" if placeholder.speed == 4 else "" }}>Fast</label>
+    </div>
+  </fieldset>
+
+  <button type="submit">Apply</button>
+</form>

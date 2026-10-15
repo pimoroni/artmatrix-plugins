@@ -1,0 +1,31 @@
+<form method="post" action="/config?plugin={{ plugin }}">
+  <fieldset>
+    <legend>Colour scheme</legend>
+    <div class="presets">
+      <label><input type="radio" name="scheme" value="sand" {{ "checked" if placeholder.scheme == "sand" else "" }}>Sand</label>
+      <label><input type="radio" name="scheme" value="neon" {{ "checked" if placeholder.scheme == "neon" else "" }}>Neon</label>
+      <label><input type="radio" name="scheme" value="ember" {{ "checked" if placeholder.scheme == "ember" else "" }}>Ember</label>
+      <label><input type="radio" name="scheme" value="ice" {{ "checked" if placeholder.scheme == "ice" else "" }}>Ice</label>
+      <label><input type="radio" name="scheme" value="mono" {{ "checked" if placeholder.scheme == "mono" else "" }}>Mono</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Pace</legend>
+    <div class="presets">
+      <label><input type="radio" name="pace" value="1" {{ "checked" if placeholder.pace == 1 else "" }}>Slow</label>
+      <label><input type="radio" name="pace" value="2" {{ "checked" if placeholder.pace == 2 else "" }}>Medium</label>
+      <label><input type="radio" name="pace" value="3" {{ "checked" if placeholder.pace == 3 else "" }}>Fast</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Detail</legend>
+    <div class="presets">
+      <label><input type="radio" name="detail" value="simple" {{ "checked" if placeholder.detail == "simple" else "" }}>Simple</label>
+      <label><input type="radio" name="detail" value="busy" {{ "checked" if placeholder.detail == "busy" else "" }}>Busy</label>
+    </div>
+  </fieldset>
+
+  <button type="submit">Apply</button>
+</form>

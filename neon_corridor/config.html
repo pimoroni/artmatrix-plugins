@@ -1,0 +1,23 @@
+<form method="post" action="/config?plugin={{ plugin }}">
+  <fieldset>
+    <legend>Colour scheme</legend>
+    <div class="presets">
+      <label><input type="radio" name="scheme" value="neon" {{ "checked" if placeholder.scheme == "neon" else "" }}>Neon</label>
+      <label><input type="radio" name="scheme" value="plaid" {{ "checked" if placeholder.scheme == "plaid" else "" }}>Plaid</label>
+      <label><input type="radio" name="scheme" value="emerald" {{ "checked" if placeholder.scheme == "emerald" else "" }}>Emerald</label>
+      <label><input type="radio" name="scheme" value="magenta" {{ "checked" if placeholder.scheme == "magenta" else "" }}>Magenta</label>
+      <label><input type="radio" name="scheme" value="blueprint" {{ "checked" if placeholder.scheme == "blueprint" else "" }}>Blueprint</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Speed</legend>
+    <div class="presets">
+      <label><input type="radio" name="speed" value="55" {{ "checked" if placeholder.speed == 55 else "" }}>Slow</label>
+      <label><input type="radio" name="speed" value="70" {{ "checked" if placeholder.speed == 70 else "" }}>Normal</label>
+      <label><input type="radio" name="speed" value="90" {{ "checked" if placeholder.speed == 90 else "" }}>Fast</label>
+    </div>
+  </fieldset>
+
+  <button type="submit">Apply</button>
+</form>

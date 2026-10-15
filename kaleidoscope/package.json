@@ -1,0 +1,21 @@
+{
+  "name": "Kaleidoscope",
+  "version": "1.0.0",
+  "description": "Vibrating-plate wave patterns that morph and pulse",
+  "author": "Pimoroni",
+  "requires_internet": false,
+  "urls": [
+    [
+      "plugins/kaleidoscope/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/kaleidoscope/config.html",
+      "config.html"
+    ],
+    [
+      "plugins/kaleidoscope/thumbnail.png",
+      "thumbnail.png"
+    ]
+  ]
+}

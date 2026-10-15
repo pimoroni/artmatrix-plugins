@@ -1,0 +1,21 @@
+{
+  "name": "Contours",
+  "version": "1.0.0",
+  "description": "Drifting contour lines, like a map of shifting hills",
+  "author": "Pimoroni",
+  "requires_internet": false,
+  "urls": [
+    [
+      "plugins/contours/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/contours/config.html",
+      "config.html"
+    ],
+    [
+      "plugins/contours/thumbnail.png",
+      "thumbnail.png"
+    ]
+  ]
+}

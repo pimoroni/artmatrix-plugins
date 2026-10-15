@@ -1,0 +1,21 @@
+{
+  "name": "Neon Corridor",
+  "version": "1.0.0",
+  "description": "An endless walk down a neon-lit corridor",
+  "author": "Pimoroni",
+  "requires_internet": false,
+  "urls": [
+    [
+      "plugins/neon_corridor/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/neon_corridor/config.html",
+      "config.html"
+    ],
+    [
+      "plugins/neon_corridor/thumbnail.png",
+      "thumbnail.png"
+    ]
+  ]
+}
