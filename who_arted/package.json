@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Famous paintings that come to life",
   "author": "Pimoroni",
+  "category": "Scenes",
   "requires_internet": false,
   "urls": [
     [

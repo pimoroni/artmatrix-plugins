@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Planets orbiting around their sun",
   "author": "Pimoroni",
+  "category": "Scenes",
   "requires_internet": false,
   "urls": [
     [

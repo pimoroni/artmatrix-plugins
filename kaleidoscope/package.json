@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Vibrating-plate wave patterns that morph and pulse",
   "author": "Pimoroni",
+  "category": "Visualisations",
   "requires_internet": false,
   "urls": [
     [

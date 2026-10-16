@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Scrolling green text like an old terminal",
   "author": "Pimoroni",
+  "category": "Scenes",
   "requires_internet": false,
   "urls": [
     [

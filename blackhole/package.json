@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A clock whose hands orbit a black hole",
   "author": "Pimoroni",
+  "category": "Scenes",
   "requires_internet": false,
   "urls": [
     [

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "The static of an untuned TV",
   "author": "Pimoroni",
+  "category": "Visualisations",
   "requires_internet": false,
   "urls": [
     [

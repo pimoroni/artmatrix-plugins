@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Swirling marbled noise in a choice of colours",
   "author": "Pimoroni",
+  "category": "Visualisations",
   "requires_internet": false,
   "urls": [
     [

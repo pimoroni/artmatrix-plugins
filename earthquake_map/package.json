@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Recent earthquakes from USGS on a world map",
   "author": "Pimoroni",
+  "category": "Information",
   "requires_internet": true,
   "urls": [
     [

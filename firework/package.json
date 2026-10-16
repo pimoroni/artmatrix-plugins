@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Fireworks bursting in the night sky",
   "author": "Pimoroni",
+  "category": "Scenes",
   "requires_internet": false,
   "urls": [
     [

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Where the International Space Station is right now",
   "author": "Pimoroni",
+  "category": "Information",
   "requires_internet": true,
   "urls": [
     [

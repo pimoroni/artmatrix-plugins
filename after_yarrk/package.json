@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Pirate ships bobbing across the sea",
   "author": "Pimoroni",
+  "category": "Scenes",
   "requires_internet": false,
   "urls": [
     [

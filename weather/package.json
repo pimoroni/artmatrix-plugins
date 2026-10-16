@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "The current weather for your location",
   "author": "Pimoroni",
+  "category": "Information",
   "requires_internet": true,
   "urls": [
     [

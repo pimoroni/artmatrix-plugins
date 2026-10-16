@@ -13,8 +13,10 @@ TARGET_PREFIX = "plugins"
 NOT_PLUGINS = {"ci", "docs"}
 # the plugin's picture, shipped with it for the settings page
 THUMBNAIL = "thumbnail.png"
-# shown on the install page's cards, so every plugin needs both
-DETAILS = ("description", "author")
+# shown on the install page's cards, so every plugin needs all three
+DETAILS = ("description", "author", "category")
+# the settings and install pages filter on these
+CATEGORIES = ("Information", "Visualisations", "Scenes", "Interactive")
 # three lines on a phone-width card
 DESCRIPTION_MAX = 60
 EXCLUDE_NAMES = {MANIFEST_NAME, "config.json", ".DS_Store", "Thumbs.db"}
@@ -52,7 +54,7 @@ def plugin_files(plugin):
 
 
 def manifest_for(plugin):
-    # The display name, version, description, author and requires_internet are the
+    # The display name, version, details and requires_internet are the
     # plugin author's to set, so all are read back out of the manifest this overwrites.
     try:
         existing = json.loads((plugin / MANIFEST_NAME).read_text())
@@ -145,6 +147,10 @@ def validate_index(index, plugins):
         description = entry.get("description")
         if isinstance(description, str) and len(description) > DESCRIPTION_MAX:
             problems.append(f"'{name}' description is {len(description)} characters, the limit is {DESCRIPTION_MAX}")
+
+        category = entry.get("category")
+        if isinstance(category, str) and category.strip() and category not in CATEGORIES:
+            problems.append(f"'{name}' category {category!r} is not one of {', '.join(CATEGORIES)}")
 
     installable = {plugin.name for plugin in plugins if (plugin / MANIFEST_NAME).is_file()}
     for name in names:

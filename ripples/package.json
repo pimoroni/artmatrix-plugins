@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Raindrops rippling across a pool of water",
   "author": "Pimoroni",
+  "category": "Visualisations",
   "requires_internet": false,
   "urls": [
     [

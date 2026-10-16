@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Watch the kritters hop between planets",
   "author": "Pimoroni",
+  "category": "Scenes",
   "requires_internet": false,
   "urls": [
     [

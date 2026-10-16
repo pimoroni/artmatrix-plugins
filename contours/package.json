@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Drifting contour lines, like a map of shifting hills",
   "author": "Pimoroni",
+  "category": "Visualisations",
   "requires_internet": false,
   "urls": [
     [

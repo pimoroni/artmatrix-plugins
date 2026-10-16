@@ -39,143 +39,178 @@
   "details": {
     "3d_pipes": {
       "description": "The classic pipes screensaver",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Scenes"
     },
     "after_yarrk": {
       "description": "Pirate ships bobbing across the sea",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Scenes"
     },
     "art_matrix_draw": {
       "description": "Draw a picture in your browser and show it",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Interactive"
     },
     "bezier": {
       "description": "Smooth B\u00e9zier curves looping round the screen",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Visualisations"
     },
     "blackhole": {
       "description": "A clock whose hands orbit a black hole",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Scenes"
     },
     "cells": {
       "description": "Glowing cells dividing in a dish",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Visualisations"
     },
     "co2_matrix": {
       "description": "The CO2 level from an SCD41 breakout",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Information"
     },
     "contours": {
       "description": "Drifting contour lines, like a map of shifting hills",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Visualisations"
     },
     "domain_warp": {
       "description": "Swirling marbled noise in a choice of colours",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Visualisations"
     },
     "earthquake_map": {
       "description": "Recent earthquakes from USGS on a world map",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Information"
     },
     "firework": {
       "description": "Fireworks bursting in the night sky",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Scenes"
     },
     "galileo_thermometer": {
       "description": "A Galileo thermometer read from a Multi-Sensor Stick",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Information"
     },
     "game_of_life": {
       "description": "Conway's Game of Life",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Visualisations"
     },
     "gravity_clock_classic": {
       "description": "Chrome balls pulled round a clock face by gravity",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Information"
     },
     "gravity_clock_vaporwave": {
       "description": "The gravity clock with a vaporwave look",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Information"
     },
     "iss_tracker": {
       "description": "Where the International Space Station is right now",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Information"
     },
     "kaleidoscope": {
       "description": "Vibrating-plate wave patterns that morph and pulse",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Visualisations"
     },
     "kritter": {
       "description": "Watch the kritters hop between planets",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Scenes"
     },
     "maze": {
       "description": "A 3D walk through randomly generated mazes",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Scenes"
     },
     "neon_corridor": {
       "description": "An endless walk down a neon-lit corridor",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Visualisations"
     },
     "now_playing": {
       "description": "Album art for what's playing on your Spotify",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Information"
     },
     "random_bots": {
       "description": "Random robot portraits from DiceBear",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Scenes"
     },
     "random_shapes": {
       "description": "Random abstract shapes from DiceBear",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Scenes"
     },
     "random_triangles": {
       "description": "Random triangle patterns from DiceBear",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Scenes"
     },
     "ripples": {
       "description": "Raindrops rippling across a pool of water",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Visualisations"
     },
     "solar_system": {
       "description": "Planets orbiting around their sun",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Scenes"
     },
     "spirit_level": {
       "description": "A spirit level using an LSM6DS3 motion sensor",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Information"
     },
     "stars": {
       "description": "Flying through a starfield",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Visualisations"
     },
     "terminal": {
       "description": "Scrolling green text like an old terminal",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Scenes"
     },
     "this_is_fine": {
       "description": "The \"this is fine\" fire, with your own message",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Scenes"
     },
     "trilobite": {
       "description": "Trilobites wandering across the seabed",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Scenes"
     },
     "tv_static": {
       "description": "The static of an untuned TV",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Visualisations"
     },
     "weather": {
       "description": "The current weather for your location",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Information"
     },
     "who_arted": {
       "description": "Famous paintings that come to life",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Scenes"
     },
     "yt_subscriber_count": {
       "description": "A YouTube channel's live subscriber count",
-      "author": "Pimoroni"
+      "author": "Pimoroni",
+      "category": "Information"
     }
   }
 }
