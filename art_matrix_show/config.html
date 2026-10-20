@@ -19,7 +19,6 @@
     #save_note { display: inline; margin-left: 0.5rem; color: var(--success); font-family: var(--font);
       font-size: 0.8125rem; font-weight: 400; letter-spacing: normal; text-transform: none; }
     #save_note[hidden] { display: none; }
-    #finish_button { width: 100%; }
     #picture_count { margin: 0 0 var(--gap); }
     .add-hint { margin: var(--gap) 0; }
 
@@ -113,8 +112,6 @@
       <label><input type="radio" name="transition" value="random" {{ "checked" if placeholder.transition == "random" else "" }}>Random</label>
     </div>
   </fieldset>
-
-  <button type="button" id="finish_button">Done</button>
 
   <script>
     // phew ends a template tag at the first pair of closing braces, so this
@@ -783,26 +780,6 @@
         event.preventDefault()
         event.returnValue = ''
       }
-    })
-
-    // everything's already saved, this just waits for anything still going, then goes back
-    const finishButton = document.getElementById('finish_button')
-    finishButton.addEventListener('click', async () => {
-      finishButton.disabled = true
-      finishButton.textContent = 'Saving…'
-      const noticeBefore = notice.textContent
-      // photos still being read join the queue as they finish, so it's checked until empty
-      while (busy()) {
-        await new Promise(resolve => setTimeout(resolve, 100))
-      }
-      // a save that failed while waiting stays on screen to be read
-      if (notice.textContent && notice.textContent !== noticeBefore) {
-        finishButton.disabled = false
-        finishButton.textContent = 'Done'
-        return
-      }
-      leaving = true
-      location.href = '/'
     })
 
     function finishGallery() {
