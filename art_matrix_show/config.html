@@ -15,6 +15,11 @@
     .picture { position: relative; }
     .picture img, .picture canvas { display: block; width: 100%; aspect-ratio: 1; image-rendering: pixelated; border-radius: var(--radius); background: #000; }
     #notice { color: var(--danger); }
+    /* sits in the heading of whatever just changed, so nothing below it moves */
+    #save_note { display: inline; margin-left: 0.5rem; color: var(--success); font-family: var(--font);
+      font-size: 0.8125rem; font-weight: 400; letter-spacing: normal; text-transform: none; }
+    #save_note[hidden] { display: none; }
+    #finish_button { width: 100%; }
     #picture_count { margin: 0 0 var(--gap); }
     .add-hint { margin: var(--gap) 0; }
 
@@ -53,7 +58,7 @@
   <aside>{{ placeholder.other_note }}</aside>
 
   <hr>
-  <h3>Pictures</h3>
+  <h3 id="pictures_heading">Pictures<small id="save_note" aria-live="polite" hidden></small></h3>
   <small id="picture_count"></small>
   <small id="notice"></small>
   <div id="upload_progress" hidden>
@@ -67,7 +72,7 @@
     <label>Zoom
       <input type="range" id="zoom" min="1" max="4" step="0.01" value="1">
     </label>
-    <small>Drag the picture to choose which part shows. Each change is saved when you let go.</small>
+    <small>Drag the picture to choose which part shows. Pinch it or use the slider to zoom. Each change is saved when you let go.</small>
     <button type="button" id="done_button" class="secondary">Done</button>
   </div>
 
@@ -108,6 +113,8 @@
       <label><input type="radio" name="transition" value="random" {{ "checked" if placeholder.transition == "random" else "" }}>Random</label>
     </div>
   </fieldset>
+
+  <button type="button" id="finish_button">Done</button>
 
   <script>
     // phew ends a template tag at the first pair of closing braces, so this
@@ -160,7 +167,9 @@
     let zoomTimer = null
     let lastName = 0
     let editing = null
-    let dragFrom = null
+    // fingers (or the mouse) down on the editor, by pointer id
+    const fingers = new Map()
+    let fingersMoved = false
 
     // counts pictures, not bytes. the wait is mostly the board saving each one
     let batchTotal = 0
@@ -183,10 +192,37 @@
       })
     }
 
-    // photos still loading, or posts not yet sent, would be lost by leaving
-    // the page, or by a storage change reloading it
+    // photos still loading, a zoom waiting to go, or posts not yet sent, would
+    // be lost by leaving the page, or by a storage change reloading it
     function busy() {
-      return batchDone < batchTotal || queued > 0
+      return batchDone < batchTotal || queued > 0 || zoomTimer !== null
+    }
+
+    // shown in the heading of what changed, so a save is seen to stick
+    const SAVED_SHOW_MS = 2000
+    const saveNote = document.getElementById('save_note')
+    let noteTimer = null
+    let notesStarted = 0
+
+    // returns what to call once the post is back. only the latest save gets to say
+    function noteSaving(heading) {
+      clearTimeout(noteTimer)
+      heading.append(saveNote)
+      saveNote.textContent = 'Saving…'
+      saveNote.hidden = false
+      notesStarted += 1
+      const mine = notesStarted
+      return saved => {
+        if (mine !== notesStarted) {
+          return
+        }
+        if (!saved) {
+          saveNote.hidden = true
+          return
+        }
+        saveNote.textContent = 'Saved ✓'
+        noteTimer = setTimeout(() => { saveNote.hidden = true }, SAVED_SHOW_MS)
+      }
     }
 
     function updateBusy() {
@@ -410,40 +446,73 @@
       // the same for a finger and for arrow keys, which step one change a press
       clearTimeout(zoomTimer)
       zoomTimer = setTimeout(() => {
+        zoomTimer = null
         batchTotal += 1
         showProgress()
         upload(photo)
       }, ZOOM_SAVE_MS)
     })
 
+    // one finger drags, two pinch. the spot between them is the one held still
+    function fingerSpot() {
+      const spots = Array.from(fingers.values())
+      const x = spots.reduce((sum, spot) => sum + spot.x, 0) / spots.length
+      const y = spots.reduce((sum, spot) => sum + spot.y, 0) / spots.length
+      const spread = spots.length > 1 ? Math.hypot(spots[0].x - spots[1].x, spots[0].y - spots[1].y) : 0
+      return { x, y, spread }
+    }
+
     editorCanvas.addEventListener('pointerdown', event => {
-      dragFrom = { x: event.clientX, y: event.clientY }
+      // a third finger is ignored rather than throwing the pinch off
+      if (!editing || fingers.size >= 2) {
+        return
+      }
+      fingers.set(event.pointerId, { x: event.clientX, y: event.clientY })
       editorCanvas.setPointerCapture(event.pointerId)
     })
 
     editorCanvas.addEventListener('pointermove', event => {
-      if (!dragFrom) {
+      if (!editing || !fingers.has(event.pointerId)) {
         return
       }
+      const before = fingerSpot()
+      fingers.set(event.pointerId, { x: event.clientX, y: event.clientY })
+      const after = fingerSpot()
+
       // screen pixels to photo pixels, the canvas shows one crop square across its width
-      const side = Math.min(editing.workingCopy.width, editing.workingCopy.height) / editing.zoom
-      const scale = side / editorCanvas.getBoundingClientRect().width
-      editing.x -= (event.clientX - dragFrom.x) * scale
-      editing.y -= (event.clientY - dragFrom.y) * scale
-      dragFrom = { x: event.clientX, y: event.clientY }
+      const bounds = editorCanvas.getBoundingClientRect()
+      const short = Math.min(editing.workingCopy.width, editing.workingCopy.height)
+      const scaleBefore = short / editing.zoom / bounds.width
+      // the photo pixel under the fingers, from the middle of the canvas
+      const heldX = editing.x + (before.x - bounds.left - bounds.width / 2) * scaleBefore
+      const heldY = editing.y + (before.y - bounds.top - bounds.height / 2) * scaleBefore
+      if (before.spread && after.spread) {
+        editing.zoom = Math.min(Math.max(editing.zoom * after.spread / before.spread, zoomSlider.min), zoomSlider.max)
+        zoomSlider.value = editing.zoom
+      }
+      // that pixel stays under the fingers as they move apart or across
+      const scaleAfter = short / editing.zoom / bounds.width
+      editing.x = heldX - (after.x - bounds.left - bounds.width / 2) * scaleAfter
+      editing.y = heldY - (after.y - bounds.top - bounds.height / 2) * scaleAfter
+      fingersMoved = true
       clampCrop(editing)
       drawPhoto(editing, editorCanvas)
     })
 
-    editorCanvas.addEventListener('pointerup', () => {
-      if (dragFrom) {
-        dragFrom = null
-        batchTotal += 1
-        showProgress()
-        upload(editing)
+    // saved once the last finger lifts, not at the end of each one
+    function liftFinger(event) {
+      if (!fingers.delete(event.pointerId) || fingers.size || !fingersMoved) {
+        return
       }
-    })
-    editorCanvas.addEventListener('pointercancel', () => { dragFrom = null })
+      fingersMoved = false
+      batchTotal += 1
+      showProgress()
+      upload(editing)
+    }
+    editorCanvas.addEventListener('pointerup', liftFinger)
+    editorCanvas.addEventListener('pointercancel', liftFinger)
+    // safari zooms the whole page on a pinch unless its own gesture event is stopped
+    editorCanvas.addEventListener('gesturestart', event => event.preventDefault())
 
     document.getElementById('done_button').addEventListener('click', closeEditor)
 
@@ -640,9 +709,12 @@
       }
       savedOrder = names
       notice.textContent = ''
+      const noteSaved = noteSaving(document.getElementById('pictures_heading'))
       // behind any upload still going, so every name in it is already saved
       enqueue(async () => {
-        if (!(await post({ arrange: names }))) {
+        const saved = await post({ arrange: names })
+        noteSaved(saved)
+        if (!saved) {
           notice.textContent = "Couldn't save the new order, check the board is still connected."
         }
       })
@@ -665,7 +737,7 @@
       return Number(durationValue.value) * UNIT_SECONDS[durationUnit.value]
     }
 
-    function saveSettings(storageChanged) {
+    function saveSettings(changed) {
       // an empty box, a fraction or too short a time never leaves the page
       durationValue.setCustomValidity(durationSeconds() < SHORTEST_SECONDS ? `At least ${SHORTEST_SECONDS} seconds` : '')
       if (!durationValue.reportValidity()) {
@@ -675,9 +747,13 @@
       for (const name of SETTING_NAMES) {
         fields[name] = form.querySelector(`input[name="${name}"]:checked`).value
       }
+      const storageChanged = changed.name === 'storage'
       notice.textContent = ''
+      const noteSaved = noteSaving(changed.closest('fieldset').querySelector('legend'))
       enqueue(async () => {
-        if (!(await post(fields))) {
+        const saved = await post(fields)
+        noteSaved(saved)
+        if (!saved) {
           notice.textContent = "Couldn't save that setting, check the board is still connected."
           return
         }
@@ -691,10 +767,10 @@
 
     for (const name of SETTING_NAMES) {
       form.querySelectorAll(`input[name="${name}"]`).forEach(input =>
-        input.addEventListener('change', () => saveSettings(name === 'storage')))
+        input.addEventListener('change', () => saveSettings(input)))
     }
-    durationValue.addEventListener('change', () => saveSettings(false))
-    durationUnit.addEventListener('change', () => saveSettings(false))
+    durationValue.addEventListener('change', () => saveSettings(durationValue))
+    durationUnit.addEventListener('change', () => saveSettings(durationUnit))
 
     // enter would submit the form and reload the page, leaving the box saves instead
     form.addEventListener('submit', event => {
@@ -707,6 +783,26 @@
         event.preventDefault()
         event.returnValue = ''
       }
+    })
+
+    // everything's already saved, this just waits for anything still going, then goes back
+    const finishButton = document.getElementById('finish_button')
+    finishButton.addEventListener('click', async () => {
+      finishButton.disabled = true
+      finishButton.textContent = 'Saving…'
+      const noticeBefore = notice.textContent
+      // photos still being read join the queue as they finish, so it's checked until empty
+      while (busy()) {
+        await new Promise(resolve => setTimeout(resolve, 100))
+      }
+      // a save that failed while waiting stays on screen to be read
+      if (notice.textContent && notice.textContent !== noticeBefore) {
+        finishButton.disabled = false
+        finishButton.textContent = 'Done'
+        return
+      }
+      leaving = true
+      location.href = '/'
     })
 
     function finishGallery() {
