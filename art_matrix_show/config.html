@@ -1,0 +1,730 @@
+<form method="post" action="/config?plugin={{ plugin }}" class="{{ "" if placeholder.sd_present else "no-card" }}">
+  <style>
+    /* greyed while it can't be used */
+    form.no-card .sd-option,
+    form.busy .storage-choice { opacity: 0.4; pointer-events: none; }
+
+    .internal-warning, .card-note { display: none; }
+    form:has(input[name="storage"][value="internal"]:checked) .internal-warning,
+    form.no-card .card-note { display: block; }
+
+    .pictures { display: grid; grid-template-columns: repeat(auto-fill, minmax(5.5rem, 1fr)); gap: var(--gap); margin: 0 0 var(--gap); }
+    .pictures:empty { display: none; }
+    /* tiles measure their layout place against this */
+    #gallery { position: relative; }
+    .picture { position: relative; }
+    .picture img, .picture canvas { display: block; width: 100%; aspect-ratio: 1; image-rendering: pixelated; border-radius: var(--radius); background: #000; }
+    #notice { color: var(--danger); }
+    #picture_count { margin: 0 0 var(--gap); }
+    .add-hint { margin: var(--gap) 0; }
+
+    /* the same bar as the install page's */
+    #upload_progress { margin: 0 0 var(--gap); }
+    #upload_progress .progress { display: block; height: 0.375rem; margin: 0.25rem 0; background: var(--lift); border-radius: var(--radius); overflow: hidden; }
+    #upload_progress .progress span { display: block; width: 0; height: 100%; background: var(--accent); transition: width var(--speed); }
+    .picture.uploading img { opacity: 0.4; }
+    .picture.editable img { cursor: pointer; }
+    /* only ones added this visit can be adjusted, the board keeps just the 128px crop */
+    .picture.editable::after { content: "Tap to adjust"; position: absolute; left: 0.25rem; right: 0.25rem; bottom: 0.25rem;
+      padding: 0.125rem; border-radius: var(--radius); background: rgba(0, 0, 0, 0.6); color: var(--ink);
+      font-size: 0.75rem; text-align: center; pointer-events: none; }
+    .picture.editing img { outline: 2px solid var(--accent); }
+    .picture.placeholder { opacity: 0.3; }
+    .picture.ghost { position: fixed; z-index: 10; margin: 0; pointer-events: none; transform: scale(1.05); box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.5); border-radius: var(--radius); }
+    /* a long press drags, so the phone's image menu, preview and selection stay out of it */
+    .picture img { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-user-drag: none; }
+    /* the darker backing keeps the red readable over any photo */
+    .picture button.icon.delete { position: absolute; top: 0.25rem; right: 0.25rem; color: var(--danger); background: rgba(0, 0, 0, 0.6); }
+
+    #editor { margin: 0 0 var(--gap); }
+    #editor canvas { display: block; width: 100%; max-width: 20rem; aspect-ratio: 1; margin: 0 0 var(--gap); background: #000; border-radius: var(--radius); touch-action: none; cursor: grab; }
+  </style>
+
+  <h3>Storage</h3>
+  <fieldset class="storage-choice">
+    <legend>Keep pictures on</legend>
+    <div class="presets">
+      <label class="sd-option"><input type="radio" name="storage" value="sd" {{ "checked" if placeholder.storage == "sd" else "" }}>SD card (recommended)</label>
+      <label><input type="radio" name="storage" value="internal" {{ "checked" if placeholder.storage == "internal" else "" }}>Internal Storage</label>
+    </div>
+  </fieldset>
+  <aside class="card-note">No SD card found. Put one in and restart the board to use it.</aside>
+  <aside class="internal-warning">Internal storage holds only {{ placeholder.LIMITS["internal"] }} pictures. Use an SD card to store up to {{ placeholder.LIMITS["sd"] }}.</aside>
+  <aside>{{ placeholder.other_note }}</aside>
+
+  <hr>
+  <h3>Pictures</h3>
+  <small id="picture_count"></small>
+  <small id="notice"></small>
+  <div id="upload_progress" hidden>
+    <span class="progress"><span></span></span>
+    <small id="upload_status"></small>
+  </div>
+  <div class="pictures" id="gallery"></div>
+
+  <div id="editor" hidden>
+    <canvas id="editor_canvas" width="256" height="256"></canvas>
+    <label>Zoom
+      <input type="range" id="zoom" min="1" max="4" step="0.01" value="1">
+    </label>
+    <small>Drag the picture to choose which part shows. Each change is saved when you let go.</small>
+    <button type="button" id="done_button" class="secondary">Done</button>
+  </div>
+
+  <input type="file" id="picker" accept="image/*" multiple hidden>
+  <small class="add-hint">Tap a new picture to move or zoom it. Once you leave this page, it can't be changed. Press and hold any picture to rearrange it.</small>
+  <button type="button" id="add_button">Add pictures</button>
+
+  <hr>
+  <h3>Slideshow</h3>
+  <fieldset>
+    <legend>Show each picture for</legend>
+    <div class="field-row">
+      <input type="number" id="duration_value" min="1" step="1" value="{{ placeholder.duration_value }}" aria-label="Show each picture for">
+      <select id="duration_unit" aria-label="Unit">
+        <option value="seconds" {{ "selected" if placeholder.duration_unit == "seconds" else "" }}>seconds</option>
+        <option value="minutes" {{ "selected" if placeholder.duration_unit == "minutes" else "" }}>minutes</option>
+        <option value="hours" {{ "selected" if placeholder.duration_unit == "hours" else "" }}>hours</option>
+      </select>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Order</legend>
+    <div class="presets">
+      <label><input type="radio" name="order" value="in_order" {{ "checked" if placeholder.order == "in_order" else "" }}>In order</label>
+      <label><input type="radio" name="order" value="shuffle" {{ "checked" if placeholder.order == "shuffle" else "" }}>Shuffle</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Transition</legend>
+    <div class="presets" style="grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr))">
+      <label><input type="radio" name="transition" value="none" {{ "checked" if placeholder.transition == "none" else "" }}>None</label>
+      <label><input type="radio" name="transition" value="fizzle" {{ "checked" if placeholder.transition == "fizzle" else "" }}>Fizzle</label>
+      <label><input type="radio" name="transition" value="slide" {{ "checked" if placeholder.transition == "slide" else "" }}>Slide</label>
+      <label><input type="radio" name="transition" value="bars" {{ "checked" if placeholder.transition == "bars" else "" }}>Bars</label>
+      <label><input type="radio" name="transition" value="star" {{ "checked" if placeholder.transition == "star" else "" }}>Star wipe</label>
+      <label><input type="radio" name="transition" value="random" {{ "checked" if placeholder.transition == "random" else "" }}>Random</label>
+    </div>
+  </fieldset>
+
+  <script>
+    // phew ends a template tag at the first pair of closing braces, so this
+    // script never puts two together
+    const SD_PRESENT = {{ "true" if placeholder.sd_present else "false" }}
+    const SAVED_STORAGE = '{{ placeholder.storage }}'
+    const LIMITS = { sd: {{ placeholder.LIMITS["sd"] }}, internal: {{ placeholder.LIMITS["internal"] }} }
+    const PLACE_NAMES = { sd: 'the SD card', internal: 'internal storage' }
+
+    // short side of the editor's copy of each photo. 4x zoom still fills the
+    // 128px picture, and bigger would only cost the phone memory
+    const WORKING_SIZE = 512
+    // a zoom is sent this long after the slider stops, not on every step of it
+    const ZOOM_SAVE_MS = 600
+    const OUTPUT_SIZE = 128
+
+    const form = document.querySelector('form')
+    const gallery = document.getElementById('gallery')
+    const pictureCount = document.getElementById('picture_count')
+    const notice = document.getElementById('notice')
+    const picker = document.getElementById('picker')
+    const addButton = document.getElementById('add_button')
+    const editor = document.getElementById('editor')
+    const editorCanvas = document.getElementById('editor_canvas')
+    const zoomSlider = document.getElementById('zoom')
+    const uploadProgress = document.getElementById('upload_progress')
+    const progressFill = uploadProgress.querySelector('.progress span')
+    const uploadStatus = document.getElementById('upload_status')
+
+    // the ones saved before this visit, plus the ones added or on their way
+    let pictureTotal = {{ len(placeholder.pictures) }}
+
+    // the previews are still streaming in until finishGallery runs
+    let galleryReady = false
+    const galleryWatcher = new MutationObserver(() => {
+      const incoming = document.getElementById('incoming')
+      if (!incoming) {
+        return
+      }
+      // the newest one may still be arriving, it's moved on the next change
+      while (incoming.children.length > 1) {
+        gallery.append(incoming.firstElementChild)
+      }
+    })
+    galleryWatcher.observe(form, { childList: true, subtree: true })
+
+    // posts go one at a time, each one makes main.py reload the plugin
+    let posts = Promise.resolve()
+    let queued = 0
+    let zoomTimer = null
+    let lastName = 0
+    let editing = null
+    let dragFrom = null
+
+    // counts pictures, not bytes. the wait is mostly the board saving each one
+    let batchTotal = 0
+    let batchDone = 0
+
+    function updateCount() {
+      const limit = LIMITS[SAVED_STORAGE]
+      pictureCount.textContent = `${pictureTotal} of ${limit} pictures on ${PLACE_NAMES[SAVED_STORAGE]}`
+      // new tiles would land among ones still loading
+      addButton.disabled = pictureTotal >= limit || (SAVED_STORAGE === 'sd' && !SD_PRESENT) ||
+        batchDone < batchTotal || !galleryReady
+    }
+
+    function enqueue(task) {
+      queued += 1
+      updateBusy()
+      posts = posts.then(task).finally(() => {
+        queued -= 1
+        updateBusy()
+      })
+    }
+
+    // photos still loading, or posts not yet sent, would be lost by leaving
+    // the page, or by a storage change reloading it
+    function busy() {
+      return batchDone < batchTotal || queued > 0
+    }
+
+    function updateBusy() {
+      form.classList.toggle('busy', busy())
+    }
+
+    function showProgress() {
+      const percent = batchTotal ? Math.floor((100 * batchDone) / batchTotal) : 100
+      progressFill.style.width = `${percent}%`
+      if (batchDone < batchTotal) {
+        uploadProgress.hidden = false
+        uploadStatus.textContent = `Uploading ${batchDone + 1} of ${batchTotal}`
+        addButton.textContent = `${percent}%`
+        addButton.disabled = true
+        updateBusy()
+        return
+      }
+      // held at full for a moment, so the bar is seen to finish
+      uploadStatus.textContent = batchTotal > 1 ? `Uploaded ${batchTotal} pictures` : 'Uploaded'
+      addButton.textContent = 'Add pictures'
+      updateCount()
+      updateBusy()
+      setTimeout(() => {
+        if (batchDone >= batchTotal) {
+          uploadProgress.hidden = true
+          batchTotal = 0
+          batchDone = 0
+        }
+      }, 1000)
+    }
+
+    // in the background, so the page stays put. the redirect isn't followed,
+    // it would build the whole page again for nothing
+    async function post(fields) {
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: new URLSearchParams(fields),
+          redirect: 'manual',
+        })
+        return response.type === 'opaqueredirect' || response.ok
+      } catch (error) {
+        return false
+      }
+    }
+
+    // one big drawImage step skips most of a photo's pixels and looks
+    // shimmery, so it's halved down in steps
+    function drawShrunk(context, source, sx, sy, sw, sh, dx, dy, dw, dh) {
+      while (sw > dw * 2) {
+        const half = document.createElement('canvas')
+        half.width = Math.ceil(sw / 2)
+        half.height = Math.ceil(sh / 2)
+        half.getContext('2d').drawImage(source, sx, sy, sw, sh, 0, 0, half.width, half.height)
+        source = half
+        sx = 0
+        sy = 0
+        sw = half.width
+        sh = half.height
+      }
+      context.imageSmoothingQuality = 'high'
+      context.drawImage(source, sx, sy, sw, sh, dx, dy, dw, dh)
+    }
+
+    function drawPhoto(photo, canvas) {
+      const side = Math.min(photo.workingCopy.width, photo.workingCopy.height) / photo.zoom
+      drawShrunk(canvas.getContext('2d'), photo.workingCopy, photo.x - side / 2, photo.y - side / 2, side, side,
+        0, 0, canvas.width, canvas.height)
+    }
+
+    // keeps the crop square inside the photo
+    function clampCrop(photo) {
+      const half = Math.min(photo.workingCopy.width, photo.workingCopy.height) / photo.zoom / 2
+      photo.x = Math.min(Math.max(photo.x, half), photo.workingCopy.width - half)
+      photo.y = Math.min(Math.max(photo.y, half), photo.workingCopy.height - half)
+    }
+
+    function upload(photo) {
+      const output = document.createElement('canvas')
+      output.width = OUTPUT_SIZE
+      output.height = OUTPUT_SIZE
+      drawPhoto(photo, output)
+      const jpegUrl = output.toDataURL('image/jpeg', 0.92)
+      // base64url, so the post has no %-escapes, which the board decodes slowly
+      const encoded = jpegUrl.split(',')[1].replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+      enqueue(async () => {
+        // deleted while this waited, sending it would put it back on the board
+        if (!photo.tile.isConnected) {
+          batchDone += 1
+          showProgress()
+          return
+        }
+        if (await post({ name: photo.name, picture: encoded })) {
+          photo.tile.querySelector('img').src = jpegUrl
+          photo.tile.classList.remove('uploading')
+          photo.uploaded = true
+        } else if (photo.uploaded) {
+          notice.textContent = "Couldn't save that change, check the board is still connected."
+        } else {
+          photo.tile.remove()
+          pictureTotal -= 1
+          updateCount()
+          notice.textContent = "Couldn't upload a picture, check the board is still connected."
+        }
+        batchDone += 1
+        showProgress()
+      })
+    }
+
+    function makeTile(name) {
+      const tile = document.createElement('div')
+      tile.className = 'picture'
+      const preview = document.createElement('img')
+      preview.alt = ''
+      preview.draggable = false
+      const deleteButton = document.createElement('button')
+      deleteButton.type = 'button'
+      deleteButton.className = 'icon delete'
+      deleteButton.dataset.name = name
+      deleteButton.setAttribute('aria-label', 'Delete picture')
+      tile.append(preview, deleteButton)
+      gallery.append(tile)
+      return tile
+    }
+
+    function loadImage(file) {
+      return new Promise((resolve, reject) => {
+        const loaded = new Image()
+        loaded.onload = () => resolve(loaded)
+        loaded.onerror = reject
+        loaded.src = URL.createObjectURL(file)
+      })
+    }
+
+    async function addPhoto(file) {
+      // the clock in ms names them in upload order. two in the same ms get the next number
+      lastName = Math.max(Date.now(), lastName + 1)
+      const photo = { name: `${lastName}.jpg`, zoom: 1, uploaded: false }
+      photo.tile = makeTile(photo.name)
+      photo.tile.classList.add('uploading')
+
+      let loaded
+      try {
+        loaded = await loadImage(file)
+      } catch (error) {
+        photo.tile.remove()
+        pictureTotal -= 1
+        updateCount()
+        notice.textContent = `Couldn't open ${file.name}.`
+        batchDone += 1
+        showProgress()
+        return
+      }
+
+      // a working copy, so dragging doesn't shrink a 12 megapixel photo on every move
+      const scale = Math.min(1, WORKING_SIZE / Math.min(loaded.naturalWidth, loaded.naturalHeight))
+      photo.workingCopy = document.createElement('canvas')
+      photo.workingCopy.width = Math.round(loaded.naturalWidth * scale)
+      photo.workingCopy.height = Math.round(loaded.naturalHeight * scale)
+      drawShrunk(photo.workingCopy.getContext('2d'), loaded, 0, 0, loaded.naturalWidth, loaded.naturalHeight,
+        0, 0, photo.workingCopy.width, photo.workingCopy.height)
+      URL.revokeObjectURL(loaded.src)
+      // the centre of the crop, in working copy pixels
+      photo.x = photo.workingCopy.width / 2
+      photo.y = photo.workingCopy.height / 2
+
+      photo.tile.classList.add('editable')
+      photo.tile.querySelector('img').addEventListener('click', () => openEditor(photo))
+      upload(photo)
+    }
+
+    function openEditor(photo) {
+      if (editing) {
+        editing.tile.classList.remove('editing')
+      }
+      editing = photo
+      photo.tile.classList.add('editing')
+      zoomSlider.value = photo.zoom
+      drawPhoto(photo, editorCanvas)
+      editor.hidden = false
+      editor.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+
+    function closeEditor() {
+      if (editing) {
+        editing.tile.classList.remove('editing')
+      }
+      editing = null
+      editor.hidden = true
+    }
+
+    addButton.addEventListener('click', () => picker.click())
+
+    picker.addEventListener('change', async () => {
+      notice.textContent = ''
+      const files = Array.from(picker.files).slice(0, LIMITS[SAVED_STORAGE] - pictureTotal)
+      picker.value = ''
+      // counted straight away, so a second pick can't go over the limit
+      pictureTotal += files.length
+      updateCount()
+      if (files.length) {
+        batchTotal += files.length
+        showProgress()
+      }
+      // one at a time, a phone holding several 12 megapixel photos open at
+      // once runs out of memory and reloads the tab
+      for (const file of files) {
+        await addPhoto(file)
+      }
+    })
+
+    zoomSlider.addEventListener('input', () => {
+      // the slider can still report a change once the editor has closed
+      if (!editing) {
+        return
+      }
+      const photo = editing
+      photo.zoom = Number(zoomSlider.value)
+      clampCrop(photo)
+      drawPhoto(photo, editorCanvas)
+      // the same for a finger and for arrow keys, which step one change a press
+      clearTimeout(zoomTimer)
+      zoomTimer = setTimeout(() => {
+        batchTotal += 1
+        showProgress()
+        upload(photo)
+      }, ZOOM_SAVE_MS)
+    })
+
+    editorCanvas.addEventListener('pointerdown', event => {
+      dragFrom = { x: event.clientX, y: event.clientY }
+      editorCanvas.setPointerCapture(event.pointerId)
+    })
+
+    editorCanvas.addEventListener('pointermove', event => {
+      if (!dragFrom) {
+        return
+      }
+      // screen pixels to photo pixels, the canvas shows one crop square across its width
+      const side = Math.min(editing.workingCopy.width, editing.workingCopy.height) / editing.zoom
+      const scale = side / editorCanvas.getBoundingClientRect().width
+      editing.x -= (event.clientX - dragFrom.x) * scale
+      editing.y -= (event.clientY - dragFrom.y) * scale
+      dragFrom = { x: event.clientX, y: event.clientY }
+      clampCrop(editing)
+      drawPhoto(editing, editorCanvas)
+    })
+
+    editorCanvas.addEventListener('pointerup', () => {
+      if (dragFrom) {
+        dragFrom = null
+        batchTotal += 1
+        showProgress()
+        upload(editing)
+      }
+    })
+    editorCanvas.addEventListener('pointercancel', () => { dragFrom = null })
+
+    document.getElementById('done_button').addEventListener('click', closeEditor)
+
+    gallery.addEventListener('click', event => {
+      const button = event.target.closest('button[data-name]')
+      if (!button) {
+        return
+      }
+      notice.textContent = ''
+      button.disabled = true
+      const tile = button.closest('.picture')
+      if (editing && editing.tile === tile) {
+        closeEditor()
+      }
+      // queued behind any upload of this picture still on its way
+      enqueue(async () => {
+        if (await post({ delete: button.dataset.name })) {
+          tile.remove()
+          pictureTotal -= 1
+          updateCount()
+        } else {
+          button.disabled = false
+          notice.textContent = "Couldn't delete that picture, check the board is still connected."
+        }
+      })
+    })
+
+    // press and hold a picture to drag it. pointer events, as most phones don't
+    // do html drag and drop. the faded tile shows where it'll land
+    const HOLD_MS = 350
+    // how far a finger can wander during the hold before it counts as a scroll
+    const HOLD_SLOP = 8
+    const SLIDE_MS = 150
+    // how near the top or bottom of the screen a drag scrolls the page
+    const SCROLL_EDGE = 60
+
+    // a press waiting to become a drag
+    let hold = null
+    // the tile being dragged, and the lifted copy of it that follows the finger
+    let moving = null
+    let ghost = null
+    // where on the tile the finger is, so the copy doesn't jump to it
+    let grabOffset = null
+    // a click this soon after a drop is the end of the drag, not a tap
+    const SWALLOW_MS = 500
+    let swallowUntil = 0
+    let savedOrder = galleryNames()
+
+    function galleryNames() {
+      return Array.from(gallery.querySelectorAll('button[data-name]')).map(button => button.dataset.name).join(',')
+    }
+
+    // the other tiles slide to their new places, rather than jumping
+    function slideTiles(rearrange) {
+      const tiles = Array.from(gallery.children)
+      // where they are on screen now, part way through any earlier slide
+      const before = tiles.map(tile => tile.getBoundingClientRect())
+      rearrange()
+      tiles.forEach((tile, index) => {
+        tile.getAnimations().forEach(animation => animation.cancel())
+        const after = tile.getBoundingClientRect()
+        const dx = before[index].left - after.left
+        const dy = before[index].top - after.top
+        if (dx || dy) {
+          tile.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: 'none' }],
+            { duration: SLIDE_MS, easing: 'ease-out' })
+        }
+      })
+    }
+
+    function startMove(tile, x, y) {
+      hold = null
+      moving = tile
+      const bounds = tile.getBoundingClientRect()
+      grabOffset = { x: x - bounds.left, y: y - bounds.top }
+
+      ghost = tile.cloneNode(true)
+      ghost.classList.add('ghost')
+      ghost.style.width = `${bounds.width}px`
+      ghost.style.left = `${bounds.left}px`
+      ghost.style.top = `${bounds.top}px`
+      document.body.append(ghost)
+
+      tile.classList.add('placeholder')
+      if (navigator.vibrate) {
+        navigator.vibrate(10)
+      }
+    }
+
+    gallery.addEventListener('pointerdown', event => {
+      const tile = event.target.closest('#gallery > .picture')
+      // an order saved before they've all loaded would leave the rest out
+      if (!tile || !galleryReady || event.target.closest('button') || event.button > 0) {
+        return
+      }
+      const x = event.clientX
+      const y = event.clientY
+      hold = { x, y, timer: setTimeout(() => startMove(tile, x, y), HOLD_MS) }
+    })
+
+    // on document, not pointer capture, which is lost when the tile moves in the dom
+    document.addEventListener('pointermove', event => {
+      if (hold) {
+        if (Math.hypot(event.clientX - hold.x, event.clientY - hold.y) > HOLD_SLOP) {
+          clearTimeout(hold.timer)
+          hold = null
+        }
+        return
+      }
+      if (!moving) {
+        return
+      }
+      ghost.style.left = `${event.clientX - grabOffset.x}px`
+      ghost.style.top = `${event.clientY - grabOffset.y}px`
+
+      if (event.clientY < SCROLL_EDGE) {
+        window.scrollBy(0, -10)
+      } else if (event.clientY > window.innerHeight - SCROLL_EDGE) {
+        window.scrollBy(0, 10)
+      }
+
+      // by layout position, which the slide animations don't move
+      const origin = gallery.getBoundingClientRect()
+      const x = event.clientX - origin.left
+      const y = event.clientY - origin.top
+      const over = Array.from(gallery.children).find(tile =>
+        x >= tile.offsetLeft && x < tile.offsetLeft + tile.offsetWidth &&
+        y >= tile.offsetTop && y < tile.offsetTop + tile.offsetHeight)
+      if (!over || over === moving) {
+        return
+      }
+      const tiles = Array.from(gallery.children)
+      slideTiles(() => {
+        if (tiles.indexOf(moving) > tiles.indexOf(over)) {
+          over.before(moving)
+        } else {
+          over.after(moving)
+        }
+      })
+    })
+
+    // once a drag is going the page mustn't scroll under it. this has to be
+    // a touch listener, and not passive, for preventDefault to count
+    gallery.addEventListener('touchmove', event => {
+      if (moving) {
+        event.preventDefault()
+      }
+    }, { passive: false })
+
+    // a long press would otherwise bring up the phone's own menu for the image
+    gallery.addEventListener('contextmenu', event => {
+      if (hold || moving) {
+        event.preventDefault()
+      }
+    })
+
+    // eats the click that ends a drag. timed, so a later keyboard click still works
+    gallery.addEventListener('click', event => {
+      if (performance.now() < swallowUntil) {
+        swallowUntil = 0
+        event.stopPropagation()
+        event.preventDefault()
+      }
+    }, true)
+
+    function finishMove() {
+      if (hold) {
+        clearTimeout(hold.timer)
+        hold = null
+      }
+      if (!moving) {
+        return
+      }
+      swallowUntil = performance.now() + SWALLOW_MS
+
+      // the lifted copy settles into the gap before it goes
+      const tile = moving
+      const lifted = ghost
+      const from = lifted.getBoundingClientRect()
+      const to = tile.getBoundingClientRect()
+      lifted.animate([{ transform: 'scale(1.05)' }, { transform: `translate(${to.left - from.left}px, ${to.top - from.top}px)` }],
+        { duration: SLIDE_MS, easing: 'ease-out', fill: 'forwards' })
+      // a timer rather than the animation's finish, which a hidden tab may never reach
+      setTimeout(() => {
+        lifted.remove()
+        tile.classList.remove('placeholder')
+      }, SLIDE_MS)
+      moving = null
+      ghost = null
+
+      const names = galleryNames()
+      if (names === savedOrder) {
+        return
+      }
+      savedOrder = names
+      notice.textContent = ''
+      // behind any upload still going, so every name in it is already saved
+      enqueue(async () => {
+        if (!(await post({ arrange: names }))) {
+          notice.textContent = "Couldn't save the new order, check the board is still connected."
+        }
+      })
+    }
+
+    document.addEventListener('pointerup', finishMove)
+    document.addEventListener('pointercancel', finishMove)
+
+    // settings save as they change. all of them go each time, the board keeps
+    // only what it's sent
+    const SETTING_NAMES = ['storage', 'order', 'transition']
+    const UNIT_SECONDS = { seconds: 1, minutes: 60, hours: 3600 }
+    // the transition takes 1s and the next picture loads 2s in, so less would stall
+    const SHORTEST_SECONDS = 3
+    const durationValue = document.getElementById('duration_value')
+    const durationUnit = document.getElementById('duration_unit')
+    let leaving = false
+
+    function durationSeconds() {
+      return Number(durationValue.value) * UNIT_SECONDS[durationUnit.value]
+    }
+
+    function saveSettings(storageChanged) {
+      // an empty box, a fraction or too short a time never leaves the page
+      durationValue.setCustomValidity(durationSeconds() < SHORTEST_SECONDS ? `At least ${SHORTEST_SECONDS} seconds` : '')
+      if (!durationValue.reportValidity()) {
+        return
+      }
+      const fields = { duration: String(durationSeconds()) }
+      for (const name of SETTING_NAMES) {
+        fields[name] = form.querySelector(`input[name="${name}"]:checked`).value
+      }
+      notice.textContent = ''
+      enqueue(async () => {
+        if (!(await post(fields))) {
+          notice.textContent = "Couldn't save that setting, check the board is still connected."
+          return
+        }
+        // the pictures have moved, so the page shows them from their new place
+        if (storageChanged) {
+          leaving = true
+          location.reload()
+        }
+      })
+    }
+
+    for (const name of SETTING_NAMES) {
+      form.querySelectorAll(`input[name="${name}"]`).forEach(input =>
+        input.addEventListener('change', () => saveSettings(name === 'storage')))
+    }
+    durationValue.addEventListener('change', () => saveSettings(false))
+    durationUnit.addEventListener('change', () => saveSettings(false))
+
+    // enter would submit the form and reload the page, leaving the box saves instead
+    form.addEventListener('submit', event => {
+      event.preventDefault()
+      durationValue.blur()
+    })
+
+    window.addEventListener('beforeunload', event => {
+      if (busy() && !leaving) {
+        event.preventDefault()
+        event.returnValue = ''
+      }
+    })
+
+    function finishGallery() {
+      galleryWatcher.disconnect()
+      const incoming = document.getElementById('incoming')
+      while (incoming.firstElementChild) {
+        gallery.append(incoming.firstElementChild)
+      }
+      incoming.remove()
+      galleryReady = true
+      savedOrder = galleryNames()
+      updateCount()
+    }
+
+    updateCount()
+  </script>
+
+  <!-- previews come last so the rest of the page shows first, then move up into the gallery -->
+  <div id="incoming" hidden>{{ placeholder.gallery() }}</div>
+  <script>finishGallery()</script>
+</form>

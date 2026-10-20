@@ -1,0 +1,22 @@
+{
+  "name": "Art Matrix Show",
+  "version": "1.0.0",
+  "description": "Your own photos as a slideshow, sent from your phone",
+  "author": "Pimoroni",
+  "category": "Interactive",
+  "requires_internet": false,
+  "urls": [
+    [
+      "plugins/art_matrix_show/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/art_matrix_show/config.html",
+      "config.html"
+    ],
+    [
+      "plugins/art_matrix_show/thumbnail.png",
+      "thumbnail.png"
+    ]
+  ]
+}

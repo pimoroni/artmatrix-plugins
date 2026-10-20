@@ -1,0 +1,22 @@
+{
+  "name": "Art Matrix Write",
+  "version": "1.0.0",
+  "description": "Your own messages, scrolling or still, with effects",
+  "author": "Pimoroni",
+  "category": "Interactive",
+  "requires_internet": false,
+  "urls": [
+    [
+      "plugins/art_matrix_write/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/art_matrix_write/config.html",
+      "config.html"
+    ],
+    [
+      "plugins/art_matrix_write/thumbnail.png",
+      "thumbnail.png"
+    ]
+  ]
+}

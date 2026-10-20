@@ -1,0 +1,154 @@
+<form method="post" action="/config?plugin={{ plugin }}">
+  <h3>Message</h3>
+  <label>Text
+    <small>One message per line, shown in turn</small>
+    <textarea name="message" rows="3">{{ placeholder.message }}</textarea>
+  </label>
+
+  <label>Font
+    <select name="font_name">
+      <option value="absolute" {{ "selected" if placeholder.font_name == "absolute" else "" }}>Absolute</option>
+      <option value="ark" {{ "selected" if placeholder.font_name == "ark" else "" }}>Ark</option>
+      <option value="awesome" {{ "selected" if placeholder.font_name == "awesome" else "" }}>Awesome</option>
+      <option value="bacteria" {{ "selected" if placeholder.font_name == "bacteria" else "" }}>Bacteria</option>
+      <option value="badgeware" {{ "selected" if placeholder.font_name == "badgeware" else "" }}>Badgeware</option>
+      <option value="badgewaremax" {{ "selected" if placeholder.font_name == "badgewaremax" else "" }}>Badgewaremax</option>
+      <option value="compass" {{ "selected" if placeholder.font_name == "compass" else "" }}>Compass</option>
+      <option value="corset" {{ "selected" if placeholder.font_name == "corset" else "" }}>Corset</option>
+      <option value="curse" {{ "selected" if placeholder.font_name == "curse" else "" }}>Curse</option>
+      <option value="desert" {{ "selected" if placeholder.font_name == "desert" else "" }}>Desert</option>
+      <option value="fear" {{ "selected" if placeholder.font_name == "fear" else "" }}>Fear</option>
+      <option value="futile" {{ "selected" if placeholder.font_name == "futile" else "" }}>Futile</option>
+      <option value="holotype" {{ "selected" if placeholder.font_name == "holotype" else "" }}>Holotype</option>
+      <option value="hungry" {{ "selected" if placeholder.font_name == "hungry" else "" }}>Hungry</option>
+      <option value="ignore" {{ "selected" if placeholder.font_name == "ignore" else "" }}>Ignore</option>
+      <option value="kobold" {{ "selected" if placeholder.font_name == "kobold" else "" }}>Kobold</option>
+      <option value="lookout" {{ "selected" if placeholder.font_name == "lookout" else "" }}>Lookout</option>
+      <option value="loser" {{ "selected" if placeholder.font_name == "loser" else "" }}>Loser</option>
+      <option value="manticore" {{ "selected" if placeholder.font_name == "manticore" else "" }}>Manticore</option>
+      <option value="match" {{ "selected" if placeholder.font_name == "match" else "" }}>Match</option>
+      <option value="memo" {{ "selected" if placeholder.font_name == "memo" else "" }}>Memo</option>
+      <option value="more" {{ "selected" if placeholder.font_name == "more" else "" }}>More</option>
+      <option value="nope" {{ "selected" if placeholder.font_name == "nope" else "" }}>Nope</option>
+      <option value="outflank" {{ "selected" if placeholder.font_name == "outflank" else "" }}>Outflank</option>
+      <option value="saga" {{ "selected" if placeholder.font_name == "saga" else "" }}>Saga</option>
+      <option value="salty" {{ "selected" if placeholder.font_name == "salty" else "" }}>Salty</option>
+      <option value="sins" {{ "selected" if placeholder.font_name == "sins" else "" }}>Sins</option>
+      <option value="smart" {{ "selected" if placeholder.font_name == "smart" else "" }}>Smart</option>
+      <option value="teatime" {{ "selected" if placeholder.font_name == "teatime" else "" }}>Teatime</option>
+      <option value="torch" {{ "selected" if placeholder.font_name == "torch" else "" }}>Torch</option>
+      <option value="troll" {{ "selected" if placeholder.font_name == "troll" else "" }}>Troll</option>
+      <option value="unfair" {{ "selected" if placeholder.font_name == "unfair" else "" }}>Unfair</option>
+      <option value="vest" {{ "selected" if placeholder.font_name == "vest" else "" }}>Vest</option>
+      <option value="winds" {{ "selected" if placeholder.font_name == "winds" else "" }}>Winds</option>
+      <option value="yesterday" {{ "selected" if placeholder.font_name == "yesterday" else "" }}>Yesterday</option>
+      <option value="yolk" {{ "selected" if placeholder.font_name == "yolk" else "" }}>Yolk</option>
+      <option value="ziplock" {{ "selected" if placeholder.font_name == "ziplock" else "" }}>Ziplock</option>
+    </select>
+  </label>
+
+  <fieldset>
+    <legend>Size</legend>
+    <div class="presets">
+      <label><input type="radio" name="size" value="1" {{ "checked" if placeholder.size == 1 else "" }}>Small</label>
+      <label><input type="radio" name="size" value="2" {{ "checked" if placeholder.size == 2 else "" }}>Medium</label>
+      <label><input type="radio" name="size" value="3" {{ "checked" if placeholder.size == 3 else "" }}>Large</label>
+      <label><input type="radio" name="size" value="4" {{ "checked" if placeholder.size == 4 else "" }}>Extra large</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Direction</legend>
+    <div class="presets">
+      <label><input type="radio" name="direction" value="left" {{ "checked" if placeholder.direction == "left" else "" }}>Right to left</label>
+      <label><input type="radio" name="direction" value="up" {{ "checked" if placeholder.direction == "up" else "" }}>Bottom to top</label>
+      <label><input type="radio" name="direction" value="static" {{ "checked" if placeholder.direction == "static" else "" }}>Static</label>
+    </div>
+  </fieldset>
+
+  <style>
+    /* position means nothing when scrolling up, speed nothing when static.
+       greyed rather than disabled, disabled inputs don't get posted */
+    form:has(input[name="direction"][value="up"]:checked) .position-field { opacity: 0.4; pointer-events: none; }
+    form:has(input[name="direction"][value="static"]:checked) .speed-field { opacity: 0.4; pointer-events: none; }
+    /* a palette recolours everything, so colours and effect don't apply */
+    form:has(input[name="palette"]:checked:not([value="none"])) .colour-field { opacity: 0.4; pointer-events: none; }
+    /* rainbow and cycle pick the text colour themselves */
+    form:has(input[name="palette"][value="none"]:checked):has(input[name="effect"]:checked:not([value="solid"])) .text-colour-field { opacity: 0.4; pointer-events: none; }
+  </style>
+  <fieldset class="position-field">
+    <legend>Position</legend>
+    <div class="presets">
+      <label><input type="radio" name="position" value="top" {{ "checked" if placeholder.position == "top" else "" }}>Top</label>
+      <label><input type="radio" name="position" value="middle" {{ "checked" if placeholder.position == "middle" else "" }}>Middle</label>
+      <label><input type="radio" name="position" value="bottom" {{ "checked" if placeholder.position == "bottom" else "" }}>Bottom</label>
+    </div>
+  </fieldset>
+
+  <fieldset class="speed-field">
+    <legend>Speed</legend>
+    <div class="presets">
+      <label><input type="radio" name="speed" value="32" {{ "checked" if placeholder.speed == 32 else "" }}>Slow</label>
+      <label><input type="radio" name="speed" value="64" {{ "checked" if placeholder.speed == 64 else "" }}>Medium</label>
+      <label><input type="radio" name="speed" value="128" {{ "checked" if placeholder.speed == 128 else "" }}>Fast</label>
+    </div>
+  </fieldset>
+
+  <hr>
+  <h3>Look</h3>
+  <fieldset class="colour-field">
+    <legend>Colours</legend>
+    <div class="field-row" style="gap: 1.5rem">
+      <label style="display: flex; align-items: center; gap: 0.5rem; margin: 0; font-weight: 400">
+        <input type="color" name="background" value="{{ '#%02x%02x%02x' % placeholder.background }}">Background
+      </label>
+      <label class="text-colour-field" style="display: flex; align-items: center; gap: 0.5rem; margin: 0; font-weight: 400">
+        <input type="color" name="colour" value="{{ '#%02x%02x%02x' % placeholder.colour }}">Text
+      </label>
+    </div>
+  </fieldset>
+
+  <fieldset class="colour-field">
+    <legend>Effect</legend>
+    <div class="presets">
+      <label><input type="radio" name="effect" value="solid" {{ "checked" if placeholder.effect == "solid" else "" }}>Solid</label>
+      <label><input type="radio" name="effect" value="rainbow" {{ "checked" if placeholder.effect == "rainbow" else "" }}>Rainbow</label>
+      <label><input type="radio" name="effect" value="cycle" {{ "checked" if placeholder.effect == "cycle" else "" }}>Cycle</label>
+    </div>
+  </fieldset>
+
+  <label style="display: flex; align-items: center; gap: 0.5rem">Drop shadow
+    <input type="checkbox" role="switch" name="drop_shadow" {{ "checked" if placeholder.drop_shadow else "" }}>
+  </label>
+
+  <hr>
+  <details {{ "open" if placeholder.wobble or placeholder.zoom or placeholder.edge_glow or placeholder.chromatic or placeholder.glitch or placeholder.glow or placeholder.crt or placeholder.palette != "none" else "" }}>
+    <summary style="margin-bottom: 0.75rem"><h3 style="display: inline">Filters and palette</h3></summary>
+
+    <fieldset>
+      <legend>Filters</legend>
+      <small>Pick any, they stack</small>
+      <div class="presets" style="grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr))">
+        <label><input type="checkbox" name="wobble" {{ "checked" if placeholder.wobble else "" }}>Wobble</label>
+        <label><input type="checkbox" name="zoom" {{ "checked" if placeholder.zoom else "" }}>Zoom</label>
+        <label><input type="checkbox" name="edge_glow" {{ "checked" if placeholder.edge_glow else "" }}>Edge glow</label>
+        <label><input type="checkbox" name="chromatic" {{ "checked" if placeholder.chromatic else "" }}>Chromatic</label>
+        <label><input type="checkbox" name="glitch" {{ "checked" if placeholder.glitch else "" }}>Glitch</label>
+        <label><input type="checkbox" name="glow" {{ "checked" if placeholder.glow else "" }}>Glow</label>
+        <label><input type="checkbox" name="crt" {{ "checked" if placeholder.crt else "" }}>CRT</label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Palette</legend>
+      <div class="presets" style="grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr))">
+        <label><input type="radio" name="palette" value="none" {{ "checked" if placeholder.palette == "none" else "" }}>None</label>
+        <label><input type="radio" name="palette" value="synthwave" {{ "checked" if placeholder.palette == "synthwave" else "" }}>Synthwave</label>
+        <label><input type="radio" name="palette" value="gameboy" {{ "checked" if placeholder.palette == "gameboy" else "" }}>Game Boy</label>
+        <label><input type="radio" name="palette" value="nightvision" {{ "checked" if placeholder.palette == "nightvision" else "" }}>Night vision</label>
+      </div>
+    </fieldset>
+  </details>
+
+  <button type="submit">Apply</button>
+</form>

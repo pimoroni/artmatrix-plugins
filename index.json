@@ -3,6 +3,8 @@
     "3d_pipes": "3D Pipes",
     "after_yarrk": "After Yarrk",
     "art_matrix_draw": "Art Matrix Draw",
+    "art_matrix_show": "Art Matrix Show",
+    "art_matrix_write": "Art Matrix Write",
     "bezier": "Bezier",
     "blackhole": "Blackhole",
     "cells": "Cells",
@@ -49,6 +51,16 @@
     },
     "art_matrix_draw": {
       "description": "Draw a picture in your browser and show it",
+      "author": "Pimoroni",
+      "category": "Interactive"
+    },
+    "art_matrix_show": {
+      "description": "Your own photos as a slideshow, sent from your phone",
+      "author": "Pimoroni",
+      "category": "Interactive"
+    },
+    "art_matrix_write": {
+      "description": "Your own messages, scrolling or still, with effects",
       "author": "Pimoroni",
       "category": "Interactive"
     },
