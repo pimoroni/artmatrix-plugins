@@ -1,4 +1,3 @@
-import config
 import gc
 import json
 import os
@@ -8,6 +7,7 @@ from scrolling import Scroll
 from fetch import AsyncFetch, HTTPException
 
 from plugin_config import plugin_config
+from qr_screen import draw_qr_screen
 
 cy = screen.height / 2
 DATA_PATH = "/lib/plugins/now_playing"
@@ -416,15 +416,4 @@ def update():
             screen.blit(tracks[current_view].render(), vec2(0, 0))
 
     else:
-        screen.font = font.smart
-        screen.pen = color.black
-        screen.clear()
-        screen.pen = color.red
-        centre_text("Setup needed", cy - 50)
-        screen.pen = color.blue
-        centre_text("visit", cy - 10, 1)
-        screen.pen = color.white
-        centre_text(f"{config.wifi_hostname}.local", cy + 5, 2)
-        screen.pen = color.blue
-        centre_text("to configure", cy + 40, 1)
-        centre_text("Now Playing", cy + 50, 1)
+        draw_qr_screen("Now Playing", "Setup needed", "now_playing")

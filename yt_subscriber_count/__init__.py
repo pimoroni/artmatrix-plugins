@@ -1,8 +1,8 @@
-import config
 from fetch import AsyncFetch
 from random import randint, uniform, choice
 
 from plugin_config import plugin_config
+from qr_screen import draw_qr_screen
 
 API_UPDATE_TIME = 60
 API_HOST = "www.googleapis.com"
@@ -170,14 +170,4 @@ def update():
             if len(confetti_particles) == 0:
                 confetti = False
     else:
-        screen.pen = color.black
-        screen.clear()
-        screen.pen = color.red
-        centre_text("Setup needed", cy - 50)
-        screen.pen = color.blue
-        centre_text("visit", cy - 10, 1)
-        screen.pen = color.white
-        centre_text(f"{config.wifi_hostname}.local", cy + 5, 2)
-        screen.pen = color.blue
-        centre_text("to configure", cy + 40, 1)
-        centre_text("YouTube", cy + 50, 1)
+        draw_qr_screen("YouTube", "Setup needed", "yt_subscriber_count")

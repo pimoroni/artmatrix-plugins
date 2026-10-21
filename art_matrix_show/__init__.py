@@ -5,12 +5,12 @@ import os
 import random
 import time
 
-import config
 import micropython
 import ubinascii
 
 from easing import easeOutSine
 from plugin_config import plugin_config
+from qr_screen import draw_qr_screen
 
 # main.py mounts the card at /sd during boot, if there is one
 sd_present = "sd" in os.listdir("/")
@@ -223,23 +223,7 @@ def update():
     now = time.ticks_ms()
 
     if current_picture is None:
-        screen.pen = color.rgb(0, 0, 0)
-        screen.clear()
-        screen.font = font.smart
-        lines = (
-            ("No pictures yet" if storage_ready else "SD card missing", color.red),
-            ("visit", color.blue),
-            (f"{config.wifi_hostname}.local", color.white),
-            ("to add some" if storage_ready else "or switch storage", color.blue),
-        )
-        sizes = [screen.measure_text(line, 1) for line, pen in lines]
-        # 8px between lines, the whole block centred
-        block_height = sum(int(height) for width, height in sizes) + 8 * (len(lines) - 1)
-        y = (screen.height - block_height) // 2
-        for (line, pen), (width, height) in zip(lines, sizes):
-            screen.pen = pen
-            screen.text(line, int(screen.width - width) // 2, y, 1)
-            y += int(height) + 8
+        draw_qr_screen("Art Matrix Show", "No pictures yet" if storage_ready else "SD card missing", "art_matrix_show")
         return
 
     if transition_start is None and len(pictures) > 1:
