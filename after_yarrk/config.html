@@ -1,4 +1,4 @@
-<form method="post" action="/config?plugin={{ plugin }}">
+<form method="post" action="/config?plugin={{ plugin }}" data-autosave>
   <fieldset>
     <legend>Ship size</legend>
     <small>Size of the ships and waves</small>
@@ -27,6 +27,4 @@
       <label><input type="radio" name="travel_speed" value="1.0" {{ "checked" if placeholder.travel_speed == 1.0 else "" }}>Fast</label>
     </div>
   </fieldset>
-
-  <button type="submit">Apply</button>
 </form>

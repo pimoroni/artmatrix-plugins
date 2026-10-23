@@ -1,4 +1,4 @@
-<form method="post" action="/config?plugin={{ plugin }}">
+<form method="post" action="/config?plugin={{ plugin }}" data-autosave>
   <fieldset>
     <legend>Kritters</legend>
     <div class="presets">
@@ -17,6 +17,4 @@
       <label><input type="radio" name="num_planets" value="15" {{ "checked" if placeholder.num_planets == 15 else "" }}>15</label>
     </div>
   </fieldset>
-
-  <button type="submit">Apply</button>
 </form>

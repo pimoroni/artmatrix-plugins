@@ -1,4 +1,4 @@
-<form method="post" action="/config?plugin={{ plugin }}">
+<form method="post" action="/config?plugin={{ plugin }}" data-autosave>
   <label>Message
     <small>The text to display</small>
     <input type="text" name="message" value="{{ placeholder.message }}">
@@ -16,6 +16,4 @@
   <label>Scroll text
     <input type="checkbox" name="scroll" {{ "checked" if placeholder.scroll else "" }}>
   </label>
-
-  <button type="submit">Apply</button>
 </form>

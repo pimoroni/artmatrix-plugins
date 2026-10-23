@@ -1,4 +1,4 @@
-<form method="post" action="/config?plugin={{ plugin }}">
+<form method="post" action="/config?plugin={{ plugin }}" data-autosave>
   <label>API key
     <small>Your YouTube Data API key</small>
     <input type="text" name="api_key" value="{{ placeholder.api_key }}">
@@ -24,6 +24,4 @@
   <label>Animate background
     <input type="checkbox" name="animate_background" {{ "checked" if placeholder.animate_background else "" }}>
   </label>
-
-  <button type="submit">Apply</button>
 </form>

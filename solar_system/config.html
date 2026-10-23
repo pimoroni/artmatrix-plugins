@@ -1,4 +1,4 @@
-<form method="post" action="/config?plugin={{ plugin }}">
+<form method="post" action="/config?plugin={{ plugin }}" data-autosave>
   <fieldset>
     <legend>Planets</legend>
     <div class="presets">
@@ -21,8 +21,8 @@
   <label>Minutes per orbit
     <small>Fastest / slowest planet</small>
     <div class="field-row">
-      <input type="number" name="min_mins_per_orbit" min="0.1" step="any" value="{{ placeholder.min_mins_per_orbit }}">
-      <input type="number" name="max_mins_per_orbit" min="0" step="any" value="{{ placeholder.max_mins_per_orbit }}">
+      <input type="number" name="min_mins_per_orbit" min="0.1" step="any" value="{{ placeholder.min_mins_per_orbit }}" required>
+      <input type="number" name="max_mins_per_orbit" min="0" step="any" value="{{ placeholder.max_mins_per_orbit }}" required>
     </div>
   </label>
 
@@ -43,6 +43,4 @@
     <input type="color" name="sun_colour"
            value="{{ '#%02x%02x%02x' % placeholder.sun_colour }}">
   </label>
-
-  <button type="submit">Apply</button>
 </form>

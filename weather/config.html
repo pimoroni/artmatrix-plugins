@@ -29,21 +29,19 @@
   }
 </style>
 
-<form method="post" action="/config?plugin={{ plugin }}">
+<form method="post" action="/config?plugin={{ plugin }}" data-autosave>
   <label>Location
     <small>Click the map to set your position, or type coordinates below.</small>
     <div id="map" style="height: 300px; margin: 0.5em 0;"></div>
   </label>
 
   <label>Latitude
-    <input type="number" name="lat" min="-90" max="90" step="any" value="{{ placeholder.lat }}">
+    <input type="number" name="lat" min="-90" max="90" step="any" value="{{ placeholder.lat }}" required>
   </label>
 
   <label>Longitude
-    <input type="number" name="lng" min="-180" max="180" step="any" value="{{ placeholder.long }}">
+    <input type="number" name="lng" min="-180" max="180" step="any" value="{{ placeholder.long }}" required>
   </label>
-
-  <button type="submit">Apply</button>
 </form>
 
 <script>
@@ -70,6 +68,8 @@
     const p = e.latlng.wrap();
     latInput.value = p.lat.toFixed(6);
     lngInput.value = p.lng.toFixed(6);
+    // save both together
+    latInput.form.dispatchEvent(new Event('change'));
     if (marker) {
       marker.setLatLng(p);
     } else {

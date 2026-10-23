@@ -1,4 +1,4 @@
-<form method="post" action="/config?plugin={{ plugin }}">
+<form method="post" action="/config?plugin={{ plugin }}" data-autosave>
   <fieldset>
     <legend>Trilobites</legend>
     <small>Each one comes with an ammonite to eat</small>
@@ -18,6 +18,4 @@
       <label><input type="radio" name="trilobite_speed" value="0.4" {{ "checked" if placeholder.trilobite_speed == 0.4 else "" }}>Fast</label>
     </div>
   </fieldset>
-
-  <button type="submit">Apply</button>
 </form>

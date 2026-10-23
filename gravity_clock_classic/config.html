@@ -1,4 +1,4 @@
-<form method="post" action="/config?plugin={{ plugin }}">
+<form method="post" action="/config?plugin={{ plugin }}" data-autosave>
   <label>Region
     <small>Sets which daylight saving rules the clock follows.</small>
     <select name="region">
@@ -57,11 +57,9 @@
   <label>Number of balls
     <small>Hour / minute / second balls to display.</small>
     <div class="field-row">
-      <input type="number" name="num_balls_hour" min="1" max="10" step="1" value="{{ placeholder.num_balls_hour }}">
-      <input type="number" name="num_balls_minute" min="1" max="10" step="1" value="{{ placeholder.num_balls_minute }}">
-      <input type="number" name="num_balls_second" min="1" max="10" step="1" value="{{ placeholder.num_balls_second }}">
+      <input type="number" name="num_balls_hour" min="1" max="10" step="1" value="{{ placeholder.num_balls_hour }}" required>
+      <input type="number" name="num_balls_minute" min="1" max="10" step="1" value="{{ placeholder.num_balls_minute }}" required>
+      <input type="number" name="num_balls_second" min="1" max="10" step="1" value="{{ placeholder.num_balls_second }}" required>
     </div>
   </label>
-
-  <button type="submit">Apply</button>
 </form>

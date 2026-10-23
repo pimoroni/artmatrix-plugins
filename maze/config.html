@@ -1,4 +1,4 @@
-<form method="post" action="/config?plugin={{ plugin }}">
+<form method="post" action="/config?plugin={{ plugin }}" data-autosave>
   <fieldset>
     <legend>Scene</legend>
     <div class="presets">
@@ -21,6 +21,4 @@
       <label><input type="radio" name="maze_period" value="60" {{ "checked" if placeholder.maze_period == 60 else "" }}>60</label>
     </div>
   </fieldset>
-
-  <button type="submit">Apply</button>
 </form>

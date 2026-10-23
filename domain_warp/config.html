@@ -1,4 +1,4 @@
-<form method="post" action="/config?plugin={{ plugin }}">
+<form method="post" action="/config?plugin={{ plugin }}" data-autosave>
   <fieldset>
     <legend>Colour scheme</legend>
     <div class="presets">
@@ -35,6 +35,4 @@
       <label><input type="radio" name="scale" value="2.0" {{ "checked" if placeholder.scale == 2.0 else "" }}>Large</label>
     </div>
   </fieldset>
-
-  <button type="submit">Apply</button>
 </form>

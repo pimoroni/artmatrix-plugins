@@ -31,7 +31,7 @@
 <hr>
 
 <h3>Display</h3>
-<form method="post" action="/config?plugin={{ plugin }}">
+<form method="post" action="/config?plugin={{ plugin }}" data-autosave>
   <label>Show paused screen
     <small>Blurs the cover and shows "Stopped/Paused" while playback is paused. Unchecked, the album art stays as it is.</small>
     <input type="checkbox" name="show_pause_screen" {{ "checked" if placeholder.Settings.show_pause_screen else "" }}>
@@ -54,8 +54,6 @@
     <small>Where downloaded covers are stored</small>
     <input type="text" name="album_art_dir" value="{{ placeholder.Settings.album_art_dir }}">
   </label>
-
-  <button type="submit">Apply</button>
 </form>
 
 <style>

@@ -1,4 +1,4 @@
-<form method="post" action="/config?plugin={{ plugin }}">
+<form method="post" action="/config?plugin={{ plugin }}" data-autosave>
   <fieldset>
     <legend>Speed</legend>
     <div class="presets">
@@ -21,6 +21,4 @@
     <legend>Trail colour</legend>
     <input type="color" name="trail_colour" aria-label="Trail colour" value="{{ '#%02x%02x%02x' % placeholder.trail_colour }}">
   </fieldset>
-
-  <button type="submit">Apply</button>
 </form>
