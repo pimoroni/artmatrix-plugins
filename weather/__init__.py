@@ -50,7 +50,7 @@ CLOUD_BASE = 58
 CLOUD_FADE_START = 0.15
 CLOUD_FADE_END = CLOUD_BASE / screen.height
 
-snowy_bg = brush.gradient(brush.LINEAR, 0, 0, 0, screen.height, ((0.0, color.rgb(109, 129, 150, 0)), (CLOUD_FADE_START, color.rgb(109, 129, 150, 0)), (CLOUD_FADE_END, color.rgb(109, 129, 150)), (1.0, color.rgb(198, 205, 212))))
+snowy_bg = brush.gradient(brush.LINEAR, 0, 0, 0, screen.height, ((0.0, color.rgb(109, 129, 150, 0)), (CLOUD_FADE_START, color.rgb(109, 129, 150, 0)), (CLOUD_FADE_END, color.rgb(109, 129, 150)), (1.0, color.rgb(150, 165, 185))))
 rainy_bg = brush.gradient(brush.LINEAR, 0, 0, 0, screen.height, ((0.0, color.rgb(105, 105, 105, 0)), (CLOUD_FADE_START, color.rgb(105, 105, 105, 0)), (CLOUD_FADE_END, color.rgb(105, 105, 105)), (1.0, color.rgb(80, 123, 156))))
 stormy_bg = brush.gradient(brush.LINEAR, 0, 0, 0, screen.height, ((0.0, color.rgb(105, 105, 105, 0)), (CLOUD_FADE_START, color.rgb(105, 105, 105, 0)), (CLOUD_FADE_END, color.rgb(105, 105, 105)), (1.0, color.rgb(70, 70, 70))))
 sky_bg = brush.gradient(brush.LINEAR, 0, 0, 0, screen.height, ((0.0, color.rgb(58, 124, 190)), (1.0, color.rgb(160, 200, 232))))
@@ -178,11 +178,12 @@ rain_particles = []
 for _ in range(HEAVY_RAIN[0]):
     rain_particles.append([randint(0, screen.width - 1), uniform(0, screen.height), randint(0, 2)])
 
-# snow levels: flakes drawn, and whether a third of them are big near ones
-LIGHT_SNOW = (60, True)
-SNOW = (100, True)
-HEAVY_SNOW = (150, True)
-SNOW_GRAINS = (100, False)
+# snow levels: flakes drawn, and whether a third of them are big near ones.
+# then the deepest it settles along the bottom, in px
+LIGHT_SNOW = (60, True, 4)
+SNOW = (100, True, 8)
+HEAVY_SNOW = (150, True, 14)
+SNOW_GRAINS = (100, False, 4)
 SNOW_LEVELS = {71: LIGHT_SNOW, 73: SNOW, 75: HEAVY_SNOW, 77: SNOW_GRAINS, 85: LIGHT_SNOW, 86: HEAVY_SNOW}
 
 # radius in px, fall speed range in px a second, pen
@@ -199,6 +200,25 @@ for i in range(HEAVY_SNOW[0]):
     layer = 1 if i % 3 == 0 else 0
     snow_particles.append([randint(0, screen.width - 1), uniform(0, screen.height), layer,
                            uniform(*SNOW_LAYERS[layer][1]), uniform(0, 6.28)])
+
+# settled snow is kept as a depth in px for each SETTLE_WIDTH px column along the bottom.
+# a flake that lands adds its level's deepest * SETTLE_RATE / flakes to its column, which
+# fills any level in about two minutes. every SETTLE_STEP seconds each column moves
+# SETTLE_SMOOTHING of the way to its neighbours' average, so it lies in drifts.
+# the drifts' outline is rebuilt as one shape then
+SETTLE_WIDTH = 2
+SETTLE_COLUMNS = screen.width // SETTLE_WIDTH
+SETTLE_RATE = 6
+SETTLE_STEP = 0.25
+SETTLE_SMOOTHING = 0.5
+SETTLED_PEN = color.rgb(235, 240, 248)
+# a darker copy of the drifts sits SETTLED_EDGE px higher, so their top edge shows
+SETTLED_EDGE_PEN = color.rgb(110, 125, 150)
+SETTLED_EDGE = 1.5
+snow_depth = [0] * SETTLE_COLUMNS
+# seconds to the next rebuild. 0 builds drifts on the first frame
+settle_in = 0
+drifts = None
 
 # how the wind moves things, per km/h blowing across the panel, and the most it can.
 # cloud and snow in px a second, rain in px sideways per px of fall. 0.58 is 30 degrees
@@ -285,19 +305,48 @@ def draw_rainy(elapsed, level):
 
 
 def draw_snow(now, elapsed, level):
-    flakes, big_flakes = level
+    global settle_in, drifts
+    flakes, big_flakes, deepest = level
+    per_flake = deepest * SETTLE_RATE / flakes
     for i in range(flakes):
         flake = snow_particles[i]
         layer = flake[2] if big_flakes else 0
         radius, _, pen = SNOW_LAYERS[layer]
         flake[1] += flake[3] * elapsed
         flake[0] = (flake[0] + snow_drift * elapsed) % screen.width
-        if flake[1] > screen.height:
-            flake[1] = 0
-            flake[0] = randint(0, screen.width - 1)
+        x = flake[0] + math.sin(now + flake[4]) * SNOW_SWAY
+        # only flakes low enough to reach the snow need their column checked
+        if flake[1] > screen.height - deepest:
+            column = int(x) // SETTLE_WIDTH % SETTLE_COLUMNS
+            if flake[1] > screen.height - snow_depth[column]:
+                if snow_depth[column] < deepest:
+                    snow_depth[column] += per_flake
+                flake[1] = 0
+                flake[0] = randint(0, screen.width - 1)
 
         screen.pen = pen
-        screen.circle(flake[0] + math.sin(now + flake[4]) * SNOW_SWAY, flake[1], radius)
+        screen.circle(x, flake[1], radius)
+
+    settle_in -= elapsed
+    if settle_in <= 0:
+        settle_in = SETTLE_STEP
+        for i in range(SETTLE_COLUMNS):
+            # the neighbours wrap round the edges
+            around = (snow_depth[i - 1] + snow_depth[(i + 1) % SETTLE_COLUMNS]) / 2
+            snow_depth[i] += (around - snow_depth[i]) * SETTLE_SMOOTHING
+
+        outline = [vec2(0, screen.height)]
+        for i in range(SETTLE_COLUMNS):
+            outline.append(vec2(i * SETTLE_WIDTH + SETTLE_WIDTH / 2, screen.height - snow_depth[i]))
+        outline.append(vec2(screen.width, screen.height))
+        drifts = shape.custom(outline)
+
+    drifts.transform = mat3().translate(0, -SETTLED_EDGE)
+    screen.pen = SETTLED_EDGE_PEN
+    screen.shape(drifts)
+    drifts.transform = mat3()
+    screen.pen = SETTLED_PEN
+    screen.shape(drifts)
 
 
 def draw_sunny(now):
@@ -418,7 +467,7 @@ if has_location:
 
 
 def update():
-    global cloud_at, last, strike_in, since_strike, bolt, shown_scene, fade_left
+    global cloud_at, last, strike_in, since_strike, bolt, shown_scene, fade_left, settle_in
 
     if has_location:
         try:
@@ -432,6 +481,10 @@ def update():
         shown_scene = scene
         previous.blit(screen, 0, 0)
         fade_left = FADE_TIME
+        if weathercode not in SNOW_LEVELS:
+            for i in range(SETTLE_COLUMNS):
+                snow_depth[i] = 0
+            settle_in = 0
 
     # clear the display
     screen.pen = color.rgb(0, 0, 0)
