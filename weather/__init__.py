@@ -79,10 +79,36 @@ heavy_cloud.ramp((
 
 sun_grad = brush.gradient(brush.RADIAL, 15, 15, 0, 0, ((0.0, color.rgb(255, 210, 120)), (1.0, color.rgb(255, 180, 40))))
 
+SUN_CENTRE = vec2(15, 15)
+SUN_RADIUS = 15
+SUN_RAYS = 50
+# long enough to reach the far corner from the sun
+RAY_LENGTH = 170
+# degrees a second
+RAY_TURN = 5
+
+# rays alternate bright and dim. each set is one shape, built once and turned by its transform
+bright_paths = []
+dim_paths = []
+for i in range(SUN_RAYS):
+    start = math.radians(360 / SUN_RAYS * i)
+    end = math.radians(360 / SUN_RAYS * (i + 1))
+    ray = [vec2(0, 0),
+           vec2(math.cos(start) * RAY_LENGTH, math.sin(start) * RAY_LENGTH),
+           vec2(math.cos(end) * RAY_LENGTH, math.sin(end) * RAY_LENGTH)]
+    if i % 2:
+        bright_paths.append(ray)
+    else:
+        dim_paths.append(ray)
+bright_rays = shape.custom(*bright_paths)
+dim_rays = shape.custom(*dim_paths)
+
 night_bg = brush.gradient(brush.LINEAR, 0, 0, 0, screen.height, ((0.0, color.rgb(6, 10, 30)), (1.0, color.rgb(28, 40, 78))))
 
 # laid over the cloudy, wet and foggy scenes after dark
 night_overlay = color.rgb(6, 10, 30, 150)
+# lighter for fog, which vanishes under the full one
+fog_night_overlay = color.rgb(6, 10, 30, 80)
 
 # same seed as light_cloud, so the clouds keep their shape after dark
 night_cloud = brush.fractal(screen.height * 0.45, 4, 0.72, 0, 7719)
@@ -232,22 +258,19 @@ def draw_snow(now, elapsed, level):
 
 
 def draw_sunny(now):
-    centre = vec2(15, 15)
-    sun_radius = 15
-    rays = 50
-    ray_a = 360 / rays
-    rotate = now * 5
+    turn = mat3.trs(SUN_CENTRE, now * RAY_TURN)
+    bright_rays.transform = turn
+    dim_rays.transform = turn
 
-    screen.pen = color.rgb(255, 255, 255)
-    for i in range(rays):
-        a = (ray_a * i) + rotate
-        b = a + ray_a
-        screen.alpha = 90 if i & 1 else 40
-        screen.shape(shape.pie(vec2(centre.x, centre.y), 160, a, b))
+    screen.pen = color.white
+    screen.alpha = 90
+    screen.shape(bright_rays)
+    screen.alpha = 40
+    screen.shape(dim_rays)
 
     screen.alpha = 255
     screen.pen = sun_grad
-    screen.circle(centre.x, centre.y, sun_radius)
+    screen.circle(SUN_CENTRE.x, SUN_CENTRE.y, SUN_RADIUS)
 
 
 def draw_moon(now):
@@ -285,7 +308,12 @@ def draw_light_cloud():
     screen.clear()
 
 
-def centre_text(text, cy=None, max_size=12, min_size=1, padding=4, colour=color.white):
+TEXT_SHADOW = color.rgb(0, 0, 0, 100)
+# pale snow needs a darker shadow for the white text to stand out
+SNOW_TEXT_SHADOW = color.rgb(20, 30, 50, 220)
+
+
+def centre_text(text, cy=None, max_size=12, min_size=1, padding=4, colour=color.white, shadow=TEXT_SHADOW):
 
     max_width = screen.width - padding * 2
     size = max_size
@@ -299,7 +327,7 @@ def centre_text(text, cy=None, max_size=12, min_size=1, padding=4, colour=color.
     if cy is None:
         cy = screen.height / 2
 
-    screen.pen = color.rgb(0, 0, 0, 100)
+    screen.pen = shadow
     screen.text(text, vec2((cx - tw / 2) + 2, (cy - th / 2) + 2), size)
 
     screen.pen = colour
@@ -418,7 +446,7 @@ def update():
 
             # clear skies have their own night scene, the rest are darkened
             if not is_day and weathercode not in [0, 1, 2]:
-                screen.pen = night_overlay
+                screen.pen = fog_night_overlay if weathercode in [45, 48] else night_overlay
                 screen.rectangle(0, 0, screen.width, screen.height)
 
             # after the night overlay, so it stays bright after dark
@@ -449,10 +477,11 @@ def update():
                         screen.line(bolt[i][0], bolt[i][1], bolt[i + 1][0], bolt[i + 1][1])
                     screen.alpha = 255
 
-            centre_text(label, cy=(screen.height - 17), max_size=1)
+            shadow = SNOW_TEXT_SHADOW if weathercode in SNOW_LEVELS else TEXT_SHADOW
+            centre_text(label, cy=(screen.height - 17), max_size=1, shadow=shadow)
 
             # draw the temperature, centre stage.
-            centre_text(f"{temperature}°", cy=CY - 15)
+            centre_text(f"{temperature}°", cy=CY - 15, shadow=shadow)
         else:
             screen.pen = sky_bg
             screen.clear()
