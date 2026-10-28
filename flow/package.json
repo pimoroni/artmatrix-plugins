@@ -1,0 +1,22 @@
+{
+  "name": "Flow",
+  "version": "1.0.0",
+  "description": "Brushstrokes drifting on a field of slowly turning winds",
+  "author": "Pimoroni",
+  "category": "Visualisations",
+  "requires_internet": false,
+  "urls": [
+    [
+      "plugins/flow/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/flow/config.html",
+      "config.html"
+    ],
+    [
+      "plugins/flow/thumbnail.png",
+      "thumbnail.png"
+    ]
+  ]
+}

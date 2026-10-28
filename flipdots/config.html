@@ -1,0 +1,14 @@
+<form method="post" action="/config?plugin={{ plugin }}" data-autosave>
+  <fieldset>
+    <legend>Pattern</legend>
+    <div class="presets">
+      <label><input type="radio" name="pattern" value="cycle" {{ "checked" if placeholder.pattern == "cycle" else "" }}>Cycle all</label>
+      <label><input type="radio" name="pattern" value="waves" {{ "checked" if placeholder.pattern == "waves" else "" }}>Waves</label>
+      <label><input type="radio" name="pattern" value="spiral" {{ "checked" if placeholder.pattern == "spiral" else "" }}>Spiral</label>
+      <label><input type="radio" name="pattern" value="rings" {{ "checked" if placeholder.pattern == "rings" else "" }}>Rings</label>
+      <label><input type="radio" name="pattern" value="life" {{ "checked" if placeholder.pattern == "life" else "" }}>Life</label>
+      <label><input type="radio" name="pattern" value="sand" {{ "checked" if placeholder.pattern == "sand" else "" }}>Falling sand</label>
+      <label><input type="radio" name="pattern" value="rain" {{ "checked" if placeholder.pattern == "rain" else "" }}>Rain</label>
+    </div>
+  </fieldset>
+</form>

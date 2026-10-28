@@ -1,0 +1,22 @@
+{
+  "name": "Flip Dots",
+  "version": "1.0.0",
+  "description": "A flip dot display flipping through waves, spirals and life",
+  "author": "Pimoroni",
+  "category": "Visualisations",
+  "requires_internet": false,
+  "urls": [
+    [
+      "plugins/flipdots/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/flipdots/config.html",
+      "config.html"
+    ],
+    [
+      "plugins/flipdots/thumbnail.png",
+      "thumbnail.png"
+    ]
+  ]
+}

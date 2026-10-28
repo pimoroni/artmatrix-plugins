@@ -1,0 +1,11 @@
+<form method="post" action="/config?plugin={{ plugin }}" data-autosave>
+  <label>Station code
+    <small>The station's three letter code, like SHF for Sheffield or KGX for London Kings Cross</small>
+    <input type="text" name="station" value="{{ placeholder.station }}" maxlength="3" autocapitalize="characters" autocomplete="off" spellcheck="false">
+  </label>
+
+  <label>Darwin token
+    <small>Free from the <a href="https://raildata.org.uk" target="_blank">Rail Data Marketplace</a>. Subscribe to "Live Departure Board Web Service (LDBWS) - Public" and paste its consumer key here. Without one, sample Sheffield times are shown</small>
+    <input type="text" name="token" value="{{ placeholder.token }}" autocomplete="off" spellcheck="false">
+  </label>
+</form>

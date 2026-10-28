@@ -1,0 +1,26 @@
+{
+  "name": "Retro Rail",
+  "version": "1.0.0",
+  "description": "Live departures and arrivals on a dot matrix board",
+  "author": "Pimoroni",
+  "category": "Information",
+  "requires_internet": true,
+  "urls": [
+    [
+      "plugins/retro_rail/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/retro_rail/config.html",
+      "config.html"
+    ],
+    [
+      "plugins/retro_rail/dotmatrix.bin",
+      "dotmatrix.bin"
+    ],
+    [
+      "plugins/retro_rail/thumbnail.png",
+      "thumbnail.png"
+    ]
+  ]
+}

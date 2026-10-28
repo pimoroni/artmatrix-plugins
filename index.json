@@ -13,6 +13,8 @@
     "domain_warp": "Domain Warp",
     "earthquake_map": "Earthquake Map",
     "firework": "Firework",
+    "flipdots": "Flip Dots",
+    "flow": "Flow",
     "galileo_thermometer": "Galileo Thermometer",
     "game_of_life": "Game of Life",
     "gravity_clock_classic": "Gravity Clock Classic",
@@ -26,6 +28,7 @@
     "random_bots": "Random Bots",
     "random_shapes": "Random Shapes",
     "random_triangles": "Random Triangles",
+    "retro_rail": "Retro Rail",
     "ripples": "Ripples",
     "solar_system": "Solar System",
     "spirit_level": "Spirit Level",
@@ -104,6 +107,16 @@
       "author": "Pimoroni",
       "category": "Scenes"
     },
+    "flipdots": {
+      "description": "A flip dot display flipping through waves, spirals and life",
+      "author": "Pimoroni",
+      "category": "Visualisations"
+    },
+    "flow": {
+      "description": "Brushstrokes drifting on a field of slowly turning winds",
+      "author": "Pimoroni",
+      "category": "Visualisations"
+    },
     "galileo_thermometer": {
       "description": "A Galileo thermometer read from a Multi-Sensor Stick",
       "author": "Pimoroni",
@@ -168,6 +181,11 @@
       "description": "Random triangle patterns from DiceBear",
       "author": "Pimoroni",
       "category": "Scenes"
+    },
+    "retro_rail": {
+      "description": "Live departures and arrivals on a dot matrix board",
+      "author": "Pimoroni",
+      "category": "Information"
     },
     "ripples": {
       "description": "Raindrops rippling across a pool of water",

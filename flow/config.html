@@ -1,0 +1,21 @@
+<form method="post" action="/config?plugin={{ plugin }}" data-autosave>
+  <fieldset>
+    <legend>Colour scheme</legend>
+    <div class="presets">
+      <label><input type="radio" name="colours" value="wander" {{ "checked" if placeholder.colours == "wander" else "" }}>Wandering</label>
+      <label><input type="radio" name="colours" value="mixed" {{ "checked" if placeholder.colours == "mixed" else "" }}>Mixed</label>
+      <label><input type="radio" name="colours" value="ice" {{ "checked" if placeholder.colours == "ice" else "" }}>Ice</label>
+      <label><input type="radio" name="colours" value="ember" {{ "checked" if placeholder.colours == "ember" else "" }}>Ember</label>
+      <label><input type="radio" name="colours" value="mono" {{ "checked" if placeholder.colours == "mono" else "" }}>Mono</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Wind</legend>
+    <div class="presets">
+      <label><input type="radio" name="mood" value="calm" {{ "checked" if placeholder.mood == "calm" else "" }}>Calm</label>
+      <label><input type="radio" name="mood" value="breezy" {{ "checked" if placeholder.mood == "breezy" else "" }}>Breezy</label>
+      <label><input type="radio" name="mood" value="gusty" {{ "checked" if placeholder.mood == "gusty" else "" }}>Gusty</label>
+    </div>
+  </fieldset>
+</form>
