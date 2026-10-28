@@ -1,0 +1,28 @@
+<form method="post" action="/config?plugin={{ plugin }}" data-autosave>
+  <fieldset>
+    <legend>Colour scheme</legend>
+    <div class="presets">
+      <label><input type="radio" name="scheme" value="ocean" {{ "checked" if placeholder.scheme == "ocean" else "" }}>Ocean</label>
+      <label><input type="radio" name="scheme" value="lagoon" {{ "checked" if placeholder.scheme == "lagoon" else "" }}>Lagoon</label>
+      <label><input type="radio" name="scheme" value="dusk" {{ "checked" if placeholder.scheme == "dusk" else "" }}>Dusk</label>
+      <label><input type="radio" name="scheme" value="night" {{ "checked" if placeholder.scheme == "night" else "" }}>Night</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Sea</legend>
+    <div class="presets">
+      <label><input type="radio" name="sea" value="calm" {{ "checked" if placeholder.sea == "calm" else "" }}>Calm</label>
+      <label><input type="radio" name="sea" value="breezy" {{ "checked" if placeholder.sea == "breezy" else "" }}>Breezy</label>
+      <label><input type="radio" name="sea" value="choppy" {{ "checked" if placeholder.sea == "choppy" else "" }}>Choppy</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>React to sound</legend>
+    <div class="presets">
+      <label><input type="radio" name="listen" value="1" {{ "checked" if placeholder.listen == 1 else "" }}>On</label>
+      <label><input type="radio" name="listen" value="0" {{ "checked" if placeholder.listen == 0 else "" }}>Off</label>
+    </div>
+  </fieldset>
+</form>

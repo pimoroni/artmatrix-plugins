@@ -1,0 +1,22 @@
+{
+  "name": "Ocean",
+  "version": "1.0.0",
+  "description": "Open water with crossing waves, lit by a low sun",
+  "author": "Pimoroni",
+  "category": "Visualisations",
+  "requires_internet": false,
+  "urls": [
+    [
+      "plugins/ocean/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/ocean/config.html",
+      "config.html"
+    ],
+    [
+      "plugins/ocean/thumbnail.png",
+      "thumbnail.png"
+    ]
+  ]
+}

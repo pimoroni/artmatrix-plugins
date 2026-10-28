@@ -21,6 +21,7 @@ builtins = [
 
 # artmatrix.py
     "display",
+    "mic",
     "screen",
     "BUTTON_A",
     "BUTTON_B",

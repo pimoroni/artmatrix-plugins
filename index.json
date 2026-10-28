@@ -23,8 +23,10 @@
     "kaleidoscope": "Kaleidoscope",
     "kritter": "Kritter",
     "maze": "Maze",
+    "moonlight": "Moonlight",
     "neon_corridor": "Neon Corridor",
     "now_playing": "Now Playing",
+    "ocean": "Ocean",
     "random_bots": "Random Bots",
     "random_shapes": "Random Shapes",
     "random_triangles": "Random Triangles",
@@ -157,6 +159,11 @@
       "author": "Pimoroni",
       "category": "Scenes"
     },
+    "moonlight": {
+      "description": "A moonlit coast, drifting clouds and a glittering sea",
+      "author": "Pimoroni",
+      "category": "Visualisations"
+    },
     "neon_corridor": {
       "description": "An endless walk down a neon-lit corridor",
       "author": "Pimoroni",
@@ -166,6 +173,11 @@
       "description": "Album art for what's playing on your Spotify",
       "author": "Pimoroni",
       "category": "Information"
+    },
+    "ocean": {
+      "description": "Open water with crossing waves, lit by a low sun",
+      "author": "Pimoroni",
+      "category": "Visualisations"
     },
     "random_bots": {
       "description": "Random robot portraits from DiceBear",

@@ -1,0 +1,18 @@
+{
+  "name": "Moonlight",
+  "version": "1.0.0",
+  "description": "A moonlit coast, drifting clouds and a glittering sea",
+  "author": "Pimoroni",
+  "category": "Visualisations",
+  "requires_internet": false,
+  "urls": [
+    [
+      "plugins/moonlight/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/moonlight/thumbnail.png",
+      "thumbnail.png"
+    ]
+  ]
+}
