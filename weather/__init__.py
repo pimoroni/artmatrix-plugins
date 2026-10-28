@@ -29,12 +29,16 @@ if None in (lat, long):
     has_location = False
 
 API_HOST = "api.open-meteo.com"
-API_PATH = f"/v1/forecast?latitude={lat}&longitude={long}&current_weather=true&timezone=auto"
+API_PATH = f"/v1/forecast?latitude={lat}&longitude={long}&current_weather=true&daily=sunrise,sunset&forecast_days=1&timezone=auto"
 UPDATE_INTERVAL = 600   # 10 minutes
 
 weathercode = None
 temperature = None
 is_day = None
+# minutes past local midnight, and seconds the local time is ahead of utc
+sunrise_minute = None
+sunset_minute = None
+utc_offset = None
 # from the wind. cloud and snow drift in px a second, rain in px sideways per px of fall
 cloud_drift = None
 snow_drift = None
@@ -227,6 +231,41 @@ strike_in = 0      # seconds to the next strike
 since_strike = 10
 bolt = []
 
+# label under the temperature. 120 px is the widest that fits, and the font won't shrink
+LABELS = {
+    0: "Sunny", 1: "Fair", 2: "Cloudy", 3: "Overcast",
+    45: "Foggy", 48: "Icy fog",
+    51: "Drizzle", 53: "Drizzle", 55: "Drizzle", 56: "Icy drizzle", 57: "Icy drizzle",
+    61: "Light rain", 63: "Rain", 65: "Heavy rain", 66: "Icy rain", 67: "Icy rain",
+    71: "Light snow", 73: "Snow", 75: "Deep snow", 77: "Fine snow",
+    80: "Showers", 81: "Showers", 82: "Downpour", 85: "Flurries", 86: "Deep snow",
+    95: "Stormy", 96: "Hail", 99: "Heavy hail",
+}
+
+# hail storms: pellets drawn
+HAIL_LEVELS = {96: 25, 99: 50}
+# pellets bounce once off HAIL_FLOOR, keeping HAIL_BOUNCE of their speed
+HAIL_FLOOR = screen.height - 2
+HAIL_GRAVITY = 300       # px a second, each second
+HAIL_SPEED = (60, 100)   # px a second as they leave the cloud
+HAIL_BOUNCE = 0.35
+HAIL_RADIUS = 1.2
+HAIL_PEN = color.rgb(235, 240, 255, 220)
+# x, y, fall speed (negative going up) and whether it has bounced
+hail_particles = []
+for _ in range(HAIL_LEVELS[99]):
+    hail_particles.append([randint(0, screen.width - 1), uniform(0, screen.height), uniform(*HAIL_SPEED), False])
+
+# warm light from the bottom, strongest at sunrise and sunset, gone GLOW_MINUTES either side
+GLOW_MINUTES = 45
+dusk_glow = brush.gradient(brush.LINEAR, 0, 0, 0, screen.height, ((0.0, color.rgb(255, 110, 90, 0)), (0.45, color.rgb(255, 110, 90, 50)), (1.0, color.rgb(255, 150, 60, 170))))
+
+# seconds a new scene takes to fade in over the last frame of the old one
+FADE_TIME = 1.5
+previous = image(screen.width, screen.height)
+fade_left = 0
+shown_scene = (weathercode, is_day)
+
 
 def draw_rainy(elapsed, level):
     drops, length, speed = level
@@ -345,8 +384,16 @@ if has_location:
     @api_data.on_complete
     def complete(fetch):
         global weathercode, temperature, is_day, cloud_drift, snow_drift, rain_slant
+        global sunrise_minute, sunset_minute, utc_offset
 
         data = fetch.to_json()
+
+        # local times like "2026-10-28T07:12"
+        sunrise = data["daily"]["sunrise"][0]
+        sunset = data["daily"]["sunset"][0]
+        sunrise_minute = int(sunrise[11:13]) * 60 + int(sunrise[14:16])
+        sunset_minute = int(sunset[11:13]) * 60 + int(sunset[14:16])
+        utc_offset = data["utc_offset_seconds"]
 
         current = data["current_weather"]
         # open-meteo sends celsius
@@ -371,7 +418,20 @@ if has_location:
 
 
 def update():
-    global cloud_at, last, strike_in, since_strike, bolt
+    global cloud_at, last, strike_in, since_strike, bolt, shown_scene, fade_left
+
+    if has_location:
+        try:
+            api_data.update()
+        except HTTPException:
+            pass
+
+    # the screen still holds the last frame. keep it to fade out over a new scene
+    scene = (weathercode, is_day)
+    if scene != shown_scene:
+        shown_scene = scene
+        previous.blit(screen, 0, 0)
+        fade_left = FADE_TIME
 
     # clear the display
     screen.pen = color.rgb(0, 0, 0)
@@ -389,12 +449,6 @@ def update():
     last = now
 
     if has_location:
-
-        try:
-            api_data.update()
-        except HTTPException:
-            pass
-
         if temperature is not None:
 
             screen.pen = color.white
@@ -406,13 +460,11 @@ def update():
                 screen.pen = snowy_bg
                 screen.clear()
                 draw_snow(now, elapsed, SNOW_LEVELS[weathercode])
-                label = "Snowy"
             elif weathercode in RAIN_LEVELS:
                 draw_cloud_band()
                 screen.pen = rainy_bg
                 screen.clear()
                 draw_rainy(elapsed, RAIN_LEVELS[weathercode])
-                label = "Rainy"
             elif weathercode in [1, 2]:  # codes for mainly clear and partly cloudy
                 if is_day:
                     screen.pen = sky_bg
@@ -423,7 +475,6 @@ def update():
                     screen.clear()
                     draw_moon(now)
                 draw_light_cloud()
-                label = "Cloudy"
             elif weathercode in [45, 48]:  # codes for fog
                 screen.pen = fog_bg
                 screen.clear()
@@ -431,32 +482,63 @@ def update():
                 fog.transform = mat3().translate(cloud_at * 0.4).scale(FOG_STRETCH, 1)
                 screen.pen = fog
                 screen.clear()
-                label = "Foggy"
             elif weathercode in [3]:  # codes for overcast
                 draw_overcast()
-                label = "Overcast"
             elif weathercode in [0]:  # codes for clear sky
                 if is_day:
                     screen.pen = sky_bg
                     screen.clear()
                     draw_sunny(now)
-                    label = "Sunny"
                 else:
                     screen.pen = night_bg
                     screen.clear()
                     draw_moon(now)
-                    label = "Clear"
             elif weathercode in STORM_CODES:
                 draw_cloud_band()
                 screen.pen = stormy_bg
                 screen.clear()
-                draw_rainy(elapsed, HEAVY_RAIN)
-                label = "Stormy"
+                if weathercode in HAIL_LEVELS:
+                    # lighter rain, so the hail stands out
+                    draw_rainy(elapsed, RAIN)
+                    screen.pen = HAIL_PEN
+                    for i in range(HAIL_LEVELS[weathercode]):
+                        stone = hail_particles[i]
+                        stone[2] += HAIL_GRAVITY * elapsed
+                        stone[1] += stone[2] * elapsed
+                        if stone[1] >= HAIL_FLOOR:
+                            if stone[3]:
+                                # landed after its bounce, so it starts again at the top
+                                stone[0] = randint(0, screen.width - 1)
+                                stone[1] = 0
+                                stone[2] = uniform(*HAIL_SPEED)
+                                stone[3] = False
+                            else:
+                                stone[1] = HAIL_FLOOR
+                                stone[2] = -stone[2] * HAIL_BOUNCE
+                                stone[3] = True
+                        screen.circle(stone[0], stone[1], HAIL_RADIUS)
+                else:
+                    draw_rainy(elapsed, HEAVY_RAIN)
+
+            label = LABELS[weathercode]
+            if weathercode == 0 and not is_day:
+                label = "Clear"
 
             # clear skies have their own night scene, the rest are darkened
             if not is_day and weathercode not in [0, 1, 2]:
                 screen.pen = fog_night_overlay if weathercode in [45, 48] else night_overlay
                 screen.rectangle(0, 0, screen.width, screen.height)
+
+            if weathercode in [0, 1, 2]:
+                # local minutes past midnight. the board's clock is utc
+                minute = (time.time() + utc_offset) // 60 % 1440
+                nearest = min(abs(minute - sunrise_minute), abs(minute - sunset_minute))
+                warmth = 1 - nearest / GLOW_MINUTES
+                if warmth > 0:
+                    screen.alpha = int(255 * warmth)
+                    screen.pen = dusk_glow
+                    screen.rectangle(0, 0, screen.width, screen.height)
+                    screen.alpha = 255
 
             # after the night overlay, so it stays bright after dark
             if weathercode in STORM_CODES:
@@ -497,3 +579,9 @@ def update():
             centre_text("Loading", max_size=1)
     else:
         draw_qr_screen("Weather", "Setup needed", "weather")
+
+    if fade_left > 0:
+        fade_left -= elapsed
+        screen.alpha = int(255 * max(fade_left, 0) / FADE_TIME)
+        screen.blit(previous, 0, 0)
+        screen.alpha = 255
