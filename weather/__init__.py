@@ -139,6 +139,19 @@ moon_halo = brush.gradient(brush.RADIAL, MOON_X, MOON_Y, MOON_X, MOON_Y + MOON_H
 moon_craters = brush.fractal(4, 3, 0.5, 0, 311)
 moon_craters.ramp(((0.0, color.rgb(150, 150, 140)), (0.55, color.rgb(225, 223, 210)), (1.0, color.rgb(225, 223, 210))))
 
+# the phase counts days from a known new moon, 18:14 utc on 6 jan 2000, in lunar months
+LUNAR_MONTH = 29.530588853
+KNOWN_NEW_MOON = time.mktime((2000, 1, 6, 18, 14, 0, 0, 0))
+# points along each edge of the moon's shadow, its rim and the line between light and dark
+MOON_SHADOW_STEPS = 16
+# a little earthshine shows through
+MOON_SHADOW_PEN = color.rgb(18, 24, 48, 230)
+# the shadow's rim reaches this far past the moon's, so no bright edge shows round it
+MOON_SHADOW_OVERLAP = 0.6
+# set with each fetch. the shadow's shape, and how much of the moon is lit from 0 to 1
+moon_shadow = None
+moon_lit = 1
+
 fog_bg = brush.gradient(brush.LINEAR, 0, 0, 0, screen.height, ((0.0, color.rgb(120, 128, 136)), (1.0, color.rgb(170, 176, 182))))
 fog = brush.fractal(screen.height * 0.3, 3, 0.5, 0, 5113)
 fog.ramp((
@@ -371,10 +384,14 @@ def draw_moon(now):
         screen.pen = color.rgb(255, 255, 255, brightness)
         screen.rectangle(x, y, 1, 1)
 
+    screen.alpha = int(255 * moon_lit)
     screen.pen = moon_halo
     screen.circle(MOON_X, MOON_Y, MOON_HALO_RADIUS)
+    screen.alpha = 255
     screen.pen = moon_craters
     screen.circle(MOON_X, MOON_Y, MOON_RADIUS)
+    screen.pen = MOON_SHADOW_PEN
+    screen.shape(moon_shadow)
 
 
 cloud_at = vec2(0.0, 0.0)
@@ -433,9 +450,26 @@ if has_location:
     @api_data.on_complete
     def complete(fetch):
         global weathercode, temperature, is_day, cloud_drift, snow_drift, rain_slant
-        global sunrise_minute, sunset_minute, utc_offset
+        global sunrise_minute, sunset_minute, utc_offset, moon_shadow, moon_lit
 
         data = fetch.to_json()
+
+        # 0 at new moon, 0.5 at full
+        phase = (time.time() - KNOWN_NEW_MOON) / 86400 % LUNAR_MONTH / LUNAR_MONTH
+        # where light meets dark across the moon. 1 at its dark edge, -1 at its lit one
+        squash = math.cos(phase * 2 * math.pi)
+        moon_lit = (1 - squash) / 2
+        # dark on the left while it waxes. the other way round south of the equator
+        side = -1 if (phase < 0.5) == (lat >= 0) else 1
+        outline = []
+        rim = MOON_RADIUS + MOON_SHADOW_OVERLAP
+        for i in range(MOON_SHADOW_STEPS + 1):
+            angle = math.pi * i / MOON_SHADOW_STEPS
+            outline.append(vec2(MOON_X + side * rim * math.sin(angle), MOON_Y - rim * math.cos(angle)))
+        for i in range(MOON_SHADOW_STEPS, -1, -1):
+            angle = math.pi * i / MOON_SHADOW_STEPS
+            outline.append(vec2(MOON_X - side * squash * MOON_RADIUS * math.sin(angle), MOON_Y - MOON_RADIUS * math.cos(angle)))
+        moon_shadow = shape.custom(outline)
 
         # local times like "2026-10-28T07:12"
         sunrise = data["daily"]["sunrise"][0]
