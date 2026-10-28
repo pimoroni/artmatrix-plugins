@@ -1,0 +1,22 @@
+{
+  "name": "Aurora",
+  "version": "1.0.0",
+  "description": "Curtains of northern lights over a dark treeline",
+  "author": "Pimoroni",
+  "category": "Visualisations",
+  "requires_internet": false,
+  "urls": [
+    [
+      "plugins/aurora/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/aurora/config.html",
+      "config.html"
+    ],
+    [
+      "plugins/aurora/thumbnail.png",
+      "thumbnail.png"
+    ]
+  ]
+}

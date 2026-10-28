@@ -1,0 +1,18 @@
+<form method="post" action="/config?plugin={{ plugin }}" data-autosave>
+  <fieldset>
+    <legend>Colour scheme</legend>
+    <div class="presets">
+      <label><input type="radio" name="scheme" value="boreal" {{ "checked" if placeholder.scheme == "boreal" else "" }}>Boreal</label>
+      <label><input type="radio" name="scheme" value="solar" {{ "checked" if placeholder.scheme == "solar" else "" }}>Solar</label>
+      <label><input type="radio" name="scheme" value="glacier" {{ "checked" if placeholder.scheme == "glacier" else "" }}>Glacier</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>React to sound</legend>
+    <div class="presets">
+      <label><input type="radio" name="listen" value="1" {{ "checked" if placeholder.listen == 1 else "" }}>On</label>
+      <label><input type="radio" name="listen" value="0" {{ "checked" if placeholder.listen == 0 else "" }}>Off</label>
+    </div>
+  </fieldset>
+</form>

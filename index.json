@@ -5,6 +5,7 @@
     "art_matrix_draw": "Art Matrix Draw",
     "art_matrix_show": "Art Matrix Show",
     "art_matrix_write": "Art Matrix Write",
+    "aurora": "Aurora",
     "bezier": "Bezier",
     "blackhole": "Blackhole",
     "cells": "Cells",
@@ -68,6 +69,11 @@
       "description": "Your own messages, scrolling or still, with effects",
       "author": "Pimoroni",
       "category": "Interactive"
+    },
+    "aurora": {
+      "description": "Curtains of northern lights over a dark treeline",
+      "author": "Pimoroni",
+      "category": "Visualisations"
     },
     "bezier": {
       "description": "Smooth B\u00e9zier curves looping round the screen",
