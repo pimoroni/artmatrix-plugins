@@ -15,10 +15,6 @@
     .picture { position: relative; }
     .picture img, .picture canvas { display: block; width: 100%; aspect-ratio: 1; image-rendering: pixelated; border-radius: var(--radius); background: #000; }
     #notice { color: var(--danger); }
-    /* sits in the heading of whatever just changed, so nothing below it moves */
-    #save_note { display: inline; margin-left: 0.5rem; color: var(--success); font-family: var(--font);
-      font-size: 0.8125rem; font-weight: 400; letter-spacing: normal; text-transform: none; }
-    #save_note[hidden] { display: none; }
     #picture_count { margin: 0 0 var(--gap); }
     .add-hint { margin: var(--gap) 0; }
 
@@ -57,7 +53,7 @@
   <aside>{{ placeholder.other_note }}</aside>
 
   <hr>
-  <h3 id="pictures_heading">Pictures<small id="save_note" aria-live="polite" hidden></small></h3>
+  <h3>Pictures</h3>
   <small id="picture_count"></small>
   <small id="notice"></small>
   <div id="upload_progress" hidden>
@@ -193,33 +189,6 @@
     // be lost by leaving the page, or by a storage change reloading it
     function busy() {
       return batchDone < batchTotal || queued > 0 || zoomTimer !== null
-    }
-
-    // shown in the heading of what changed, so a save is seen to stick
-    const SAVED_SHOW_MS = 2000
-    const saveNote = document.getElementById('save_note')
-    let noteTimer = null
-    let notesStarted = 0
-
-    // returns what to call once the post is back. only the latest save gets to say
-    function noteSaving(heading) {
-      clearTimeout(noteTimer)
-      heading.append(saveNote)
-      saveNote.textContent = 'Saving…'
-      saveNote.hidden = false
-      notesStarted += 1
-      const mine = notesStarted
-      return saved => {
-        if (mine !== notesStarted) {
-          return
-        }
-        if (!saved) {
-          saveNote.hidden = true
-          return
-        }
-        saveNote.textContent = 'Saved ✓'
-        noteTimer = setTimeout(() => { saveNote.hidden = true }, SAVED_SHOW_MS)
-      }
     }
 
     function updateBusy() {
@@ -706,12 +675,11 @@
       }
       savedOrder = names
       notice.textContent = ''
-      const noteSaved = noteSaving(document.getElementById('pictures_heading'))
       // behind any upload still going, so every name in it is already saved
       enqueue(async () => {
-        const saved = await post({ arrange: names })
-        noteSaved(saved)
-        if (!saved) {
+        if (await post({ arrange: names })) {
+          showToast('Saved!', false)
+        } else {
           notice.textContent = "Couldn't save the new order, check the board is still connected."
         }
       })
@@ -746,14 +714,12 @@
       }
       const storageChanged = changed.name === 'storage'
       notice.textContent = ''
-      const noteSaved = noteSaving(changed.closest('fieldset').querySelector('legend'))
       enqueue(async () => {
-        const saved = await post(fields)
-        noteSaved(saved)
-        if (!saved) {
+        if (!await post(fields)) {
           notice.textContent = "Couldn't save that setting, check the board is still connected."
           return
         }
+        showToast('Saved!', false)
         // the pictures have moved, so the page shows them from their new place
         if (storageChanged) {
           leaving = true
