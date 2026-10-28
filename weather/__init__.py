@@ -11,9 +11,13 @@ CY = screen.height / 2
 cfg = plugin_config("weather", {
     "lat": None,
     "lng": None,
+    "units": "celsius",  # celsius or fahrenheit
 })
 lat = cfg["lat"]
 long = cfg["lng"]
+units = cfg["units"]
+if units not in ("celsius", "fahrenheit"):
+    units = "celsius"
 if lat is not None:
     lat = float(lat)
 if long is not None:
@@ -345,7 +349,12 @@ if has_location:
         data = fetch.to_json()
 
         current = data["current_weather"]
-        temperature = round(current["temperature"])
+        # open-meteo sends celsius
+        celsius = current["temperature"]
+        if units == "fahrenheit":
+            temperature = round(celsius * 9 / 5 + 32)
+        else:
+            temperature = round(celsius)
         weathercode = current["weathercode"]
         is_day = current["is_day"] == 1
 

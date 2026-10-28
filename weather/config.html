@@ -42,6 +42,14 @@
   <label>Longitude
     <input type="number" name="lng" min="-180" max="180" step="any" value="{{ placeholder.long }}" required>
   </label>
+
+  <fieldset>
+    <legend>Temperature</legend>
+    <div class="presets">
+      <label><input type="radio" name="units" value="celsius" {{ "checked" if placeholder.units != "fahrenheit" else "" }}>Celsius</label>
+      <label><input type="radio" name="units" value="fahrenheit" {{ "checked" if placeholder.units == "fahrenheit" else "" }}>Fahrenheit</label>
+    </div>
+  </fieldset>
 </form>
 
 <script>
