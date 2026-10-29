@@ -16,7 +16,7 @@ THUMBNAIL = "thumbnail.png"
 # shown on the install page's cards, so every plugin needs all three
 DETAILS = ("description", "author", "category")
 # the settings and install pages filter on these
-CATEGORIES = ("Information", "Visualisations", "Scenes", "Interactive")
+CATEGORIES = ("Information", "Visualisations", "Scenes", "Interactive", "3D")
 # three lines on a phone-width card
 DESCRIPTION_MAX = 60
 EXCLUDE_NAMES = {MANIFEST_NAME, "config.json", ".DS_Store", "Thumbs.db"}
