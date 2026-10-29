@@ -50,6 +50,15 @@
       <label><input type="radio" name="units" value="fahrenheit" {{ "checked" if placeholder.units == "fahrenheit" else "" }}>Fahrenheit</label>
     </div>
   </fieldset>
+
+  <fieldset>
+    <legend>Text</legend>
+    <div class="presets">
+      <label><input type="radio" name="text" value="default" {{ "checked" if placeholder.text not in ("corner", "none") else "" }}>Default</label>
+      <label><input type="radio" name="text" value="corner" {{ "checked" if placeholder.text == "corner" else "" }}>Corner</label>
+      <label><input type="radio" name="text" value="none" {{ "checked" if placeholder.text == "none" else "" }}>No Text</label>
+    </div>
+  </fieldset>
 </form>
 
 <script>

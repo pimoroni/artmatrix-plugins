@@ -12,10 +12,14 @@ cfg = plugin_config("weather", {
     "lat": None,
     "lng": None,
     "units": "celsius",  # celsius or fahrenheit
+    "text": "default",  # default, corner or none
 })
 lat = cfg["lat"]
 long = cfg["lng"]
 units = cfg["units"]
+text = cfg["text"]
+if text not in ("default", "corner", "none"):
+    text = "default"
 if units not in ("celsius", "fahrenheit"):
     units = "celsius"
 if lat is not None:
@@ -421,6 +425,17 @@ TEXT_SHADOW = color.rgb(0, 0, 0, 100)
 # pale snow needs a darker shadow for the white text to stand out
 SNOW_TEXT_SHADOW = color.rgb(20, 30, 50, 220)
 
+# corner mode: just the temperature, on a dark card in the bottom left
+CARD_FONT = font.smart
+CARD_MARGIN = 4
+CARD_PADDING = 3
+CARD_RADIUS = 3
+CARD_PEN = color.rgb(0, 0, 0, 120)
+# rebuilt only when the temperature changes. card_text is the reading it was built for
+card_text = None
+card = None
+reading_at = None
+
 
 def centre_text(text, cy=None, max_size=12, min_size=1, padding=4, colour=color.white, shadow=TEXT_SHADOW):
 
@@ -502,6 +517,7 @@ if has_location:
 
 def update():
     global cloud_at, last, strike_in, since_strike, bolt, shown_scene, fade_left, settle_in
+    global card_text, card, reading_at
 
     if has_location:
         try:
@@ -655,11 +671,29 @@ def update():
                         screen.line(bolt[i][0], bolt[i][1], bolt[i + 1][0], bolt[i + 1][1])
                     screen.alpha = 255
 
-            shadow = SNOW_TEXT_SHADOW if weathercode in SNOW_LEVELS else TEXT_SHADOW
-            centre_text(label, cy=(screen.height - 17), max_size=1, shadow=shadow)
+            if text == "default":
+                shadow = SNOW_TEXT_SHADOW if weathercode in SNOW_LEVELS else TEXT_SHADOW
+                centre_text(label, cy=(screen.height - 17), max_size=1, shadow=shadow)
 
-            # draw the temperature, centre stage.
-            centre_text(f"{temperature}°", cy=CY - 15, shadow=shadow)
+                # draw the temperature, centre stage.
+                centre_text(f"{temperature}°", cy=CY - 15, shadow=shadow)
+            elif text == "corner":
+                reading = f"{temperature}°"
+                screen.font = CARD_FONT
+                if reading != card_text:
+                    card_text = reading
+                    reading_width, reading_height = screen.measure_text(reading, 1)
+                    # always square, sized by the longer side of the text
+                    card_size = max(reading_width, reading_height) + CARD_PADDING * 2
+                    card_x = CARD_MARGIN
+                    card_y = screen.height - CARD_MARGIN - card_size
+                    card = shape.rounded_rectangle(card_x, card_y, card_size, card_size, CARD_RADIUS)
+                    # whole pixels, or the pixel font blurs
+                    reading_at = vec2(round(card_x + (card_size - reading_width) / 2), round(card_y + (card_size - reading_height) / 2))
+                screen.pen = CARD_PEN
+                screen.shape(card)
+                screen.pen = color.white
+                screen.text(reading, reading_at, 1)
         else:
             screen.pen = sky_bg
             screen.clear()
