@@ -23,6 +23,7 @@
     "iss_tracker": "ISS Tracker",
     "kaleidoscope": "Kaleidoscope",
     "kritter": "Kritter",
+    "magic_portal": "Magic Portal",
     "maze": "Maze",
     "moonlight": "Moonlight",
     "neon_corridor": "Neon Corridor",
@@ -157,6 +158,11 @@
     },
     "kritter": {
       "description": "Watch the kritters hop between planets",
+      "author": "Pimoroni",
+      "category": "Scenes"
+    },
+    "magic_portal": {
+      "description": "A glowing portal spiralling into the dark",
       "author": "Pimoroni",
       "category": "Scenes"
     },

@@ -1,0 +1,11 @@
+<form method="post" action="/config?plugin={{ plugin }}" data-autosave>
+  <fieldset>
+    <legend>Colour scheme</legend>
+    <div class="presets">
+      <label><input type="radio" name="scheme" value="violet" {{ "checked" if placeholder.scheme == "violet" else "" }}>Violet</label>
+      <label><input type="radio" name="scheme" value="ember" {{ "checked" if placeholder.scheme == "ember" else "" }}>Ember</label>
+      <label><input type="radio" name="scheme" value="ice" {{ "checked" if placeholder.scheme == "ice" else "" }}>Ice</label>
+      <label><input type="radio" name="scheme" value="emerald" {{ "checked" if placeholder.scheme == "emerald" else "" }}>Emerald</label>
+    </div>
+  </fieldset>
+</form>

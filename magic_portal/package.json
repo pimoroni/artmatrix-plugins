@@ -1,0 +1,22 @@
+{
+  "name": "Magic Portal",
+  "version": "1.0.0",
+  "description": "A glowing portal spiralling into the dark",
+  "author": "Pimoroni",
+  "category": "Scenes",
+  "requires_internet": false,
+  "urls": [
+    [
+      "plugins/magic_portal/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/magic_portal/config.html",
+      "config.html"
+    ],
+    [
+      "plugins/magic_portal/thumbnail.png",
+      "thumbnail.png"
+    ]
+  ]
+}
