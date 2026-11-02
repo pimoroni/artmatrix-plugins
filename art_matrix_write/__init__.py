@@ -47,11 +47,16 @@ GAP_MS = 500
 # how long static text shows each message
 HOLD_MS = 5000
 
-# room between wrapped lines, 1 has them touching
-LINE_SPACING = 1.2
+# room between wrapped lines, 1 has them touching. keep it to quarters, they
+# add up exactly in floats. others drift and can knock a line up a pixel
+LINE_SPACING = 1.25
 
 # frames timed per speed check. the median ignores one slow frame like a gc sweep
 MEASURE_FRAMES = 15
+
+# a new step has to be this much closer to the speed asked for before it's used,
+# so a frame time sitting between two steps can't flip it back and forth
+SWITCH_MARGIN = 0.2
 
 # one message per line, blank lines skipped
 messages = [line.strip() for line in message.splitlines() if line.strip()]
@@ -69,9 +74,13 @@ solid_shadow_colour = color.rgb(*(channel // 4 for channel in colour))
 
 # scrolling text stays hidden until the first frames are timed. a guess
 # would start at the wrong speed and then correct itself
-step = None
+move_px = None
+move_every = 1
+checks_done = 0
+frame_count = 0
 frame_gaps = []
 last_frame = None
+text_shown = False
 
 message_index = -1
 message_hue = 0
@@ -106,7 +115,7 @@ def start_next_message():
         # lifted so the shadow stays on screen, plus 1px the panel's frame covers
         text_y = screen.height - text_height - shadow_offset - 1
 
-    # how far the text has moved, in half pixels
+    # how far the text has moved, in pixels
     scrolled = 0
     gap_ends = time.ticks_add(time.ticks_ms(), GAP_MS)
     hold_ends = time.ticks_add(time.ticks_ms(), HOLD_MS)
@@ -116,24 +125,42 @@ start_next_message()
 
 
 def update():
-    global step, frame_gaps, last_frame, scrolled
+    global move_px, move_every, checks_done, frame_count, frame_gaps, last_frame, text_shown, scrolled
     screen.pen = background_colour
     screen.clear()
 
     # time recent frames and pick the step that keeps the speed steady
     now = time.ticks_ms()
-    if last_frame is not None:
+    # the blank gap between messages is quicker to draw, so once there's a step
+    # only frames that had text on them count. text_shown is still last frame's
+    if last_frame is not None and (move_px is None or text_shown):
         frame_gaps.append(time.ticks_diff(now, last_frame))
     last_frame = now
     if len(frame_gaps) == MEASURE_FRAMES:
         frame_gaps.sort()
         frame_ms = frame_gaps[MEASURE_FRAMES // 2]
         frame_gaps = []
-        # half pixels per frame for the chosen speed, at least one
-        step = max(1, round(speed * frame_ms * 2 / 1000))
+        # whole pixels every frame, or one pixel every few frames. anything in
+        # between, like 1.5, moves 1 then 2 and judders
+        ideal_px = speed * frame_ms / 1000
+        if ideal_px >= 1:
+            best_px, best_every = round(ideal_px), 1
+        else:
+            best_px, best_every = 1, round(1 / ideal_px)
+        best_error = abs(best_px / best_every - ideal_px) / ideal_px
+        checks_done += 1
+        # the first check runs before any text is drawn, so its frames are quick
+        # and the step it picks is too small. the second check always replaces it
+        if checks_done <= 2:
+            move_px, move_every = best_px, best_every
+        else:
+            move_error = abs(move_px / move_every - ideal_px) / ideal_px
+            if move_error - best_error > SWITCH_MARGIN:
+                move_px, move_every = best_px, best_every
 
     # static text doesn't need a speed or gap check
-    if direction == "static" or (step is not None and time.ticks_diff(now, gap_ends) >= 0):
+    text_shown = direction == "static" or (move_px is not None and time.ticks_diff(now, gap_ends) >= 0)
+    if text_shown:
         if effect == "solid":
             text_colour = solid_text_colour
             shadow_colour = solid_shadow_colour
@@ -149,10 +176,14 @@ def update():
 
         screen.font = font_face
 
+        if direction != "static":
+            # stepped by frames, not placed by the clock, which jittered
+            frame_count += 1
+            if frame_count % move_every == 0:
+                scrolled += move_px
+
         if direction == "left":
-            # a step each frame, not placed by the clock, which jittered
-            scrolled += step
-            text_x = screen.width - scrolled // 2
+            text_x = screen.width - scrolled
             if drop_shadow:
                 screen.pen = shadow_colour
                 screen.text(current_text, text_x + shadow_offset, text_y + shadow_offset, size)
@@ -161,8 +192,7 @@ def update():
             finished = text_x + text_width + shadow_offset <= 0
         else:
             if direction == "up":
-                scrolled += step
-                text_top = screen.height - scrolled // 2
+                text_top = screen.height - scrolled
                 finished = text_top + text_height + shadow_offset <= 0
             else:
                 text_top = text_y
