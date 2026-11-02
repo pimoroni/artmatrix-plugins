@@ -1,4 +1,4 @@
-import time
+import timezones
 import math
 
 screen.antialias = image.X4
@@ -14,7 +14,7 @@ time_set = False
 
 def update():
 
-    year, month, day, hour, minute, second, _, _ = time.localtime()
+    year, month, day, hour, minute, second, _, _ = timezones.localtime()
 
     screen.pen = color.rgb(0, 0, 0)
     screen.clear()

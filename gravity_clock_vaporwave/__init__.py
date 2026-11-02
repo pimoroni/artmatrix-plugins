@@ -1,9 +1,9 @@
 import math
 import random
 import time
+import timezones
 
 
-from daylightsaving import DaylightSavingPolicy, DaylightSaving
 from plugin_config import plugin_config
 
 GRAVITY_STRENGTH = 5
@@ -17,8 +17,6 @@ screen.font = rom_font.sins
 
 # These values are exposed to the web interface
 cfg = plugin_config("gravity_clock_vaporwave", {
-    "region": "eu",
-    "tz_offset": 0,
     "hours_colour": (255, 97, 198),  # The colour for the hour balls and ray. NOTE this is a tuple not a color.rgb so the value survives the round trip to the web interface.
     "minutes_colour": (255, 193, 0),  # The colour for the minute balls and ray. NOTE this is a tuple not a color.rgb so the value survives the round trip to the web interface.
     "seconds_colour": (92, 236, 255),  # The colour for the second balls and ray. NOTE this is a tuple not a color.rgb so the value survives the round trip to the web interface.
@@ -29,8 +27,6 @@ cfg = plugin_config("gravity_clock_vaporwave", {
     "show_border": True,  # Displays the squircle border the balls collide with.
     "show_glow": False,  # Displays a neon glow around all screen elements. NOTE this comes with a serious framerate hit.
 })
-region = cfg["region"]
-tz_offset = cfg["tz_offset"]
 hours_colour = cfg["hours_colour"]
 minutes_colour = cfg["minutes_colour"]
 seconds_colour = cfg["seconds_colour"]
@@ -48,34 +44,6 @@ min_second_size = 200
 show_fps = False
 show_border = cfg["show_border"]
 show_glow = cfg["show_glow"]
-
-
-# These are the different Daylight Saving time zones, according to the Wikipedia article.
-# Timezones are incredibly complex, we've covered the main ones here.
-# "zonename": (hemisphere, week, month, weekday, hour, timezone, minutes clocks change by)
-# Israel and Palestine each follow different daylight saving rules from standard, and are not included here.
-regions = {
-    "us": (0, 2, 3, 6, 2, 1, 11, 6, 2, 60),
-    "cuba": (0, 2, 3, 6, 0, 1, 11, 6, 1, 60),
-    "eu": (0, 0, 3, 6, 1, 0, 10, 6, 1, 60),
-    "moldova": (0, 0, 3, 6, 2, 0, 10, 6, 3, 60),
-    "lebanon": (0, 0, 3, 6, 0, 0, 10, 6, 0, 60),
-    "egypt": (0, 0, 4, 4, 0, 0, 10, 3, 24, 60),
-    "chile": (1, 1, 9, 5, 24, 1, 4, 5, 24, 60),
-    "australia": (1, 1, 10, 6, 2, 1, 4, 6, 3, 60),
-    "nz": (1, 0, 9, 6, 2, 1, 4, 6, 3, 60)
-}
-
-region = region if region in regions else "eu"
-tz_minutes = tz_offset * 60
-hemisphere, week_in, month_in, weekday_in, hour_in, week_out, month_out, weekday_out, hour_out, mins_difference = regions[region]
-
-dstp = DaylightSavingPolicy(hemisphere, week_in, month_in, weekday_in, hour_in,
-                            tz_minutes + mins_difference)
-stdp = DaylightSavingPolicy(hemisphere, week_out, month_out, weekday_out, hour_out,
-                            tz_minutes)
-
-dst = DaylightSaving(dstp, stdp)
 
 
 # build all the hand shapes, saves rebuilding these every frame. ALL THE FPS.
@@ -125,21 +93,15 @@ class Clock:
         self.last_second = 0
         self.sub_second = 0
         self.last_ms = time.ticks_ms()
-        self.last_utc_minute = -1
         self.local_hour = 0
         self.local_minute = 0
 
     @micropython.native
     def calc_clock(self):
-        utc = time.gmtime()
-        minute = utc[4]
-        second = utc[5]
-
-        if minute != self.last_utc_minute:
-            self.last_utc_minute = minute
-            local = time.gmtime(dst.localtime(time.mktime(utc)))
-            self.local_hour = local[3]
-            self.local_minute = local[4]
+        local = timezones.localtime()
+        self.local_hour = local[3]
+        self.local_minute = local[4]
+        second = local[5]
 
         if second != self.last_second:
             self.sub_second = 0
