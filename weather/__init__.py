@@ -57,7 +57,7 @@ CLOUD_FADE_END = CLOUD_BASE / screen.height
 snowy_bg = brush.gradient(brush.LINEAR, 0, 0, 0, screen.height, ((0.0, color.rgb(109, 129, 150, 0)), (CLOUD_FADE_START, color.rgb(109, 129, 150, 0)), (CLOUD_FADE_END, color.rgb(109, 129, 150)), (1.0, color.rgb(150, 165, 185))))
 rainy_bg = brush.gradient(brush.LINEAR, 0, 0, 0, screen.height, ((0.0, color.rgb(105, 105, 105, 0)), (CLOUD_FADE_START, color.rgb(105, 105, 105, 0)), (CLOUD_FADE_END, color.rgb(105, 105, 105)), (1.0, color.rgb(80, 123, 156))))
 stormy_bg = brush.gradient(brush.LINEAR, 0, 0, 0, screen.height, ((0.0, color.rgb(105, 105, 105, 0)), (CLOUD_FADE_START, color.rgb(105, 105, 105, 0)), (CLOUD_FADE_END, color.rgb(105, 105, 105)), (1.0, color.rgb(70, 70, 70))))
-sky_bg = brush.gradient(brush.LINEAR, 0, 0, 0, screen.height, ((0.0, color.rgb(58, 124, 190)), (1.0, color.rgb(160, 200, 232))))
+sky_bg = brush.gradient(brush.LINEAR, 0, 0, 0, screen.height, ((0.0, color.rgb(30, 72, 124)), (1.0, color.rgb(88, 128, 168))))
 
 over_cloud = brush.fractal(screen.height * 0.45, 4, 0.72, 0, 7719)
 over_cloud.ramp((
@@ -97,7 +97,7 @@ SUN_RAYS = 50
 # long enough to reach the far corner from the sun
 RAY_LENGTH = 170
 # degrees a second
-RAY_TURN = 5
+RAY_TURN = 2.5
 
 # rays alternate bright and dim. each set is one shape, built once and turned by its transform
 bright_paths = []
