@@ -21,7 +21,6 @@
     "gravity_clock_classic": "Gravity Clock Classic",
     "gravity_clock_vaporwave": "Gravity Clock Vaporwave",
     "iss_tracker": "ISS Tracker",
-    "kaleidoscope": "Kaleidoscope",
     "kritter": "Kritter",
     "magic_portal": "Magic Portal",
     "maze": "Maze",
@@ -32,6 +31,7 @@
     "random_bots": "Random Bots",
     "random_shapes": "Random Shapes",
     "random_triangles": "Random Triangles",
+    "resonance": "Resonance",
     "retro_rail": "Retro Rail",
     "ripples": "Ripples",
     "solar_system": "Solar System",
@@ -151,11 +151,6 @@
       "author": "Pimoroni",
       "category": "Information"
     },
-    "kaleidoscope": {
-      "description": "Vibrating-plate wave patterns that morph and pulse",
-      "author": "Pimoroni",
-      "category": "Visualisations"
-    },
     "kritter": {
       "description": "Watch the kritters hop between planets",
       "author": "Pimoroni",
@@ -205,6 +200,11 @@
       "description": "Random triangle patterns from DiceBear",
       "author": "Pimoroni",
       "category": "Scenes"
+    },
+    "resonance": {
+      "description": "Vibrating-plate wave patterns that morph and pulse",
+      "author": "Pimoroni",
+      "category": "Visualisations"
     },
     "retro_rail": {
       "description": "Live departures and arrivals on a dot matrix board",

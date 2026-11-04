@@ -22,7 +22,7 @@ BUSY = SIMPLE + [(3, 5, 1), (2, 7, -1), (4, 7, 1), (3, 8, -1), (5, 6, 1), (1, 8,
 # ms a figure stays still, then ms to melt into the next
 PACES = {1: (8000, 4000), 2: (4500, 2500), 3: (2500, 1500)}
 
-cfg = plugin_config("kaleidoscope", {
+cfg = plugin_config("resonance", {
     "scheme": "sand",  # one of SCHEMES
     "pace": 2,  # 1 slow, 2 medium, 3 fast
     "detail": "simple",  # simple or busy

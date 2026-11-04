@@ -1,5 +1,5 @@
 {
-  "name": "Kaleidoscope",
+  "name": "Resonance",
   "version": "1.0.0",
   "description": "Vibrating-plate wave patterns that morph and pulse",
   "author": "Pimoroni",
@@ -7,15 +7,15 @@
   "requires_internet": false,
   "urls": [
     [
-      "plugins/kaleidoscope/__init__.py",
+      "plugins/resonance/__init__.py",
       "__init__.py"
     ],
     [
-      "plugins/kaleidoscope/config.html",
+      "plugins/resonance/config.html",
       "config.html"
     ],
     [
-      "plugins/kaleidoscope/thumbnail.png",
+      "plugins/resonance/thumbnail.png",
       "thumbnail.png"
     ]
   ]
