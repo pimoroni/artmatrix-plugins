@@ -37,6 +37,8 @@ fade_started = None  # ticks_ms when the fade began, None while pipes are growin
 screen_centre_x = screen.width / 2
 screen_centre_y = screen.height / 2
 
+# depths closer than this count as level, float sin/cos never quite give 0
+SAME_DEPTH = 0.01
 TURN_ODDS = 6  # one step in this many heads off in a random direction
 PIPE_WIDTH = 4
 JOINT_RADIUS = 4
@@ -71,8 +73,9 @@ def new_pipe():
         if pos not in used_cells:
             break
     used_cells.add(pos)
-    # a pipe is [head cell, direction, head's (screen x, screen y, depth), colour]
-    return [pos, choice(directions), transform_points(pos[0] - centre, pos[1] - centre, pos[2] - centre), colour]
+    # a pipe is [head cell, direction, head's (screen x, screen y, depth), colour, current run]
+    # a run is (start x, start y, depth, its render_list cell), None until the first step
+    return [pos, choice(directions), transform_points(pos[0] - centre, pos[1] - centre, pos[2] - centre), colour, None]
 
 
 def can_move(x, y, z):
@@ -132,32 +135,44 @@ def step(pipe):
         brightness = (FRONT_BRIGHTNESS - depth_norm * (FRONT_BRIGHTNESS - BACK_BRIGHTNESS)) * 255
         brightness = min(max(0, brightness), 255)
 
-        # highlight and shadow sit 1px off the middle, so they stop short of the next segment.
-        # stretch them 10% past each end to close the gap
+        # highlight and shadow sit 1px off the middle, so they stop short of the joint ball.
+        # stretch them 10% of one cell past each end of the run to close the gap
         overhang_x = (screen_x - prev_x) * 0.10
         overhang_y = (screen_y - prev_y) * 0.10
 
-        red, green, blue = pipe[3]
-        colour = color.rgb(red * brightness, green * brightness, blue * brightness)
-        shade = brightness * SHADOW_BRIGHTNESS
-        shadow_colour = color.rgb(red * shade, green * shade, blue * shade)
+        # segments drawn end to end leave a seam or a bump at every join, so a pipe going
+        # straight on at the same depth stretches its current run instead of adding a segment
+        run = pipe[4]
+        if not changed_dir and run is not None and abs(depth - run[2]) < SAME_DEPTH:
+            start_x, start_y, _, cell = run
+        else:
+            start_x, start_y = prev_x, prev_y
 
-        # next_cell breaks depth ties, so insort never has to compare the shapes
-        sort_key = (-depth, next_cell)
-        body = shape.line(vec2(screen_x, screen_y), vec2(prev_x, prev_y), PIPE_WIDTH)
+            red, green, blue = pipe[3]
+            colour = color.rgb(red * brightness, green * brightness, blue * brightness)
+            shade = brightness * SHADOW_BRIGHTNESS
+            shadow_colour = color.rgb(red * shade, green * shade, blue * shade)
+
+            # (shadow ball, body ball nudged up left so a dark crescent shows, highlight)
+            # on every turn, and on the first step so the pipe starts with a ball
+            joint = None
+            if changed_dir or run is None:
+                joint = (shape.circle(prev_x, prev_y, JOINT_RADIUS),
+                         shape.circle(prev_x - 0.5, prev_y - 0.5, JOINT_RADIUS - 0.5),
+                         shape.circle(prev_x - 1, prev_y - 1, JOINT_RADIUS / 2))
+
+            # [colour, shadow colour, body, shadow, highlight, joint], lines filled in below
+            cell = [colour, shadow_colour, None, None, None, joint]
+            # next_cell breaks depth ties, so insort never has to compare the cells
+            insort(render_list, ((-depth, next_cell), cell))
+            pipe[4] = (start_x, start_y, depth, cell)
+
+        cell[2] = shape.line(vec2(start_x, start_y), vec2(screen_x, screen_y), PIPE_WIDTH)
         # light comes from the top left, so the shadow sits opposite the highlight
-        shadow = shape.line(vec2(prev_x + 1 - overhang_x, prev_y + 1 - overhang_y), vec2(screen_x + 1 + overhang_x, screen_y + 1 + overhang_y), 1)
-        highlight = shape.line(vec2(prev_x - 1 - overhang_x, prev_y - 1 - overhang_y), vec2(screen_x - 1 + overhang_x, screen_y - 1 + overhang_y), 1)
-        # (shadow ball, body ball nudged up left so a dark crescent shows, highlight)
-        joint = None
-        if changed_dir:
-            joint = (shape.circle(prev_x, prev_y, JOINT_RADIUS),
-                     shape.circle(prev_x - 0.5, prev_y - 0.5, JOINT_RADIUS - 0.5),
-                     shape.circle(prev_x - 1, prev_y - 1, JOINT_RADIUS / 2))
-        cell = (colour, shadow_colour, body, shadow, highlight, joint)
+        cell[3] = shape.line(vec2(start_x + 1 - overhang_x, start_y + 1 - overhang_y), vec2(screen_x + 1 + overhang_x, screen_y + 1 + overhang_y), 1)
+        cell[4] = shape.line(vec2(start_x - 1 - overhang_x, start_y - 1 - overhang_y), vec2(screen_x - 1 + overhang_x, screen_y - 1 + overhang_y), 1)
 
         used_cells.add(next_cell)
-        insort(render_list, (sort_key, cell))
         pipe[2] = (screen_x, screen_y, depth)
 
     # return whether or not a valid dir was found
