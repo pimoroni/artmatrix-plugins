@@ -21,7 +21,7 @@ class Terminal:
     speed = terminal_speed
 
     def update():
-        if time.ticks_ms() - Terminal.line_added_at > Terminal.speed:
+        if time.ticks_diff(time.ticks_ms(), Terminal.line_added_at) > Terminal.speed:
             Terminal.add_line()
 
     def add_line():
@@ -48,7 +48,7 @@ def draw_terminal():
     for i in range(25):
         # work out the position of screen that this line will be rendered
         y = 7 + i * 5
-        yo = ((time.ticks_ms() - Terminal.line_added_at) / Terminal.speed) * 5
+        yo = (time.ticks_diff(time.ticks_ms(), Terminal.line_added_at) / Terminal.speed) * 5
         y = int(y - yo)
 
         # force the random seed so that word widths will always be consistent for
@@ -60,9 +60,6 @@ def draw_terminal():
             w = random.randint(3, 10)
             # draw the "greeked" word
             screen.rectangle(cx + 2, y, w, 2)
-            # rect.transform = mat3().translate(cx + 5, y).scale(w, 2)
-            # screen.shape(rect)
-            # add a space
             cx += w + 2
 
 
