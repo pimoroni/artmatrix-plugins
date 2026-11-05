@@ -262,7 +262,7 @@
       "category": "Scenes"
     },
     "yt_subscriber_count": {
-      "description": "A YouTube channel's live subscriber count",
+      "description": "A YouTube channel's subscriber count",
       "author": "Pimoroni",
       "category": "Information"
     }

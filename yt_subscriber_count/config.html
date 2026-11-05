@@ -1,11 +1,11 @@
 <form method="post" action="/config?plugin={{ plugin }}" data-autosave>
   <label>API key
-    <small>Your YouTube Data API key</small>
+    <small>Free from the <a href="https://console.cloud.google.com/apis/library/youtube.googleapis.com" target="_blank">Google Cloud Console</a>. Turn on YouTube Data API v3, then make an API key under Credentials and paste it here</small>
     <input type="text" name="api_key" value="{{ placeholder.api_key }}">
   </label>
 
-  <label>Channel ID
-    <small>The YouTube channel to track</small>
+  <label>Channel
+    <small>Its @handle, like @pimoroni, or its channel ID</small>
     <input type="text" name="channel_id" value="{{ placeholder.channel_id }}">
   </label>
 

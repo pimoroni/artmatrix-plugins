@@ -1,7 +1,7 @@
 {
   "name": "YouTube Subscriber Count",
   "version": "1.0.0",
-  "description": "A YouTube channel's live subscriber count",
+  "description": "A YouTube channel's subscriber count",
   "author": "Pimoroni",
   "category": "Information",
   "requires_internet": true,
