@@ -1,0 +1,29 @@
+<form method="post" action="/config?plugin={{ plugin }}" data-autosave>
+  <fieldset>
+    <legend>Theme</legend>
+    <div class="presets">
+      <label><input type="radio" name="theme" value="rainbow" {{ "checked" if placeholder.theme == "rainbow" else "" }}>Rainbow</label>
+      <label><input type="radio" name="theme" value="berry" {{ "checked" if placeholder.theme == "berry" else "" }}>Berry</label>
+      <label><input type="radio" name="theme" value="ocean" {{ "checked" if placeholder.theme == "ocean" else "" }}>Ocean</label>
+      <label><input type="radio" name="theme" value="mono" {{ "checked" if placeholder.theme == "mono" else "" }}>Mono</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Speed</legend>
+    <div class="presets">
+      <label><input type="radio" name="speed" value="slow" {{ "checked" if placeholder.speed == "slow" else "" }}>Slow</label>
+      <label><input type="radio" name="speed" value="normal" {{ "checked" if placeholder.speed == "normal" else "" }}>Normal</label>
+      <label><input type="radio" name="speed" value="fast" {{ "checked" if placeholder.speed == "fast" else "" }}>Fast</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Skill</legend>
+    <div class="presets">
+      <label><input type="radio" name="skill" value="beginner" {{ "checked" if placeholder.skill == "beginner" else "" }}>Beginner</label>
+      <label><input type="radio" name="skill" value="average" {{ "checked" if placeholder.skill == "average" else "" }}>Average</label>
+      <label><input type="radio" name="skill" value="expert" {{ "checked" if placeholder.skill == "expert" else "" }}>Expert</label>
+    </div>
+  </fieldset>
+</form>

@@ -1,0 +1,22 @@
+{
+  "name": "Block Drop",
+  "version": "1.0.0",
+  "description": "A falling blocks game that plays itself",
+  "author": "Pimoroni",
+  "category": "Scenes",
+  "requires_internet": false,
+  "urls": [
+    [
+      "plugins/block_drop/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/block_drop/config.html",
+      "config.html"
+    ],
+    [
+      "plugins/block_drop/thumbnail.png",
+      "thumbnail.png"
+    ]
+  ]
+}

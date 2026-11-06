@@ -8,6 +8,7 @@
     "aurora": "Aurora",
     "bezier": "Bezier",
     "blackhole": "Blackhole",
+    "block_drop": "Block Drop",
     "cells": "Cells",
     "co2_matrix": "CO2 Matrix",
     "contours": "Contours",
@@ -83,6 +84,11 @@
     },
     "blackhole": {
       "description": "A clock whose hands orbit a black hole",
+      "author": "Pimoroni",
+      "category": "Scenes"
+    },
+    "block_drop": {
+      "description": "A falling blocks game that plays itself",
       "author": "Pimoroni",
       "category": "Scenes"
     },
