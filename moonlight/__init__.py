@@ -56,9 +56,6 @@ STARS = const(90)
 # glow around the brightest glints: bloom(threshold, intensity, radius, strength)
 BLOOM = (205, 255, 5, 1.4)
 
-# how much loudness makes the waves steeper
-LOUD_WAVES = 0.6
-
 # sine table: 1024 steps a turn, values x256
 SIN = array("i", [int(math.sin(i * 2 * math.pi / 1024) * 256) for i in range(1024)])
 
@@ -332,7 +329,6 @@ def clouds(pixels: ptr32, cloud: ptr8, lit: ptr32, drift: ptr32):
 # glittering path. rows is SEA, see there
 @micropython.viper
 def sea(pixels: ptr32, rows: ptr32, sin: ptr32, travel: ptr32):
-    lift = int(travel[3])
     y = 0
     while y < SEA_ROWS:
         row_at = y * SEA_STRIDE
@@ -340,16 +336,16 @@ def sea(pixels: ptr32, rows: ptr32, sin: ptr32, travel: ptr32):
         reflect = int(rows[row_at + 1])
         wave0_phase = int(rows[row_at + 2]) - int(travel[0])
         wave0_step = int(rows[row_at + 3])
-        wave0_across = (int(rows[row_at + 4]) * lift) >> 8
-        wave0_up = (int(rows[row_at + 5]) * lift) >> 8
+        wave0_across = int(rows[row_at + 4])
+        wave0_up = int(rows[row_at + 5])
         wave1_phase = int(rows[row_at + 6]) - int(travel[1])
         wave1_step = int(rows[row_at + 7])
-        wave1_across = (int(rows[row_at + 8]) * lift) >> 8
-        wave1_up = (int(rows[row_at + 9]) * lift) >> 8
+        wave1_across = int(rows[row_at + 8])
+        wave1_up = int(rows[row_at + 9])
         wave2_phase = int(rows[row_at + 10]) - int(travel[2])
         wave2_step = int(rows[row_at + 11])
-        wave2_across = (int(rows[row_at + 12]) * lift) >> 8
-        wave2_up = (int(rows[row_at + 13]) * lift) >> 8
+        wave2_across = int(rows[row_at + 12])
+        wave2_up = int(rows[row_at + 13])
         water_red = water & 0xff
         water_green = (water >> 8) & 0xff
         water_blue = (water >> 16) & 0xff
@@ -435,36 +431,26 @@ for row in range(SEA_ROWS):
         SEA[row_at + 4 + wave * 4] = int(shows * SHIFT[0] * 256 * wavenumber_across / wavenumber_total)
         SEA[row_at + 5 + wave * 4] = int(lifts * SHIFT[1] * 256 * wavenumber_out / wavenumber_total)
 
-# how far each wave has travelled, in the same units as its phase, and how
-# much steeper sound makes them all, x256
-TRAVEL = array("i", [0, 0, 0, 256])
+# how far each wave has travelled, in the same units as its phase
+TRAVEL = array("i", [0, 0, 0])
 
 
-start = last = time.ticks_ms()
+start = time.ticks_ms()
 frame = 0
-loud = 0.0
 
 
 def update():
-    global last, frame, loud
+    global frame
 
     now = time.ticks_ms()
-    elapsed = time.ticks_diff(now, last) / 1000
-    last = now
     seconds = time.ticks_diff(now, start) / 1000
     frame += 1
-
-    if mic.active():
-        loud += (mic.level() - loud) * (1 - math.exp(-2 * elapsed))
-    else:
-        loud += (0 - loud) * (1 - math.exp(-elapsed))
 
     DRIFTING[0] = int(seconds * DRIFT[0])
     DRIFTING[1] = int(seconds * DRIFT[1])
 
     for wave in range(3):
         TRAVEL[wave] = int(WAVE[wave][2] * seconds * TURN) & 0x3ffffff
-    TRAVEL[3] = int(256 * (1 + loud * LOUD_WAVES))
 
     # the coast before the sea, so it shows in the water too
     pixels = memoryview(screen)

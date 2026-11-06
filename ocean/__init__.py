@@ -28,11 +28,9 @@ SEAS = {
 cfg = plugin_config("ocean", {
     "scheme": "ocean",  # one of SCHEMES
     "sea": "breezy",  # one of SEAS
-    "listen": 1,  # 1 to react to sound, 0 to ignore it
 })
 scheme = cfg["scheme"]
 sea = cfg["sea"]
-listen = cfg["listen"]
 
 # unknown names fall back to the defaults so the config page ticks what's showing
 if scheme not in SCHEMES:
@@ -47,8 +45,6 @@ COUNT = len(WAVES)
 # cos and sin multipliers for one grid row
 assert COUNT == 6
 ROW_TERMS = const(12)
-
-hearing = mic if listen else None
 
 # pulls wavelength into speed the way deep water does, longer is faster
 GRAVITY = 30
@@ -265,15 +261,6 @@ def load_lighting():
 
 LIT = load_lighting()
 
-# how much sound can raise each wave: the long ones follow the bass, the
-# short ones the treble, all of them the loudness
-SWELL_LIFT = 0.5
-CHOP_LIFT = 0.9
-LOUD_LIFT = 0.3
-
-# how quickly the sea follows the sound, rising then falling, per second
-FOLLOW = (0.8, 0.4)
-
 
 # per grid column, each wave's cos and sin of its bent phase across
 @micropython.viper
@@ -412,11 +399,10 @@ def render(across: ptr32, rows: ptr32, lit: ptr32, pixels: ptr32,
         grid_row += 1
 
 
-# moves every wave on by elapsed ms and fills PARAMS. swell and chop are how
-# much sound lifts the long and the short waves, x256
+# moves every wave on by elapsed ms and fills PARAMS
 @micropython.viper
 def advance(motion: ptr32, shape: ptr32, params: ptr32, sin: ptr32,
-            elapsed: int, swell: int, chop: int, count: int):
+            elapsed: int, count: int):
     wave = 0
     while wave < count:
         motion_at = wave * 8
@@ -426,11 +412,10 @@ def advance(motion: ptr32, shape: ptr32, params: ptr32, sin: ptr32,
             pair += 2
 
         group = GROUP_LOW + (((256 - GROUP_LOW) * (256 + int(sin[int(motion[motion_at + 6]) >> 16]))) >> 9)
-        lift = swell if wave < (count >> 1) else chop
 
         params_at = wave * 5
         params[params_at] = int(motion[motion_at]) >> 16
-        params[params_at + 1] = (((int(shape[wave * 2]) * group) >> 8) * lift) >> 8
+        params[params_at + 1] = (int(shape[wave * 2]) * group) >> 8
         params[params_at + 2] = int(shape[wave * 2 + 1])
         params[params_at + 3] = int(motion[motion_at + 2]) >> 16
         params[params_at + 4] = int(motion[motion_at + 4]) >> 16
@@ -439,38 +424,15 @@ def advance(motion: ptr32, shape: ptr32, params: ptr32, sin: ptr32,
 
 last = time.ticks_ms()
 
-# the smoothed loudness, bass and treble
-loud = 0.0
-bass = 0.0
-treble = 0.0
-
 
 def update():
-    global last, loud, bass, treble
+    global last
 
     now = time.ticks_ms()
     elapsed = time.ticks_diff(now, last)
     last = now
 
-    # the share of the way to its target each follower moves this frame
-    rise = 1 - math.exp(-FOLLOW[0] * elapsed / 1000)
-    fall = 1 - math.exp(-FOLLOW[1] * elapsed / 1000)
-
-    if hearing is not None and hearing.active():
-        bands = hearing.spectrum()
-        targets = (hearing.level(), (bands[0] + bands[1] + bands[2] + bands[3]) / 4,
-                   (bands[9] + bands[10] + bands[11] + bands[12] + bands[13]) / 5)
-    else:
-        targets = (0, 0, 0)
-
-    loud += (targets[0] - loud) * (rise if targets[0] > loud else fall)
-    bass += (targets[1] - bass) * (rise if targets[1] > bass else fall)
-    treble += (targets[2] - treble) * (rise if targets[2] > treble else fall)
-
-    # the first half of the waves are swell, the rest chop
-    swell = int((1 + loud * LOUD_LIFT + bass * SWELL_LIFT) * 256)
-    chop = int((1 + loud * LOUD_LIFT + treble * CHOP_LIFT) * 256)
-    advance(MOTION, SHAPE, PARAMS, SIN, elapsed, swell, chop, COUNT)
+    advance(MOTION, SHAPE, PARAMS, SIN, elapsed, COUNT)
 
     columns(PHASE_ACROSS, BEND_ACROSS, PARAMS, COS, SIN, COLUMNS, POINTS, COUNT)
     rows(PHASE_DOWN, BEND_DOWN, PARAMS, COS, SIN, ROWS, POINTS, COUNT)

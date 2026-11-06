@@ -26,17 +26,13 @@ SCHEMES = {
 
 cfg = plugin_config("aurora", {
     "scheme": "boreal",  # one of SCHEMES
-    "listen": 1,  # 1 to react to sound, 0 to ignore it
 })
 scheme = cfg["scheme"]
-listen = cfg["listen"]
 
 # unknown names fall back to the default so the config page ticks what's showing
 if scheme not in SCHEMES:
     scheme = "boreal"
 COLOURS, SKY_TOP, SKY_HORIZON = SCHEMES[scheme]
-
-hearing = mic if listen else None
 
 CURTAINS = const(3)
 
@@ -59,20 +55,6 @@ PACE = 2
 
 # glow around the light: bloom(threshold, intensity, radius, strength)
 BLOOM = (24, 255, 6, 1.6)
-
-# how much the bass can brighten the curtains, and how far a kick's pulse
-# runs along them, in px a second
-BASS_LIFT = 0.6
-PULSE_SPEED = 90
-
-# a kick's swell: half its width in columns, and how much it brightens at its
-# middle, out of 256
-PULSE_WIDTH = const(20)
-PULSE_GAIN = const(150)
-
-# where the pulse is when there isn't one. a real pulse starts left of the
-# panel at -PULSE_WIDTH, so this sits well past that
-NO_PULSE = const(-1000)
 
 # stars, and the trees: this many spruces, taller toward the sides
 STARS = const(110)
@@ -193,7 +175,7 @@ FOREST = forest()
 # as paint() draws two at a time
 @micropython.viper
 def shape(edges: ptr32, rays: ptr32, waves: ptr32, sin: ptr32,  # noqa: F821
-          pulse: int, work: ptr32):  # noqa: F821
+          work: ptr32):  # noqa: F821
     curtain = 0
     while curtain < CURTAINS:
         slot = curtain * WAVE_SLOTS
@@ -268,14 +250,6 @@ def shape(edges: ptr32, rays: ptr32, waves: ptr32, sin: ptr32,  # noqa: F821
             patch = (patch * patch) >> 8
             light = (light * patch) >> 8
 
-            # a kick's pulse, a soft swell of light moving along the curtain
-            if pulse != NO_PULSE:
-                distance = x - pulse
-                if distance < 0:
-                    distance = -distance
-                if distance < PULSE_WIDTH:
-                    swell = 128 + (int(sin[(distance * 512 // PULSE_WIDTH + 256) & 1023]) >> 1)
-                    light = (light * (256 + ((swell * PULSE_GAIN) >> 8))) >> 8
             light = (light * bright) >> 8
             if light < 0:
                 light = 0
@@ -395,36 +369,16 @@ def paint(edges: ptr32, rays: ptr32, glows: ptr32, sky: ptr32,  # noqa: F821
         star += 1
 
 
-start = last = time.ticks_ms()
+start = time.ticks_ms()
 frame = 0
-bass = 0.0
-pulse_at = None
 
 
 def update():
-    global last, frame, bass, pulse_at
+    global frame
 
     now = time.ticks_ms()
-    elapsed = time.ticks_diff(now, last) / 1000
-    last = now
     seconds = time.ticks_diff(now, start) / 1000 * PACE
     frame += 1
-
-    if hearing is not None and hearing.active():
-        bands = hearing.spectrum()
-        target = (bands[0] + bands[1] + bands[2] + bands[3]) / 4
-        bass += (target - bass) * (1 - math.exp(-1.5 * elapsed))
-        if hearing.kick() and pulse_at is None:
-            pulse_at = seconds
-    else:
-        bass += (0 - bass) * (1 - math.exp(-0.5 * elapsed))
-
-    pulse = NO_PULSE
-    if pulse_at is not None:
-        pulse = int((seconds - pulse_at) * PULSE_SPEED) - PULSE_WIDTH
-        if pulse > 128 + PULSE_WIDTH:
-            pulse_at = None
-            pulse = NO_PULSE
 
     for curtain, (height, sway, bright, drift) in enumerate(CURTAIN):
         slot = curtain * WAVE_SLOTS
@@ -433,7 +387,7 @@ def update():
         WAVES[slot] = int((height + 6 * math.sin(seconds * 0.11 + curtain * 2.1)) * 4)
         WAVES[slot + 1] = sway * 4
         presence = 0.5 + 0.5 * math.sin(seconds * 0.071 + curtain * 2.3) * math.cos(seconds * 0.043 + curtain)
-        WAVES[slot + 2] = int(256 * bright * (0.15 + 0.95 * presence * presence + bass * BASS_LIFT))
+        WAVES[slot + 2] = int(256 * bright * (0.15 + 0.95 * presence * presence))
         WAVES[slot + 3] = int(seconds * 23 * drift) + curtain * 300
         WAVES[slot + 4] = int(-seconds * 17 * drift) + curtain * 170
         # the rays drift slowly along the curtain
@@ -445,7 +399,7 @@ def update():
         WAVES[slot + 10] = int(-seconds * 11) + curtain * 600
         WAVES[slot + 11] = int(FOLD * 256 * (0.7 + 0.3 * math.sin(seconds * 0.05 + curtain * 1.7)))
 
-    shape(EDGES, RAYS, WAVES, SIN, pulse, LAID)
+    shape(EDGES, RAYS, WAVES, SIN, LAID)
     paint(EDGES, RAYS, GLOWS, SKY, SCENE, memoryview(screen), frame)
     screen.blit(FOREST, vec2(0, 0))  # noqa: F821
     screen.bloom(*BLOOM)  # noqa: F821

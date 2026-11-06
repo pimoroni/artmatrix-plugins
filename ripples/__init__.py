@@ -19,15 +19,11 @@ SCHEMES = {
 cfg = plugin_config("ripples", {
     "scheme": "deep_sea",  # one of SCHEMES
     "rain": 2,  # 1 light, 2 steady, 4 heavy
-    "listen": 1,  # 1 to react to sound, 0 to ignore it
 })
 scheme = cfg["scheme"]
 rain = cfg["rain"]
-listen = cfg["listen"]
 
 DEEP, SKY, GLINT = SCHEMES.get(scheme, SCHEMES["deep_sea"])
-
-hearing = mic if listen else None
 
 # water height is 16 bits a cell, offset so calm water is LEVEL: now and a
 # step ago. the edges stay calm, so waves bounce back off them
@@ -45,7 +41,7 @@ DROP = (1200, 4000)
 RADIUS = (3, 7)
 BETWEEN = (180, 600)
 
-# on a kick a stone this big drops in, on a clap a scatter of small drops
+# a stone this big drops in now and then
 STONE = 7000
 STONE_RADIUS = 11
 
@@ -58,9 +54,8 @@ def rings(turns):
 
 BROAD = rings(2.5)
 FINE = rings(4.5)
-SCATTER = 6
 
-# a big drop now and then, without music
+# about how many seconds between stones
 BIG_EVERY = 6
 
 # lighting for every slope across and down, 64 x 64
@@ -265,33 +260,20 @@ def between(lo, hi):
 start = time.ticks_ms()
 next_drop = start
 next_big = start + BIG_EVERY * 1000
-loud = 0.0
-last = start
 
 
 def update():
-    global NOW, BEFORE, next_drop, next_big, loud, last
+    global NOW, BEFORE, next_drop, next_big
 
     t = time.ticks_ms()
-    dt = time.ticks_diff(t, last) / 1000
-    last = t
 
-    pace = rain
-    if hearing is not None and hearing.active():
-        loud += (hearing.level() - loud) * (1 - math.exp(-2 * dt))
-        pace = rain * (1 + 2 * loud)
-        if hearing.kick():
-            drop(STONE, STONE_RADIUS)
-        if hearing.clap():
-            for _ in range(SCATTER):
-                drop(between(*DROP) // 2, RADIUS[0])
-    elif time.ticks_diff(t, next_big) >= 0:
+    if time.ticks_diff(t, next_big) >= 0:
         drop(STONE, STONE_RADIUS)
         next_big = time.ticks_add(t, int(BIG_EVERY * 1000 * (0.6 + getrandbits(8) / 320)))
 
     if time.ticks_diff(t, next_drop) >= 0:
         drop(between(*DROP), between(*RADIUS))
-        next_drop = time.ticks_add(t, int(between(*BETWEEN) / pace))
+        next_drop = time.ticks_add(t, int(between(*BETWEEN) / rain))
 
     seconds = time.ticks_diff(t, start) / 1000
     for w in range(2):
