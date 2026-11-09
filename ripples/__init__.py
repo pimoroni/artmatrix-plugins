@@ -23,13 +23,25 @@ cfg = plugin_config("ripples", {
 scheme = cfg["scheme"]
 rain = cfg["rain"]
 
-DEEP, SKY, GLINT = SCHEMES.get(scheme, SCHEMES["deep_sea"])
+# unknown values fall back to the defaults so the config page ticks what's
+# showing
+if scheme not in SCHEMES:
+    scheme = "deep_sea"
+if rain not in (1, 2, 4):
+    rain = 2
 
-# water height is 16 bits a cell, offset so calm water is LEVEL: now and a
-# step ago. the edges stay calm, so waves bounce back off them
+DEEP, SKY, GLINT = SCHEMES[scheme]
+
+# water height is 16 bits a cell, offset so calm water is LEVEL. a cell's
+# height now and a step ago sit side by side, so one PSRAM read gets both.
+# the edges stay calm, so waves bounce off them
 LEVEL = const(32768)
-NOW = array("H", [LEVEL] * 128 * 128)
-BEFORE = array("H", [LEVEL] * 128 * 128)
+WATER = array("H", [LEVEL] * 128 * 128 * 2)
+
+# the frames take turns over which of each pair is now. these views start
+# on the first and second of each pair, so a cell is at [i * 2] in both
+HALVES = (memoryview(WATER), memoryview(WATER)[1:])
+now_half = 0
 
 # how much of each wave is lost every step, as a shift. 6 loses 1/64, so
 # ripples run right across the pool and through each other
@@ -58,8 +70,11 @@ FINE = rings(4.5)
 # about how many seconds between stones
 BIG_EVERY = 6
 
-# lighting for every slope across and down, 64 x 64
+# lighting for every slope across and down, 64 x 64, flat water in the middle
 TABLE = 64
+TABLE_MIDDLE = const(32)
+TABLE_EDGE = const(63)
+TABLE_ROW_SHIFT = const(6)
 STEEPEST = 1.0
 # the sun is low, so only the steepest faces catch its glint. the glint is
 # tight
@@ -71,30 +86,32 @@ REFLECT = 0.05
 LIFT = 1.8
 
 
-def pack(r, g, b):
-    return 0xff000000 | (int(b) << 16) | (int(g) << 8) | int(r)
+def pack(red, green, blue):
+    return 0xff000000 | (int(blue) << 16) | (int(green) << 8) | int(red)
 
 
 def sunlit():
     lit = array("I", [0] * TABLE * TABLE)
-    sx, sy, sz = SUN_FROM
-    size = math.sqrt(sx * sx + sy * sy + sz * sz)
-    sx, sy, sz = sx / size, sy / size, sz / size
-    hx, hy, hz = sx, sy, sz + 1
-    size = math.sqrt(hx * hx + hy * hy + hz * hz)
-    hx, hy, hz = hx / size, hy / size, hz / size
+    sun_x, sun_y, sun_z = SUN_FROM
+    size = math.sqrt(sun_x * sun_x + sun_y * sun_y + sun_z * sun_z)
+    sun_x, sun_y, sun_z = sun_x / size, sun_y / size, sun_z / size
+    # the glint peaks where the water faces halfway between the sun and the
+    # viewer straight above
+    halfway_x, halfway_y, halfway_z = sun_x, sun_y, sun_z + 1
+    size = math.sqrt(halfway_x * halfway_x + halfway_y * halfway_y + halfway_z * halfway_z)
+    halfway_x, halfway_y, halfway_z = halfway_x / size, halfway_y / size, halfway_z / size
     half = TABLE // 2
     for row in range(TABLE):
-        dy = (row - half) / half * STEEPEST
+        slope_y = (row - half) / half * STEEPEST
         for column in range(TABLE):
-            dx = (column - half) / half * STEEPEST
-            size = math.sqrt(dx * dx + dy * dy + 1)
-            nx, ny, nz = -dx / size, -dy / size, 1 / size
-            facing = max(0.0, nx * sx + ny * sy + nz * sz)
-            glint = max(0.0, nx * hx + ny * hy + nz * hz) ** SHINE
-            reflect = REFLECT + (1 - REFLECT) * (1 - nz) ** 5
+            slope_x = (column - half) / half * STEEPEST
+            size = math.sqrt(slope_x * slope_x + slope_y * slope_y + 1)
+            normal_x, normal_y, normal_z = -slope_x / size, -slope_y / size, 1 / size
+            facing = max(0.0, normal_x * sun_x + normal_y * sun_y + normal_z * sun_z)
+            glint = max(0.0, normal_x * halfway_x + normal_y * halfway_y + normal_z * halfway_z) ** SHINE
+            reflect = REFLECT + (1 - REFLECT) * (1 - normal_z) ** 5
             shade = (0.3 + 1.1 * facing) * (1 - reflect)
-            lit[row * TABLE + column] = pack(*[min(255, (DEEP[c] * shade + SKY[c] * reflect) * LIFT + GLINT[c] * glint) for c in range(3)])
+            lit[row * TABLE + column] = pack(*[min(255, (DEEP[channel] * shade + SKY[channel] * reflect) * LIFT + GLINT[channel] * glint) for channel in range(3)])
     return lit
 
 
@@ -107,59 +124,33 @@ SLOPE_SHIFT = const(5)
 # heading degrees, steepness in lighting table steps)
 SWELLS = [(74, 20, 11), (41, -55, 8)]
 
-# swell slope is steepness times sin(x + y), x its phase across, y its phase
-# down plus travel. that's sin(x) cos(y) + cos(x) sin(y). so per column,
-# sin(x) then cos(x) x256. per row, what multiplies them each frame
-SWELL_COLUMNS = array("i", [0] * 128 * 4)
-SWELL_ROWS = array("i", [0] * 128 * 8)
+# a swell's phase is in 1/256 turn, with 16 bits of fraction below that
+PHASE_FRACTION = const(16)
+TURN = 256 << PHASE_FRACTION
 
-# per swell: its phase down per row and travelled, in 1/1024 turn, then its
-# steepness across and down, x256
-SWELL_PARAMS = array("i", [0] * 8)
-SWELL_DOWN = []
-SWELL_SPEED = []
-for _w, (_length, _heading, _steep) in enumerate(SWELLS):
-    _k = 2 * math.pi / _length
-    _kx = _k * math.cos(math.radians(_heading))
-    _ky = _k * math.sin(math.radians(_heading))
-    for _x in range(128):
-        SWELL_COLUMNS[_x * 4 + _w * 2] = int(math.sin(_kx * _x) * 256)
-        SWELL_COLUMNS[_x * 4 + _w * 2 + 1] = int(math.cos(_kx * _x) * 256)
-    SWELL_DOWN.append(_ky * 1024 / (2 * math.pi))
-    SWELL_SPEED.append(math.sqrt(9 * _k) * 1024 / (2 * math.pi))
-    SWELL_PARAMS[_w * 4 + 2] = int(_steep * 256 * math.cos(math.radians(_heading)))
-    SWELL_PARAMS[_w * 4 + 3] = int(_steep * 256 * math.sin(math.radians(_heading)))
+# each swell's slope at every 1/256 turn: across in the top 16 bits and down
+# in the bottom 16, both x16
+SWELL_SLOPES = array("i", [0] * 2 * 256)
 
-SIN = array("i", [int(math.sin(i * 2 * math.pi / 1024) * 256) for i in range(1024)])
+# per swell: its phase at the top left pixel, then how far that moves for
+# each column across and each row down
+SWELL_PHASES = array("i", [0] * 2 * 3)
 
+# how far each swell's phase moves per ms as it travels
+SWELL_SPEEDS = []
 
-# fills SWELL_ROWS: for each row and swell, what multiplies the column's sin
-# and cos for the slope across, then for the slope down
-@micropython.viper
-def swell_rows(rows: ptr32, params: ptr32, sin: ptr32, down: ptr32):  # noqa: F821
-    y = 0
-    while y < 128:
-        w = 0
-        while w < 2:
-            b = (int(down[w * 128 + y]) + int(params[w * 4])) & 1023
-            cb = int(sin[(b + 256) & 1023])
-            sb = int(sin[b])
-            across = int(params[w * 4 + 2])
-            along = int(params[w * 4 + 3])
-            o = y * 8 + w * 4
-            rows[o] = (across * cb) >> 8
-            rows[o + 1] = (across * sb) >> 8
-            rows[o + 2] = (along * cb) >> 8
-            rows[o + 3] = (along * sb) >> 8
-            w += 1
-        y += 1
-
-
-# each swell's phase down each row, in 1/1024 turn
-SWELL_ROW_PHASE = array("i", [0] * 2 * 128)
-for _w in range(2):
-    for _y in range(128):
-        SWELL_ROW_PHASE[_w * 128 + _y] = int(SWELL_DOWN[_w] * _y)
+for swell, (wavelength, heading, steepness) in enumerate(SWELLS):
+    heading_x = math.cos(math.radians(heading))
+    heading_y = math.sin(math.radians(heading))
+    SWELL_PHASES[swell * 3 + 1] = int(TURN * heading_x / wavelength)
+    SWELL_PHASES[swell * 3 + 2] = int(TURN * heading_y / wavelength)
+    radians_per_second = math.sqrt(9 * 2 * math.pi / wavelength)
+    SWELL_SPEEDS.append(int(TURN * radians_per_second / (2 * math.pi) / 1000))
+    for step in range(256):
+        rise = math.sin(step * 2 * math.pi / 256)
+        across = round(steepness * heading_x * rise * 16)
+        down = round(steepness * heading_y * rise * 16)
+        SWELL_SLOPES[swell * 256 + step] = (across << 16) | (down & 0xFFFF)
 
 
 # one step of the wave: each cell moves toward the average of its eight
@@ -167,118 +158,148 @@ for _w in range(2):
 # then each pixel is lit by its slope across and down
 @micropython.viper
 def ripple(now: ptr16, before: ptr16, pixels: ptr32, lit: ptr32,  # noqa: F821
-           columns: ptr32, rows: ptr32):  # noqa: F821
-    row = 128
-    while row < 16256:
-        y8 = (row >> 7) * 8
-        ac1 = int(rows[y8])
-        as1 = int(rows[y8 + 1])
-        dc1 = int(rows[y8 + 2])
-        ds1 = int(rows[y8 + 3])
-        ac2 = int(rows[y8 + 4])
-        as2 = int(rows[y8 + 5])
-        dc2 = int(rows[y8 + 6])
-        ds2 = int(rows[y8 + 7])
-        i = row + 1
-        end = row + 127
+           swell_slopes: ptr32, swell_phases: ptr32):  # noqa: F821
+    first_phase = int(swell_phases[0])
+    first_per_column = int(swell_phases[1])
+    first_per_row = int(swell_phases[2])
+    second_phase = int(swell_phases[3])
+    second_per_column = int(swell_phases[4])
+    second_per_row = int(swell_phases[5])
+
+    y = 1
+    while y < 127:
+        # each swell's phase at the first pixel of the row
+        first = first_phase + first_per_row * y + first_per_column
+        second = second_phase + second_per_row * y + second_per_column
+
+        # a cell's heights are at [i * 2], so the rows above and below are 256
+        # away. the 3 x 3 of heights around the pixel is kept less LEVEL, and
+        # stepping along a pixel only reads the new column on the right
+        i = (y << 7) + 1
+        at = i << 1
+        up_left = int(now[at - 258]) - LEVEL
+        up = int(now[at - 256]) - LEVEL
+        left = int(now[at - 2]) - LEVEL
+        middle = int(now[at]) - LEVEL
+        down_left = int(now[at + 254]) - LEVEL
+        down = int(now[at + 256]) - LEVEL
+        end = i + 126
         while i < end:
-            left = int(now[i - 1]) - LEVEL
-            right = int(now[i + 1]) - LEVEL
-            up = int(now[i - 128]) - LEVEL
-            down = int(now[i + 128]) - LEVEL
+            up_right = int(now[at - 254]) - LEVEL
+            right = int(now[at + 2]) - LEVEL
+            down_right = int(now[at + 258]) - LEVEL
 
             # sides count twice the corners, so rings spread round, not square
-            corners = (int(now[i - 129]) + int(now[i - 127]) + int(now[i + 127]) + int(now[i + 129])) - 4 * LEVEL
-            next_height = (((left + right + up + down) * 2 + corners) * 170 >> 10) - (int(before[i]) - LEVEL)
+            sides = left + right + up + down
+            corners = up_left + up_right + down_left + down_right
+            next_height = ((sides * 2 + corners) * 170 >> 10) - (int(before[at]) - LEVEL)
             next_height -= next_height >> LOSS
             if next_height > 32000:
                 next_height = 32000
             elif next_height < -32000:
                 next_height = -32000
-            before[i] = next_height + LEVEL
+            before[at] = next_height + LEVEL
 
-            # the swell under it all, then the ripples on top
-            c4 = (i & 127) * 4
-            sa1 = int(columns[c4])
-            ca1 = int(columns[c4 + 1])
-            sa2 = int(columns[c4 + 2])
-            ca2 = int(columns[c4 + 3])
-            across = 32 + ((right - left) >> SLOPE_SHIFT) + ((sa1 * ac1 + ca1 * as1 + sa2 * ac2 + ca2 * as2) >> 16)
-            along = 32 + ((down - up) >> SLOPE_SHIFT) + ((sa1 * dc1 + ca1 * ds1 + sa2 * dc2 + ca2 * ds2) >> 16)
+            # the swell under it all, then the ripples on top. the bottom 16
+            # bits of a swell slope are signed, so they're flipped about 0x8000
+            first_slope = int(swell_slopes[(first >> PHASE_FRACTION) & 255])
+            second_slope = int(swell_slopes[256 + ((second >> PHASE_FRACTION) & 255)])
+            swell_across = (first_slope >> 16) + (second_slope >> 16)
+            swell_down = ((first_slope & 0xFFFF) ^ 0x8000) + ((second_slope & 0xFFFF) ^ 0x8000) - 0x10000
+            across = TABLE_MIDDLE + ((right - left) >> SLOPE_SHIFT) + (swell_across >> 4)
+            along = TABLE_MIDDLE + ((down - up) >> SLOPE_SHIFT) + (swell_down >> 4)
             if across < 0:
                 across = 0
-            elif across > 63:
-                across = 63
+            elif across > TABLE_EDGE:
+                across = TABLE_EDGE
             if along < 0:
                 along = 0
-            elif along > 63:
-                along = 63
-            pixels[i] = lit[(along << 6) | across]
-            i += 1
-        row += 128
+            elif along > TABLE_EDGE:
+                along = TABLE_EDGE
+            pixels[i] = lit[(along << TABLE_ROW_SHIFT) | across]
 
-    # the edge never moves, so it's always calm water
-    calm = lit[(32 << 6) | 32]
-    i = 0
-    while i < 128:
-        pixels[i] = calm
-        pixels[16256 + i] = calm
-        pixels[i << 7] = calm
-        pixels[(i << 7) + 127] = calm
-        i += 1
+            up_left = up
+            up = up_right
+            left = middle
+            middle = right
+            down_left = down
+            down = down_right
+            first += first_per_column
+            second += second_per_column
+            i += 1
+            at += 2
+        y += 1
+
+    # the edge cells never move, so each border pixel copies the one next to
+    # it, which has the swell on it
+    y = 1
+    while y < 127:
+        row = y << 7
+        pixels[row] = pixels[row + 1]
+        pixels[row + 127] = pixels[row + 126]
+        y += 1
+    x = 0
+    while x < 128:
+        pixels[x] = pixels[128 + x]
+        pixels[16256 + x] = pixels[16128 + x]
+        x += 1
 
 
 # pushes a soft round drop into the water
 @micropython.viper
 def splash(now: ptr16, x: int, y: int, radius: int, height: int, profile: ptr32):  # noqa: F821
-    r2 = radius * radius
-    dy = -radius
-    while dy <= radius:
-        py = y + dy
-        if 1 <= py < 127:
-            dx = -radius
-            while dx <= radius:
-                px = x + dx
-                d2 = dx * dx + dy * dy
-                if 1 <= px < 127 and d2 < r2:
-                    k = int(profile[(d2 * 64) // r2])
-                    at = (py << 7) | px
-                    v = int(now[at]) + ((height * k) >> 8)
-                    now[at] = 65535 if v > 65535 else (0 if v < 0 else v)
-                dx += 1
-        dy += 1
+    radius_squared = radius * radius
+    offset_y = -radius
+    while offset_y <= radius:
+        pixel_y = y + offset_y
+        if 1 <= pixel_y < 127:
+            offset_x = -radius
+            while offset_x <= radius:
+                pixel_x = x + offset_x
+                distance_squared = offset_x * offset_x + offset_y * offset_y
+                if 1 <= pixel_x < 127 and distance_squared < radius_squared:
+                    push = int(profile[(distance_squared * 64) // radius_squared])
+                    at = ((pixel_y << 7) | pixel_x) << 1
+                    pushed = int(now[at]) + ((height * push) >> 8)
+                    now[at] = 65535 if pushed > 65535 else (0 if pushed < 0 else pushed)
+                offset_x += 1
+        offset_y += 1
 
 
 def drop(height, radius):
-    splash(NOW, 6 + getrandbits(7) % 116, 6 + getrandbits(7) % 116, radius, height, FINE if getrandbits(1) else BROAD)
+    splash(HALVES[now_half], 6 + getrandbits(7) % 116, 6 + getrandbits(7) % 116, radius, height, FINE if getrandbits(1) else BROAD)
 
 
-def between(lo, hi):
-    return lo + getrandbits(16) * (hi - lo) // 65536
+def between(low, high):
+    return low + getrandbits(16) * (high - low) // 65536
 
 
 start = time.ticks_ms()
 next_drop = start
-next_big = start + BIG_EVERY * 1000
+next_big = time.ticks_add(start, BIG_EVERY * 1000)
+last_frame = start
 
 
 def update():
-    global NOW, BEFORE, next_drop, next_big
+    global now_half, next_drop, next_big, last_frame
 
-    t = time.ticks_ms()
+    ticks = time.ticks_ms()
 
-    if time.ticks_diff(t, next_big) >= 0:
+    if time.ticks_diff(ticks, next_big) >= 0:
         drop(STONE, STONE_RADIUS)
-        next_big = time.ticks_add(t, int(BIG_EVERY * 1000 * (0.6 + getrandbits(8) / 320)))
+        next_big = time.ticks_add(ticks, int(BIG_EVERY * 1000 * (0.6 + getrandbits(8) / 320)))
 
-    if time.ticks_diff(t, next_drop) >= 0:
+    if time.ticks_diff(ticks, next_drop) >= 0:
         drop(between(*DROP), between(*RADIUS))
-        next_drop = time.ticks_add(t, int(between(*BETWEEN) / rain))
+        next_drop = time.ticks_add(ticks, int(between(*BETWEEN) / rain))
 
-    seconds = time.ticks_diff(t, start) / 1000
-    for w in range(2):
-        SWELL_PARAMS[w * 4] = int(-seconds * SWELL_SPEED[w]) & 1023
-    swell_rows(SWELL_ROWS, SWELL_PARAMS, SIN, SWELL_ROW_PHASE)
+    # move each swell on by the time since the last frame. the phase wraps at
+    # a turn, so it stays exact however long the plugin runs
+    elapsed = time.ticks_diff(ticks, last_frame)
+    last_frame = ticks
+    for swell in range(2):
+        SWELL_PHASES[swell * 3] = (SWELL_PHASES[swell * 3] - elapsed * SWELL_SPEEDS[swell]) % TURN
 
-    ripple(NOW, BEFORE, memoryview(screen), LIT, SWELL_COLUMNS, SWELL_ROWS)
-    NOW, BEFORE = BEFORE, NOW
+    after = 1 - now_half
+    ripple(HALVES[now_half], HALVES[after], memoryview(screen), LIT, SWELL_SLOPES, SWELL_PHASES)
+    now_half = after
