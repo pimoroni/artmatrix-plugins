@@ -1,13 +1,12 @@
 import time
 
 import fetch
-from machine import Pin
 
 from plugin_config import plugin_config
 
 # a uk station's departure board, like the amber dot matrix ones on the
-# concourse. it shows a page of trains at a time and the clock. button A swaps
-# between departures and arrivals. the choice is kept for next time.
+# concourse. it shows a page of trains at a time and the clock. the config
+# page picks departures, arrivals, or both one after the other
 #
 # live times come from national rail's darwin, through the huxley 2 json
 # proxy. that needs a free darwin token. it's the consumer key of a
@@ -20,13 +19,14 @@ from plugin_config import plugin_config
 cfg = plugin_config("retro_rail", {
     "station": "SHF",  # the station's three letter crs code
     "token": "",  # a darwin token. without one it shows sample times
+    "board": "departures",  # departures, arrivals or both
 })
 station = cfg["station"].upper()
 token = cfg["token"]
+# the boards shown, one after the other
+boards = ("departures", "arrivals") if cfg["board"] == "both" else (cfg["board"],)
 
 HERE = __file__.rsplit("/", 1)[0]
-# which board was showing last
-SHOWN = HERE + "/board.txt"
 
 HOST = "huxley2.azurewebsites.net"
 # trains asked for, then seconds between fetches and after a failed one
@@ -102,28 +102,20 @@ SAMPLE_ARRIVALS = (
     (37, "Cleethorpes", None, "1", 0), (43, "Lincoln", "via Retford", "4", 0),
 )
 
-SWITCH = Pin(BUTTON_A, Pin.IN, Pin.PULL_UP)
-
-# whether arrivals are showing, and whether A is down
-arriving = False
-try:
-    with open(SHOWN) as saved:
-        arriving = saved.read().strip() == "arrivals"
-except OSError:
-    pass
-switch_held = False
-
-# trains are (time, destination or origin, via, platform, expected, cancelled).
-# made is when national rail made the board, in seconds since midnight, and
-# made_at the tick it came in on. problem is why live times aren't showing
-trains = []
+# each board's trains, as (time, destination or origin, via, platform,
+# expected, cancelled). made is when national rail made a board, in seconds
+# since midnight, and made_at the tick it came in on. problem is why a board's
+# live times aren't showing
+trains = {board: [] for board in boards}
 made = None
 made_at = 0
-problem = ""
+problem = dict.fromkeys(boards, "")
 
 fetcher = fetch.AsyncFetch(HOST) if token else None
 fetching = False
 due = time.ticks_ms()
+# boards[fetch_index] is being fetched, or is fetched next
+fetch_index = 0
 
 # when each scrolling line started, keyed by (row, text), and the cached text
 # images, keyed by (face, text, repeat)
@@ -156,44 +148,45 @@ def hhmm(seconds):
     return "%02d:%02d" % (seconds // 3600 % 24, seconds // 60 % 60)
 
 
-# fills trains with the sample ones, timed from this minute
+# fills each board with the sample trains, timed from this minute
 def sample():
-    global trains
     minute = seconds_now() // 60 * 60
-    trains = []
-    for minutes, place, via, platform, late in (SAMPLE_ARRIVALS if arriving else SAMPLE):
-        if late < 0:
-            expected = "Cancelled"
-        elif late:
-            expected = hhmm(minute + (minutes + late) * 60)
-        else:
-            expected = "On time"
-        trains.append((hhmm(minute + minutes * 60), place, via, platform, expected, late < 0))
+    for board in boards:
+        trains[board] = []
+        for minutes, place, via, platform, late in (SAMPLE_ARRIVALS if board == "arrivals" else SAMPLE):
+            if late < 0:
+                expected = "Cancelled"
+            elif late:
+                expected = hhmm(minute + (minutes + late) * 60)
+            else:
+                expected = "On time"
+            trains[board].append((hhmm(minute + minutes * 60), place, via, platform, expected, late < 0))
 
 
 # takes in a huxley 2 departures or arrivals board
-def show(board):
-    global trains, made, made_at, problem
-    trains = []
-    for train in board.get("trainServices") or ():
+def show(board, fetched):
+    global made, made_at
+    arriving = board == "arrivals"
+    trains[board] = []
+    for train in fetched.get("trainServices") or ():
         places = train.get("origin" if arriving else "destination") or ()
         place = " & ".join(location.get("locationName", "") for location in places)
         via = " ".join(location.get("via") or "" for location in places).strip() or None
         cancelled = bool(train.get("isCancelled"))
         scheduled = train.get("sta" if arriving else "std", "")
         expected = "Cancelled" if cancelled else train.get("eta" if arriving else "etd") or ""
-        trains.append((scheduled, place, via, train.get("platform") or "", expected, cancelled))
+        trains[board].append((scheduled, place, via, train.get("platform") or "", expected, cancelled))
 
-    where = board.get("locationName") or station
-    if trains:
-        problem = ""
+    where = fetched.get("locationName") or station
+    if trains[board]:
+        problem[board] = ""
     elif arriving:
-        problem = "No arrivals at %s" % where
+        problem[board] = "No arrivals at %s" % where
     else:
-        problem = "No departures from %s" % where
+        problem[board] = "No departures from %s" % where
 
     # generatedAt is iso 8601, so hh:mm:ss starts at character 11
-    stamp = board.get("generatedAt") or ""
+    stamp = fetched.get("generatedAt") or ""
     if len(stamp) >= 19:
         made = int(stamp[11:13]) * 3600 + int(stamp[14:16]) * 60 + int(stamp[17:19])
         made_at = time.ticks_ms()
@@ -201,26 +194,28 @@ def show(board):
 
 # starts a fetch when one's due, and takes in the board when it's done
 def poll(now):
-    global fetching, due, problem
+    global fetching, due, fetch_index
     if fetcher is None:
         return
+    board = boards[fetch_index]
     if not fetching:
         if time.ticks_diff(now, due) < 0:
             return
-        board = "arrivals" if arriving else "departures"
         fetcher.fetch("/%s/%s/%d?accessToken=%s" % (board, station, TRAINS, token))
         fetching = True
     try:
         if fetcher.update() == fetch.AsyncFetch.FETCHING:
             return
         fetching = False
-        show(fetcher.to_json())
-        due = time.ticks_add(now, REFRESH * 1000)
+        show(board, fetcher.to_json())
+        # the next board straight away, then a wait once they're all in
+        fetch_index = (fetch_index + 1) % len(boards)
+        due = now if fetch_index else time.ticks_add(now, REFRESH * 1000)
     except (OSError, ValueError, fetch.HTTPException) as error:
         fetching = False
         fetcher.reset()
         due = time.ticks_add(now, RETRY * 1000)
-        problem = "Can't reach National Rail (%s)" % error
+        problem[board] = "Can't reach National Rail (%s)" % error
 
 
 # where a character's record starts in DOTS. an advance of 0 means the font
@@ -292,21 +287,27 @@ def scroll(text, x, y, width, now):
     screen.clip = rect(EDGE, EDGE, screen.width - 2 * EDGE, screen.height - 2 * EDGE)
 
 
-# the trains split into pages that fit. a page is a list of rows, each one a
+# each board's trains split into pages that fit, one board after the other. a
+# page is (board, rows, page number, pages on that board), and a row is a
 # train or the via line under one
 def pages():
-    split, page = [], []
-    for train in trains:
-        via = train[2]
-        if len(page) + (2 if via else 1) > TRAIN_ROWS:
+    shown = []
+    for board in boards:
+        split, page = [], []
+        for train in trains[board]:
+            via = train[2]
+            if len(page) + (2 if via else 1) > TRAIN_ROWS:
+                split.append(page)
+                page = []
+            page.append(train)
+            if via:
+                page.append(via)
+        # an empty board still gets a page, for its heading and problem
+        if page or not split:
             split.append(page)
-            page = []
-        page.append(train)
-        if via:
-            page.append(via)
-    if page:
-        split.append(page)
-    return split
+        for number, rows in enumerate(split):
+            shown.append((board, rows, number + 1, len(split)))
+    return shown
 
 
 if not token:
@@ -315,32 +316,9 @@ if not token:
 sampled = seconds_now() // 60
 
 
-# swaps departures and arrivals. the other board's fetched straight away
-def switch(now):
-    global arriving, trains, fetching, due
-    arriving = not arriving
-    try:
-        with open(SHOWN, "w") as saved:
-            saved.write("arrivals" if arriving else "departures")
-    except OSError as error:
-        print("retro_rail: can't keep the board,", error)
-    scrolls.clear()
-    if fetcher:
-        fetcher.reset()
-        fetching = False
-        due = now
-        trains = []
-    else:
-        sample()
-
-
 def update():
-    global sampled, switch_held
+    global sampled
     now = time.ticks_ms()
-    down = not SWITCH.value()
-    if down and not switch_held:
-        switch(now)
-    switch_held = down
     poll(now)
     if not token and seconds_now() // 60 != sampled:
         sampled = seconds_now() // 60
@@ -360,18 +338,19 @@ def update():
     for y in [FIRST_ROW + row * LINE for row in range(TRAIN_ROWS)] + [FOOTER_ROW]:
         screen.rectangle(EDGE, y + TEXT_TOP, right_edge - EDGE, TEXT_HEIGHT)
 
+    shown = pages()
+    board, rows, page_number, page_count = shown[now // PAGE % len(shown)]
+
     # the heading in the middle of its strip. Plat and Expt sit on its
     # baseline, below the repeated rows
     top = heading_top + (HEADING_HEIGHT - TEXT_HEIGHT - len(HEADING_REPEAT)) // 2
-    write(BOLD, "Arrivals" if arriving else "Departures", EDGE, top, HEADING_REPEAT)
+    write(BOLD, "Arrivals" if board == "arrivals" else "Departures", EDGE, top, HEADING_REPEAT)
     top += len(HEADING_REPEAT)
     right(REGULAR, "Plat", PLATFORM_RIGHT + PLAT_SHIFT, top)
     right(REGULAR, "Expt", right_edge, top)
 
-    shown = pages()
-    page = now // PAGE % len(shown) if shown else 0
     y = FIRST_ROW
-    for row in shown[page] if shown else ():
+    for row in rows:
         top = y + TEXT_TOP
         # a via line is a plain string, a train is a tuple
         if isinstance(row, str):
@@ -397,10 +376,10 @@ def update():
     top = FOOTER_ROW + TEXT_TOP
     clock_width = measure(TALL, clock)
     right(TALL, clock, right_edge, top)
-    if problem:
-        footer = problem
-    elif len(shown) > 1:
-        footer = "Page %d of %d" % (page + 1, len(shown))
+    if problem[board]:
+        footer = problem[board]
+    elif page_count > 1:
+        footer = "Page %d of %d" % (page_number, page_count)
     else:
         footer = ""
     if footer:

@@ -8,4 +8,13 @@
     <small>Free from the <a href="https://raildata.org.uk" target="_blank">Rail Data Marketplace</a>. Subscribe to "Live Departure Board Web Service (LDBWS) - Public" and paste its consumer key here. Without one, sample Sheffield times are shown</small>
     <input type="text" name="token" value="{{ placeholder.token }}" autocomplete="off" spellcheck="false">
   </label>
+
+  <fieldset>
+    <legend>Show</legend>
+    <div class="presets">
+      <label><input type="radio" name="board" value="departures" {{ "checked" if placeholder.board == "departures" else "" }}>Departures</label>
+      <label><input type="radio" name="board" value="arrivals" {{ "checked" if placeholder.board == "arrivals" else "" }}>Arrivals</label>
+      <label><input type="radio" name="board" value="both" {{ "checked" if placeholder.board == "both" else "" }}>Both</label>
+    </div>
+  </fieldset>
 </form>
