@@ -78,6 +78,17 @@ if skill not in SKILLS:
 SLIP_START = SKILLS[skill]
 SLIP_PER_LEVEL = 0.4
 
+# expert keeps the right hand column empty for the long piece, so every clear
+# is four lines. it minds holes and bumps more and doesn't get sloppier each level
+WELL_COLUMN = COLUMNS - 1
+# the score lost by any other spot that covers the well. it has to beat the
+# stack height a three line clear saves, about 7 a line
+WELL_PENALTY = 100.0
+if skill == "expert":
+    HOLES_WEIGHT = 2.0
+    BUMPS_WEIGHT = 0.4
+    SLIP_PER_LEVEL = 0.0
+
 # each speed's times as a multiple of the normal ones below
 SPEEDS = {
     "slow": 1.5,
@@ -241,6 +252,8 @@ def spawn(now):
 
     # score every turn in every column it fits, dropped straight down
     level_slip = SLIP_START + SLIP_PER_LEVEL * (level - 1)
+    # the drop into expert's empty well isn't a bump worth smoothing out
+    bump_columns = WELL_COLUMN - 1 if skill == "expert" else COLUMNS - 1
     best_score = None
     target_turn = 0
     target_x = piece_x
@@ -262,10 +275,12 @@ def spawn(now):
                     cleared += 1
             # a cleared line takes a block off every column
             height = sum(ROWS - top for top in new_tops) - cleared * COLUMNS
-            bumps = sum(abs(new_tops[column] - new_tops[column + 1]) for column in range(COLUMNS - 1))
+            bumps = sum(abs(new_tops[column] - new_tops[column + 1]) for column in range(bump_columns))
             score = (LINES_WEIGHT * cleared - HEIGHT_WEIGHT * height
                      - HOLES_WEIGHT * new_holes - BUMPS_WEIGHT * bumps
                      + random.uniform(0, level_slip))
+            if skill == "expert" and x + width > WELL_COLUMN and cleared < 4:
+                score -= WELL_PENALTY
             if best_score is None or score > best_score:
                 best_score = score
                 target_turn = turn_index
