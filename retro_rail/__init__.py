@@ -8,17 +8,16 @@ from plugin_config import plugin_config
 # concourse. it shows a page of trains at a time and the clock. the config
 # page picks departures, arrivals, or both one after the other
 #
-# live times come from national rail's darwin, through the huxley 2 json
-# proxy. that needs a free darwin token. it's the consumer key of a
-# subscription to "Live Departure Board Web Service (LDBWS) - Public" on the
-# rail data marketplace, https://raildata.org.uk
+# live times come straight from national rail on the rail data marketplace,
+# https://raildata.org.uk. that needs the free consumer key of a subscription
+# to "Live Arrival and Departure Boards"
 #
 # the lettering is daniel hart's dot matrix typeface, under the sil open font
 # license, https://github.com/DanielHartUK/Dot-Matrix-Typeface. its dots are
 # in dotmatrix.bin
 cfg = plugin_config("retro_rail", {
     "station": "SHF",  # the station's three letter crs code
-    "token": "",  # a darwin token. without one it shows sample times
+    "token": "",  # a rail data key. without one it shows sample times
     "board": "departures",  # departures, arrivals or both
 })
 station = cfg["station"].upper()
@@ -28,9 +27,12 @@ boards = ("departures", "arrivals") if cfg["board"] == "both" else (cfg["board"]
 
 HERE = __file__.rsplit("/", 1)[0]
 
-HOST = "huxley2.azurewebsites.net"
-# trains asked for, then seconds between fetches and after a failed one
-TRAINS = 10
+HOST = "api1.raildata.org.uk"
+# arrivals and departures together, with the station's code on the end
+BOARD = "/1010-live-arrival-and-departure-boards-arr-and-dep1_1/LDBWS/api/20220120/GetArrDepBoardWithDetails/"
+# trains asked for, both ways together, then seconds between fetches and
+# after a failed one
+TRAINS = 20
 REFRESH = 60
 RETRY = 30
 
@@ -114,8 +116,6 @@ problem = dict.fromkeys(boards, "")
 fetcher = fetch.AsyncFetch(HOST) if token else None
 fetching = False
 due = time.ticks_ms()
-# boards[fetch_index] is being fetched, or is fetched next
-fetch_index = 0
 
 # when each scrolling line started, keyed by (row, text), and the cached text
 # images, keyed by (face, text, repeat)
@@ -163,27 +163,37 @@ def sample():
             trains[board].append((hhmm(minute + minutes * 60), place, via, platform, expected, late < 0))
 
 
-# takes in a huxley 2 departures or arrivals board
-def show(board, fetched):
+# takes in the arrivals and departures, then sorts them onto the boards. a
+# train that starts here has no arrival time, and one that ends here no
+# departure time
+def show(fetched):
     global made, made_at
-    arriving = board == "arrivals"
-    trains[board] = []
-    for train in fetched.get("trainServices") or ():
-        places = train.get("origin" if arriving else "destination") or ()
-        place = " & ".join(location.get("locationName", "") for location in places)
-        via = " ".join(location.get("via") or "" for location in places).strip() or None
-        cancelled = bool(train.get("isCancelled"))
-        scheduled = train.get("sta" if arriving else "std", "")
-        expected = "Cancelled" if cancelled else train.get("eta" if arriving else "etd") or ""
-        trains[board].append((scheduled, place, via, train.get("platform") or "", expected, cancelled))
-
     where = fetched.get("locationName") or station
-    if trains[board]:
-        problem[board] = ""
-    elif arriving:
-        problem[board] = "No arrivals at %s" % where
-    else:
-        problem[board] = "No departures from %s" % where
+    for board in boards:
+        arriving = board == "arrivals"
+        trains[board] = []
+        for train in fetched.get("trainServices") or ():
+            scheduled = train.get("sta" if arriving else "std")
+            if not scheduled:
+                continue
+            places = train.get("origin" if arriving else "destination") or ()
+            place = " & ".join(location.get("locationName", "") for location in places)
+            via = " ".join(location.get("via") or "" for location in places).strip() or None
+            cancelled = bool(train.get("isCancelled"))
+            expected = "Cancelled" if cancelled else train.get("eta" if arriving else "etd") or ""
+            trains[board].append((scheduled, place, via, train.get("platform") or "", expected, cancelled))
+
+        # the reply comes in departure order, so each board goes in its own.
+        # minutes count from an hour ago, so times past midnight sort last
+        earliest = seconds_now() // 60 - 60
+        trains[board].sort(key=lambda train: (int(train[0][:2]) * 60 + int(train[0][3:]) - earliest) % 1440)
+
+        if trains[board]:
+            problem[board] = ""
+        elif arriving:
+            problem[board] = "No arrivals at %s" % where
+        else:
+            problem[board] = "No departures from %s" % where
 
     # generatedAt is iso 8601, so hh:mm:ss starts at character 11
     stamp = fetched.get("generatedAt") or ""
@@ -194,28 +204,26 @@ def show(board, fetched):
 
 # starts a fetch when one's due, and takes in the board when it's done
 def poll(now):
-    global fetching, due, fetch_index
+    global fetching, due
     if fetcher is None:
         return
-    board = boards[fetch_index]
     if not fetching:
         if time.ticks_diff(now, due) < 0:
             return
-        fetcher.fetch("/%s/%s/%d?accessToken=%s" % (board, station, TRAINS, token))
+        fetcher.fetch("%s%s?numRows=%d" % (BOARD, station, TRAINS), headers={"x-apikey": token})
         fetching = True
     try:
         if fetcher.update() == fetch.AsyncFetch.FETCHING:
             return
         fetching = False
-        show(board, fetcher.to_json())
-        # the next board straight away, then a wait once they're all in
-        fetch_index = (fetch_index + 1) % len(boards)
-        due = now if fetch_index else time.ticks_add(now, REFRESH * 1000)
+        show(fetcher.to_json())
+        due = time.ticks_add(now, REFRESH * 1000)
     except (OSError, ValueError, fetch.HTTPException) as error:
         fetching = False
         fetcher.reset()
         due = time.ticks_add(now, RETRY * 1000)
-        problem[board] = "Can't reach National Rail (%s)" % error
+        for board in boards:
+            problem[board] = "Can't reach National Rail (%s)" % error
 
 
 # where a character's record starts in DOTS. an advance of 0 means the font
