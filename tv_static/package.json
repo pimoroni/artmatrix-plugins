@@ -1,6 +1,7 @@
 {
   "name": "TV Static",
   "version": "1.0.0",
+  "hash": "a2b19cace6c4",
   "description": "The static of an untuned TV",
   "author": "Pimoroni",
   "category": "Visualisations",

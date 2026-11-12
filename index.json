@@ -50,227 +50,272 @@
     "3d_pipes": {
       "description": "The classic pipes screensaver",
       "author": "Pimoroni",
-      "category": "Scenes"
+      "category": "Scenes",
+      "hash": "8c481ff9d2ed"
     },
     "after_yarrk": {
       "description": "Pirate ships bobbing across the sea",
       "author": "Pimoroni",
-      "category": "Scenes"
+      "category": "Scenes",
+      "hash": "48085ba67e9f"
     },
     "art_matrix_draw": {
       "description": "Draw a picture in your browser and show it",
       "author": "Pimoroni",
-      "category": "Interactive"
+      "category": "Interactive",
+      "hash": "5e35c873bb72"
     },
     "art_matrix_show": {
       "description": "Your own photos as a slideshow, sent from your phone",
       "author": "Pimoroni",
-      "category": "Interactive"
+      "category": "Interactive",
+      "hash": "a23a2979401d"
     },
     "art_matrix_write": {
       "description": "Your own messages, scrolling or still, with effects",
       "author": "Pimoroni",
-      "category": "Interactive"
+      "category": "Interactive",
+      "hash": "2eb035945a60"
     },
     "aurora": {
       "description": "Curtains of northern lights over a dark treeline",
       "author": "Pimoroni",
-      "category": "Visualisations"
+      "category": "Visualisations",
+      "hash": "aa3af2fc6904"
     },
     "bezier": {
       "description": "Smooth B\u00e9zier curves looping round the screen",
       "author": "Pimoroni",
-      "category": "Visualisations"
+      "category": "Visualisations",
+      "hash": "edc550643a20"
     },
     "blackhole": {
       "description": "A clock whose hands orbit a black hole",
       "author": "Pimoroni",
-      "category": "Scenes"
+      "category": "Scenes",
+      "hash": "09b7434263fe"
     },
     "block_drop": {
       "description": "A falling blocks game that plays itself",
       "author": "Pimoroni",
-      "category": "Scenes"
+      "category": "Scenes",
+      "hash": "280241b8f34a"
     },
     "cells": {
       "description": "Glowing cells dividing in a dish",
       "author": "Pimoroni",
-      "category": "Visualisations"
+      "category": "Visualisations",
+      "hash": "ef56814d7be7"
     },
     "co2_matrix": {
       "description": "The CO2 level from an SCD41 breakout",
       "author": "Pimoroni",
-      "category": "Information"
+      "category": "Information",
+      "hash": "312da6b99346"
     },
     "contours": {
       "description": "Drifting contour lines, like a map of shifting hills",
       "author": "Pimoroni",
-      "category": "Visualisations"
+      "category": "Visualisations",
+      "hash": "272cfbdc1e28"
     },
     "domain_warp": {
       "description": "Swirling marbled noise in a choice of colours",
       "author": "Pimoroni",
-      "category": "Visualisations"
+      "category": "Visualisations",
+      "hash": "8073f150f2ef"
     },
     "earthquake_map": {
       "description": "Recent earthquakes from USGS on a world map",
       "author": "Pimoroni",
-      "category": "Information"
+      "category": "Information",
+      "hash": "142d67c343cf"
     },
     "firework": {
       "description": "Fireworks bursting in the night sky",
       "author": "Pimoroni",
-      "category": "Scenes"
+      "category": "Scenes",
+      "hash": "c9c5808edd14"
     },
     "flipdots": {
       "description": "A flip dot display flipping through waves, spirals and life",
       "author": "Pimoroni",
-      "category": "Visualisations"
+      "category": "Visualisations",
+      "hash": "2666fa39f9fa"
     },
     "flow": {
       "description": "Brushstrokes drifting on a field of slowly turning winds",
       "author": "Pimoroni",
-      "category": "Visualisations"
+      "category": "Visualisations",
+      "hash": "b388e3ae74e2"
     },
     "galileo_thermometer": {
       "description": "A Galileo thermometer read from a Multi-Sensor Stick",
       "author": "Pimoroni",
-      "category": "Information"
+      "category": "Information",
+      "hash": "00599873c7dd"
     },
     "game_of_life": {
       "description": "Conway's Game of Life",
       "author": "Pimoroni",
-      "category": "Visualisations"
+      "category": "Visualisations",
+      "hash": "f509c0c0ec42"
     },
     "gravity_clock_classic": {
       "description": "Chrome balls pulled round a clock face by gravity",
       "author": "Pimoroni",
-      "category": "Information"
+      "category": "Information",
+      "hash": "a24b4585b36d"
     },
     "gravity_clock_vaporwave": {
       "description": "The gravity clock with a vaporwave look",
       "author": "Pimoroni",
-      "category": "Information"
+      "category": "Information",
+      "hash": "8b68e3c53ac1"
     },
     "iss_tracker": {
       "description": "Where the International Space Station is right now",
       "author": "Pimoroni",
-      "category": "Information"
+      "category": "Information",
+      "hash": "de2aef37d800"
     },
     "kritter": {
       "description": "Watch the kritters hop between planets",
       "author": "Pimoroni",
-      "category": "Scenes"
+      "category": "Scenes",
+      "hash": "525085b9c370"
     },
     "magic_portal": {
       "description": "A glowing portal spiralling into the dark",
       "author": "Pimoroni",
-      "category": "Scenes"
+      "category": "Scenes",
+      "hash": "50c18a438494"
     },
     "maze": {
       "description": "A 3D walk through randomly generated mazes",
       "author": "Pimoroni",
-      "category": "Scenes"
+      "category": "Scenes",
+      "hash": "b6d772814423"
     },
     "moonlight": {
       "description": "A moonlit coast, drifting clouds and a glittering sea",
       "author": "Pimoroni",
-      "category": "Visualisations"
+      "category": "Visualisations",
+      "hash": "d3bc5415118e"
     },
     "neon_corridor": {
       "description": "An endless walk down a neon-lit corridor",
       "author": "Pimoroni",
-      "category": "Visualisations"
+      "category": "Visualisations",
+      "hash": "447d8a7349f2"
     },
     "now_playing": {
       "description": "Album art for what's playing on your Spotify",
       "author": "Pimoroni",
-      "category": "Information"
+      "category": "Information",
+      "hash": "b84ef01f4e80"
     },
     "ocean": {
       "description": "Open water with crossing waves, lit by a low sun",
       "author": "Pimoroni",
-      "category": "Visualisations"
+      "category": "Visualisations",
+      "hash": "5133109f24ea"
     },
     "random_bots": {
       "description": "Random robot portraits from DiceBear",
       "author": "Pimoroni",
-      "category": "Scenes"
+      "category": "Scenes",
+      "hash": "836a6d8de8be"
     },
     "random_shapes": {
       "description": "Random abstract shapes from DiceBear",
       "author": "Pimoroni",
-      "category": "Scenes"
+      "category": "Scenes",
+      "hash": "69372ad17016"
     },
     "random_triangles": {
       "description": "Random triangle patterns from DiceBear",
       "author": "Pimoroni",
-      "category": "Scenes"
+      "category": "Scenes",
+      "hash": "f2e3727a087d"
     },
     "resonance": {
       "description": "Vibrating-plate wave patterns that morph and pulse",
       "author": "Pimoroni",
-      "category": "Visualisations"
+      "category": "Visualisations",
+      "hash": "ccbe20eef667"
     },
     "retro_rail": {
       "description": "Live departures and arrivals on a dot matrix board",
       "author": "Pimoroni",
-      "category": "Information"
+      "category": "Information",
+      "hash": "728b7e7362a5"
     },
     "ripples": {
       "description": "Raindrops rippling across a pool of water",
       "author": "Pimoroni",
-      "category": "Visualisations"
+      "category": "Visualisations",
+      "hash": "89d95c4f74f4"
     },
     "solar_system": {
       "description": "Planets orbiting around their sun",
       "author": "Pimoroni",
-      "category": "Scenes"
+      "category": "Scenes",
+      "hash": "7d1229aeac5f"
     },
     "spirit_level": {
       "description": "A spirit level using an LSM6DS3 motion sensor",
       "author": "Pimoroni",
-      "category": "Information"
+      "category": "Information",
+      "hash": "972e22088648"
     },
     "stars": {
       "description": "Flying through a starfield",
       "author": "Pimoroni",
-      "category": "Visualisations"
+      "category": "Visualisations",
+      "hash": "2b75b162629c"
     },
     "terminal": {
       "description": "Scrolling green text like an old terminal",
       "author": "Pimoroni",
-      "category": "Scenes"
+      "category": "Scenes",
+      "hash": "dc5c444335e5"
     },
     "this_is_fine": {
       "description": "The \"this is fine\" fire, with your own message",
       "author": "Pimoroni",
-      "category": "Scenes"
+      "category": "Scenes",
+      "hash": "bbea5e7d55b2"
     },
     "trilobite": {
       "description": "Trilobites wandering across the seabed",
       "author": "Pimoroni",
-      "category": "Scenes"
+      "category": "Scenes",
+      "hash": "f4af16d8ddc4"
     },
     "tv_static": {
       "description": "The static of an untuned TV",
       "author": "Pimoroni",
-      "category": "Visualisations"
+      "category": "Visualisations",
+      "hash": "a2b19cace6c4"
     },
     "weather": {
       "description": "The current weather for your location",
       "author": "Pimoroni",
-      "category": "Information"
+      "category": "Information",
+      "hash": "70f6728653e7"
     },
     "who_arted": {
       "description": "Famous paintings that come to life",
       "author": "Pimoroni",
-      "category": "Scenes"
+      "category": "Scenes",
+      "hash": "f078b3af36b9"
     },
     "yt_subscriber_count": {
       "description": "A YouTube channel's subscriber count",
       "author": "Pimoroni",
-      "category": "Information"
+      "category": "Information",
+      "hash": "54631b1641fd"
     }
   }
 }

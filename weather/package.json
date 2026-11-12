@@ -1,6 +1,7 @@
 {
   "name": "Weather",
   "version": "1.0.0",
+  "hash": "70f6728653e7",
   "description": "The current weather for your location",
   "author": "Pimoroni",
   "category": "Information",

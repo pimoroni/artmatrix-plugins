@@ -1,6 +1,7 @@
 {
   "name": "Resonance",
   "version": "1.0.0",
+  "hash": "ccbe20eef667",
   "description": "Vibrating-plate wave patterns that morph and pulse",
   "author": "Pimoroni",
   "category": "Visualisations",

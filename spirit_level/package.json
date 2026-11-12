@@ -1,6 +1,7 @@
 {
   "name": "Spirit Level",
   "version": "1.0.0",
+  "hash": "972e22088648",
   "description": "A spirit level using an LSM6DS3 motion sensor",
   "author": "Pimoroni",
   "category": "Information",

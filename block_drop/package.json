@@ -1,6 +1,7 @@
 {
   "name": "Block Drop",
   "version": "1.0.0",
+  "hash": "280241b8f34a",
   "description": "A falling blocks game that plays itself",
   "author": "Pimoroni",
   "category": "Scenes",

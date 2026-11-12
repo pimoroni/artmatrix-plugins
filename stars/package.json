@@ -1,6 +1,7 @@
 {
   "name": "Stars",
   "version": "1.0.0",
+  "hash": "2b75b162629c",
   "description": "Flying through a starfield",
   "author": "Pimoroni",
   "category": "Visualisations",

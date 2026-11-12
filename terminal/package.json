@@ -1,6 +1,7 @@
 {
   "name": "Terminal",
   "version": "1.0.0",
+  "hash": "dc5c444335e5",
   "description": "Scrolling green text like an old terminal",
   "author": "Pimoroni",
   "category": "Scenes",

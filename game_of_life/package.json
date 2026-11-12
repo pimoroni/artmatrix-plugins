@@ -1,6 +1,7 @@
 {
   "name": "Game of Life",
   "version": "1.0.0",
+  "hash": "f509c0c0ec42",
   "description": "Conway's Game of Life",
   "author": "Pimoroni",
   "category": "Visualisations",

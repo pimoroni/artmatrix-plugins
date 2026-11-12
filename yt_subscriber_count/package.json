@@ -1,6 +1,7 @@
 {
   "name": "YouTube Subscriber Count",
   "version": "1.0.0",
+  "hash": "54631b1641fd",
   "description": "A YouTube channel's subscriber count",
   "author": "Pimoroni",
   "category": "Information",

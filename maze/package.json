@@ -1,6 +1,7 @@
 {
   "name": "Maze",
   "version": "1.0.0",
+  "hash": "b6d772814423",
   "description": "A 3D walk through randomly generated mazes",
   "author": "Pimoroni",
   "category": "Scenes",

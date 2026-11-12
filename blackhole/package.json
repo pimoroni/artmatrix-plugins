@@ -1,6 +1,7 @@
 {
   "name": "Blackhole",
   "version": "1.0.0",
+  "hash": "09b7434263fe",
   "description": "A clock whose hands orbit a black hole",
   "author": "Pimoroni",
   "category": "Scenes",

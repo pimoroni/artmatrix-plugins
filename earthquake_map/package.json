@@ -1,6 +1,7 @@
 {
   "name": "Earthquake Map",
   "version": "1.0.0",
+  "hash": "142d67c343cf",
   "description": "Recent earthquakes from USGS on a world map",
   "author": "Pimoroni",
   "category": "Information",

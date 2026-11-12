@@ -1,6 +1,7 @@
 {
   "name": "Solar System",
   "version": "1.0.0",
+  "hash": "7d1229aeac5f",
   "description": "Planets orbiting around their sun",
   "author": "Pimoroni",
   "category": "Scenes",

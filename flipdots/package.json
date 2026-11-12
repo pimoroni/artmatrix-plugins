@@ -1,6 +1,7 @@
 {
   "name": "Flip Dots",
   "version": "1.0.0",
+  "hash": "2666fa39f9fa",
   "description": "A flip dot display flipping through waves, spirals and life",
   "author": "Pimoroni",
   "category": "Visualisations",
