@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import hashlib
 import json
 import subprocess
 import sys
@@ -9,6 +10,7 @@ ROOT = Path(__file__).resolve().parent.parent
 MANIFEST_NAME = "package.json"
 INDEX_NAME = "index.json"
 INITIAL_VERSION = "1.0.0"
+HASH_LENGTH = 12
 TARGET_PREFIX = "plugins"
 NOT_PLUGINS = {"ci", "docs"}
 # the plugin's picture, shipped with it for the settings page
@@ -72,6 +74,13 @@ def manifest_for(plugin):
 
     manifest["version"] = version if isinstance(version, str) and version else INITIAL_VERSION
 
+    # changes whenever a shipped file does, the settings page offers an update when it differs
+    files = plugin_files(plugin)
+    digest = hashlib.sha1()
+    for path in files:
+        digest.update(path.encode() + b"\0" + (plugin / path).read_bytes())
+    manifest["hash"] = digest.hexdigest()[:HASH_LENGTH]
+
     # no fallback for these, validate_index() fails a plugin without them
     for field in DETAILS:
         value = existing.get(field)
@@ -82,7 +91,7 @@ def manifest_for(plugin):
     if isinstance(existing.get("requires_internet"), bool):
         manifest["requires_internet"] = existing["requires_internet"]
 
-    manifest["urls"] = [[f"{TARGET_PREFIX}/{plugin.name}/{path}", path] for path in plugin_files(plugin)]
+    manifest["urls"] = [[f"{TARGET_PREFIX}/{plugin.name}/{path}", path] for path in files]
 
     return manifest
 
@@ -96,7 +105,7 @@ def index_for(plugins):
     # reads each plugins value as the display name string
     manifests = {plugin.name: manifest_for(plugin) for plugin in plugins}
     return {"plugins": {name: manifest["name"] for name, manifest in manifests.items()},
-            "details": {name: {field: manifest.get(field) for field in DETAILS}
+            "details": {name: {**{field: manifest.get(field) for field in DETAILS}, "hash": manifest["hash"]}
                         for name, manifest in manifests.items()}}
 
 

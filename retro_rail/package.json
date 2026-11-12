@@ -1,6 +1,7 @@
 {
   "name": "Retro Rail",
   "version": "1.0.0",
+  "hash": "728b7e7362a5",
   "description": "Live departures and arrivals on a dot matrix board",
   "author": "Pimoroni",
   "category": "Information",

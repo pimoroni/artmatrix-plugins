@@ -1,6 +1,7 @@
 {
   "name": "Art Matrix Draw",
   "version": "1.0.0",
+  "hash": "5e35c873bb72",
   "description": "Draw a picture in your browser and show it",
   "author": "Pimoroni",
   "category": "Interactive",

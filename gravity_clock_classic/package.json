@@ -1,6 +1,7 @@
 {
   "name": "Gravity Clock Classic",
   "version": "1.0.0",
+  "hash": "a24b4585b36d",
   "description": "Chrome balls pulled round a clock face by gravity",
   "author": "Pimoroni",
   "category": "Information",

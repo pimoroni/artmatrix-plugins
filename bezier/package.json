@@ -1,6 +1,7 @@
 {
   "name": "Bezier",
   "version": "1.0.0",
+  "hash": "edc550643a20",
   "description": "Smooth B\u00e9zier curves looping round the screen",
   "author": "Pimoroni",
   "category": "Visualisations",

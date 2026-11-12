@@ -1,6 +1,7 @@
 {
   "name": "Kritter",
   "version": "1.0.0",
+  "hash": "525085b9c370",
   "description": "Watch the kritters hop between planets",
   "author": "Pimoroni",
   "category": "Scenes",

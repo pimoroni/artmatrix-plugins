@@ -1,6 +1,7 @@
 {
   "name": "Now Playing",
   "version": "1.0.0",
+  "hash": "b84ef01f4e80",
   "description": "Album art for what's playing on your Spotify",
   "author": "Pimoroni",
   "category": "Information",
