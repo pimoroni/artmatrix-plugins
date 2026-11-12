@@ -1,0 +1,13 @@
+<form method="post" action="/config?plugin={{ plugin }}" data-autosave>
+  <fieldset>
+    <legend>New picture every</legend>
+    <div class="presets">
+      <label><input type="radio" name="interval" value="10" {{ "checked" if placeholder.interval == 10 else "" }}>10 seconds</label>
+      <label><input type="radio" name="interval" value="30" {{ "checked" if placeholder.interval == 30 else "" }}>30 seconds</label>
+      <label><input type="radio" name="interval" value="60" {{ "checked" if placeholder.interval == 60 else "" }}>1 minute</label>
+      <label><input type="radio" name="interval" value="300" {{ "checked" if placeholder.interval == 300 else "" }}>5 minutes</label>
+      <label><input type="radio" name="interval" value="900" {{ "checked" if placeholder.interval == 900 else "" }}>15 minutes</label>
+      <label><input type="radio" name="interval" value="3600" {{ "checked" if placeholder.interval == 3600 else "" }}>1 hour</label>
+    </div>
+  </fieldset>
+</form>

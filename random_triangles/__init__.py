@@ -5,13 +5,19 @@ import binascii
 from easing import easeInCubic
 import machine
 
+from plugin_config import plugin_config
+
 FADE_DURATION = 2000
-UPDATE_INTERVAL = 10
 RANDOMNESS = 32
 
 SHAPES_API_HOST = "api.dicebear.com"
 SHAPES_API_PATH = "/10.x/triangles/png?size=128&seed="
 CACHE_FILE = "/lib/plugins/random_triangles/random_triangles.png"
+
+cfg = plugin_config("random_triangles", {
+    "interval": 10,  # seconds between pictures
+})
+interval = cfg["interval"]
 
 UID = binascii.hexlify(machine.unique_id()).decode()
 
@@ -26,7 +32,7 @@ except (OSError, ValueError):
 
 api_data = AsyncFetch(SHAPES_API_HOST, debug=True)
 
-api_data.fetch(f"{SHAPES_API_PATH}{UID}{seed}", file=CACHE_FILE, interval=UPDATE_INTERVAL)
+api_data.fetch(f"{SHAPES_API_PATH}{UID}{seed}", file=CACHE_FILE, interval=interval)
 
 fade_start = time.ticks_ms() - FADE_DURATION
 
@@ -51,7 +57,7 @@ def error(fetch):
     print(fetch.http_status, fetch.http_response_headers)
 
     seed = random.getrandbits(RANDOMNESS)
-    api_data.fetch(f"{SHAPES_API_PATH}{UID}{seed}", file=CACHE_FILE, interval=UPDATE_INTERVAL)
+    api_data.fetch(f"{SHAPES_API_PATH}{UID}{seed}", file=CACHE_FILE, interval=interval)
 
 
 def update():

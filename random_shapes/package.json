@@ -11,6 +11,10 @@
       "__init__.py"
     ],
     [
+      "plugins/random_shapes/config.html",
+      "config.html"
+    ],
+    [
       "plugins/random_shapes/thumbnail.png",
       "thumbnail.png"
     ]
