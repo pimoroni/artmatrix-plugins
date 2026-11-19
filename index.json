@@ -29,6 +29,7 @@
     "neon_corridor": "Neon Corridor",
     "now_playing": "Now Playing",
     "ocean": "Ocean",
+    "rail_clock": "Rail Clock",
     "random_bots": "Random Bots",
     "random_shapes": "Random Shapes",
     "random_triangles": "Random Triangles",
@@ -220,6 +221,12 @@
       "author": "Pimoroni",
       "category": "Visualisations",
       "hash": "5133109f24ea"
+    },
+    "rail_clock": {
+      "description": "The time inside two rings of sweeping rail chevrons",
+      "author": "Vincent Willcox",
+      "category": "Information",
+      "hash": "868478aafbf9"
     },
     "random_bots": {
       "description": "Random robot portraits from DiceBear",
