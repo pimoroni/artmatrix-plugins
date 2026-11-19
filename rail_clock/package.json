@@ -1,0 +1,31 @@
+{
+  "name": "Rail Clock",
+  "version": "1.0.0",
+  "hash": "868478aafbf9",
+  "description": "The time inside two rings of sweeping rail chevrons",
+  "author": "Vincent Willcox",
+  "category": "Information",
+  "requires_internet": false,
+  "urls": [
+    [
+      "plugins/rail_clock/OFL-Inter.txt",
+      "OFL-Inter.txt"
+    ],
+    [
+      "plugins/rail_clock/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/rail_clock/config.html",
+      "config.html"
+    ],
+    [
+      "plugins/rail_clock/railclock_digits.af",
+      "railclock_digits.af"
+    ],
+    [
+      "plugins/rail_clock/thumbnail.png",
+      "thumbnail.png"
+    ]
+  ]
+}

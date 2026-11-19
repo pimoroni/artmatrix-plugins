@@ -1,0 +1,15 @@
+<form method="post" action="/config?plugin={{ plugin }}" data-autosave>
+  <label>Colours
+    <small>Rings / time / background. Black leaves the background LEDs off.</small>
+    <div class="field-row">
+      <input type="color" name="ring_colour" aria-label="Rings" value="{{ '#%02x%02x%02x' % placeholder.ring_colour }}">
+      <input type="color" name="time_colour" aria-label="Time" value="{{ '#%02x%02x%02x' % placeholder.time_colour }}">
+      <input type="color" name="background_colour" aria-label="Background" value="{{ '#%02x%02x%02x' % placeholder.background_colour }}">
+    </div>
+  </label>
+
+  <label>12-hour clock
+    <small>Show 1:05 rather than 13:05.</small>
+    <input type="checkbox" name="twelve_hour" {{ "checked" if placeholder.twelve_hour else "" }}>
+  </label>
+</form>
