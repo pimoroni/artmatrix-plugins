@@ -1,0 +1,154 @@
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+  #map .leaflet-bar {
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  #map .leaflet-control-zoom a {
+    box-sizing: content-box;
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    padding: 0;
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 0;
+    display: block;
+  }
+  #map img {
+    max-width: none;
+    background: none;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+  }
+</style>
+
+<form method="post" action="/config?plugin={{ plugin }}" data-autosave>
+  <label>Location
+    <small>Click the map to set your position, or type coordinates below. Leave them blank to use the Weather plugin's location.</small>
+    <div id="map" style="height: 300px; margin: 0.5em 0;"></div>
+  </label>
+
+  <label>Latitude
+    <input type="number" name="lat" min="-90" max="90" step="any" value="{{ placeholder.lat }}" placeholder="{{ "%.4f" % placeholder.location[0] if placeholder.location else "" }}">
+  </label>
+
+  <label>Longitude
+    <input type="number" name="lng" min="-180" max="180" step="any" value="{{ placeholder.lng }}" placeholder="{{ "%.4f" % placeholder.location[1] if placeholder.location else "" }}">
+  </label>
+
+  <fieldset>
+    <legend>Units</legend>
+    <div class="presets">
+      <label><input type="radio" name="units" value="celsius" {{ "checked" if placeholder.units == "celsius" else "" }}>Celsius</label>
+      <label><input type="radio" name="units" value="fahrenheit" {{ "checked" if placeholder.units == "fahrenheit" else "" }}>Fahrenheit</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Temperature</legend>
+    <div class="presets">
+      <label><input type="radio" name="text" value="top-left" {{ "checked" if placeholder.text == "top-left" else "" }}>Top left</label>
+      <label><input type="radio" name="text" value="top-right" {{ "checked" if placeholder.text == "top-right" else "" }}>Top right</label>
+      <label><input type="radio" name="text" value="bottom-left" {{ "checked" if placeholder.text == "bottom-left" else "" }}>Bottom left</label>
+      <label><input type="radio" name="text" value="bottom-right" {{ "checked" if placeholder.text == "bottom-right" else "" }}>Bottom right</label>
+      <label><input type="radio" name="text" value="centre" {{ "checked" if placeholder.text == "centre" else "" }}>Centre</label>
+      <label><input type="radio" name="text" value="none" {{ "checked" if placeholder.text == "none" else "" }}>None</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Blend the temperature in</legend>
+    <small>On stands it in the scene, with cloud, fog, rain, snow and grass passing over it. Off puts it on a plain card</small>
+    <div class="presets">
+      <label><input type="radio" name="blend" value="on" {{ "checked" if placeholder.blend == "on" else "" }}>On</label>
+      <label><input type="radio" name="blend" value="off" {{ "checked" if placeholder.blend == "off" else "" }}>Off</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Beach from</legend>
+    <small>A clear or fair day at least this warm is a beach, a cooler one a field</small>
+    <div class="presets">
+      <label><input type="radio" name="beach" value="18" {{ "checked" if placeholder.beach == 18 else "" }}>{{ "64 °F" if placeholder.units == "fahrenheit" else "18 °C" }}</label>
+      <label><input type="radio" name="beach" value="20" {{ "checked" if placeholder.beach == 20 else "" }}>{{ "68 °F" if placeholder.units == "fahrenheit" else "20 °C" }}</label>
+      <label><input type="radio" name="beach" value="22" {{ "checked" if placeholder.beach == 22 else "" }}>{{ "72 °F" if placeholder.units == "fahrenheit" else "22 °C" }}</label>
+      <label><input type="radio" name="beach" value="25" {{ "checked" if placeholder.beach == 25 else "" }}>{{ "77 °F" if placeholder.units == "fahrenheit" else "25 °C" }}</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Season</legend>
+    <small>Auto follows the calendar where you are: blossom in spring, falling leaves in autumn, a bare tree in winter</small>
+    <div class="presets">
+      <label><input type="radio" name="season" value="auto" {{ "checked" if placeholder.season == "auto" else "" }}>Auto</label>
+      <label><input type="radio" name="season" value="spring" {{ "checked" if placeholder.season == "spring" else "" }}>Spring</label>
+      <label><input type="radio" name="season" value="summer" {{ "checked" if placeholder.season == "summer" else "" }}>Summer</label>
+      <label><input type="radio" name="season" value="autumn" {{ "checked" if placeholder.season == "autumn" else "" }}>Autumn</label>
+      <label><input type="radio" name="season" value="winter" {{ "checked" if placeholder.season == "winter" else "" }}>Winter</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Festive days</legend>
+    <small>Auto dresses the scene for Christmas (1 December to 5 January), New Year (31 December and 1 January), Halloween (25 to 31 October) and Bonfire Night (5 November)</small>
+    <div class="presets">
+      <label><input type="radio" name="theme" value="auto" {{ "checked" if placeholder.theme == "auto" else "" }}>Auto</label>
+      <label><input type="radio" name="theme" value="off" {{ "checked" if placeholder.theme == "off" else "" }}>Off</label>
+      <label><input type="radio" name="theme" value="christmas" {{ "checked" if placeholder.theme == "christmas" else "" }}>Christmas</label>
+      <label><input type="radio" name="theme" value="halloween" {{ "checked" if placeholder.theme == "halloween" else "" }}>Halloween</label>
+      <label><input type="radio" name="theme" value="bonfire" {{ "checked" if placeholder.theme == "bonfire" else "" }}>Bonfire Night</label>
+      <label><input type="radio" name="theme" value="newyear" {{ "checked" if placeholder.theme == "newyear" else "" }}>New Year</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Show</legend>
+    <small>The demo steps through every scene, 10 seconds each</small>
+    <div class="presets">
+      <label><input type="radio" name="show" value="live" {{ "checked" if placeholder.show == "live" else "" }}>Live weather</label>
+      <label><input type="radio" name="show" value="demo" {{ "checked" if placeholder.show == "demo" else "" }}>Demo of every scene</label>
+    </div>
+  </fieldset>
+</form>
+
+<script>
+  const latInput = document.querySelector('[name=lat]');
+  const lngInput = document.querySelector('[name=lng]');
+
+  // Start on the saved location, or the Weather plugin's shown as the fields'
+  // placeholders, otherwise a zoomed-out world view.
+  const startLat = parseFloat(latInput.value || latInput.placeholder);
+  const startLng = parseFloat(lngInput.value || lngInput.placeholder);
+  const hasStart = !isNaN(startLat) && !isNaN(startLng);
+
+  const map = L.map('map').setView(
+    hasStart ? [startLat, startLng] : [0, 0],
+    hasStart ? 10 : 2
+  );
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  let marker = hasStart ? L.marker([startLat, startLng]).addTo(map) : null;
+
+  map.on('click', function (e) {
+    const p = e.latlng.wrap();
+    latInput.value = p.lat.toFixed(6);
+    lngInput.value = p.lng.toFixed(6);
+    // save both together
+    latInput.form.dispatchEvent(new Event('change'));
+    if (marker) {
+      marker.setLatLng(p);
+    } else {
+      marker = L.marker(p).addTo(map);
+    }
+  });
+</script>

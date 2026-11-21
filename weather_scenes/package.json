@@ -1,0 +1,47 @@
+{
+  "name": "Weather Scenes",
+  "version": "1.0.0",
+  "hash": "2978b630294e",
+  "description": "The weather outside, as an animated landscape",
+  "author": "Vincent Willcox",
+  "category": "Information",
+  "requires_internet": true,
+  "urls": [
+    [
+      "plugins/weather_scenes/OFL-Fredoka.txt",
+      "OFL-Fredoka.txt"
+    ],
+    [
+      "plugins/weather_scenes/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/weather_scenes/config.html",
+      "config.html"
+    ],
+    [
+      "plugins/weather_scenes/festive.py",
+      "festive.py"
+    ],
+    [
+      "plugins/weather_scenes/scenery.py",
+      "scenery.py"
+    ],
+    [
+      "plugins/weather_scenes/sky.py",
+      "sky.py"
+    ],
+    [
+      "plugins/weather_scenes/temperature.af",
+      "temperature.af"
+    ],
+    [
+      "plugins/weather_scenes/temperature.py",
+      "temperature.py"
+    ],
+    [
+      "plugins/weather_scenes/thumbnail.png",
+      "thumbnail.png"
+    ]
+  ]
+}
