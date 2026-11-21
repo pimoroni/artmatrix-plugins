@@ -43,6 +43,7 @@
     "trilobite": "Trilobite",
     "tv_static": "TV Static",
     "weather": "Weather",
+    "weather_scenes": "Weather Scenes",
     "who_arted": "Who Arted",
     "yt_subscriber_count": "YouTube Subscriber Count"
   },
@@ -304,6 +305,12 @@
       "author": "Pimoroni",
       "category": "Information",
       "hash": "70f6728653e7"
+    },
+    "weather_scenes": {
+      "description": "The weather outside, as an animated landscape",
+      "author": "Vincent Willcox",
+      "category": "Information",
+      "hash": "2978b630294e"
     },
     "who_arted": {
       "description": "Famous paintings that come to life",
