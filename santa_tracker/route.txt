@@ -1,0 +1,366 @@
+North Pole
+Provideniya, Russia
+Anadyr, Russia
+Petropavlovsk-Kamchatsky, Russia
+Bikini, Marshall Islands
+Majuro, Marshall Islands
+Labasa, Fiji
+Suva, Fiji
+Auckland, New Zealand
+Wanganui, New Zealand
+Wellington, New Zealand
+Christchurch, New Zealand
+Invercargill, New Zealand
+Port Vila, Vanuatu
+Luganville, Vanuatu
+Honiara, Solomon Islands
+Gizo, Solomon Islands
+Kolonia, Micronesia
+Urup, Kuril Islands
+Onekotan, Kuril Islands
+Magadan, Russia
+Yuzhno-Sakhalinsk, Sakhalin Island
+Birobidzhan, Russia
+Vladivostok, Russia
+Chichi-jima Island, Japan
+Iwo Jima, Japan
+Andersen AFB, Guam
+Hagatna, Guam
+Yap Islands, Micronesia
+Rabaul, Papua New Guinea
+Lae, Papua New Guinea
+Port Moresby, Papua New Guinea
+Cairns, Australia
+Townsville, Australia
+Mackay, Australia
+Brisbane, Australia
+Sydney, Australia
+Wollongong, Australia
+Canberra, Australia
+Melbourne, Australia
+Hobart, Tasmania
+Adelaide, Australia
+Alice Springs, Australia
+Darwin, Australia
+Bungku Utara, Indonesia
+Koror, Palau
+Naha, Japan
+Kobe, Japan
+Kyoto, Japan
+Nagoya, Japan
+Mt Fuji, Japan
+Ayase, Japan
+Yokohama, Japan
+Tokyo, Japan
+Sendai, Japan
+Seoul, South Korea
+P?yongyang, North Korea
+Yakutsk, Russia
+Irkutsk, Russia
+Bayanchandmani, Mongolia
+Wall of China, China
+Beijing, China
+Tianjin, China
+Chongqing, China
+Shanghai, China
+Zhaoqing, China
+Kowloon,  Hong Kong
+Taipei, Taiwan
+Calumpit, Philippines
+Manila, Philippines
+Zamboanga, Philippines
+Muara, Brunei
+Bintulu, Malaysia
+Makassar, Indonesia
+Broome, Australia
+Albany, Australia
+Bunbury, Australia
+Fremantle, Australia
+Perth, Australia
+The Settlement, Christmas Island
+Cipongkor, Indonesia
+Jakarta, Indonesia
+Singapore, Republic of Singapore
+Taiping, Malaysia
+Port Blair, Andaman Islands
+Bangkok, Thailand
+Phnom Penh, Cambodia
+Vientiane, Laos
+Hanoi, Vietnam
+Lhasa, China
+Urumqi, China
+Krasnoyarsk, Russia
+Noril?sk, Russia
+Dudinka, Russia
+Omsk, Russia
+Pavlodar, Kazakhstan
+Kara-Kol, Kyrgyzstan
+Kulob, Tajikistan
+Mount Everest, Nepal
+Pokhara, Nepal
+Kolkata, India
+Dhaka, Bangladesh
+Chiang Mai, Thailand
+Taunggyi, Burma (Myanmar) 
+Diego Garcia, British Indian Ocean Territory
+Male, Maldives
+Bangalore, India
+Badulla, Sri Lanka
+Mumbai, India
+Taj Mahal, India
+New Delhi, India
+Mussoorie, India
+Karachi, Pakistan
+Islamabad, Pakistan
+Mazar-e Sharif, Afghanistan
+Balkanabat, Turkmenistan
+Zarafshan, Uzbekistan
+Aqtobe, Kazakhstan
+Kirov, Russia
+Samara, Russia
+Gori, Georgia
+Laki, Azerbaijan
+Yerevan, Armenia
+Tehran, Iran
+Kuwait City, Kuwait
+Mina Jabal Ali, United Arab Emirates
+Sur, Oman
+Victoria, Seychelles
+Mahebourg, Mauritius
+Enderby Land, Antarctic
+Crozet Islands, French Southern Territories
+Prince Edward Islands, South Africa
+Taolagnaro, Madagascar
+Mahajanga, Madagascar
+Moroni, Comoros
+Zanzibar, Tanzania
+Mombasa, Kenya
+Kampala, Uganda
+Soroti, Uganda
+Jima, Ethiopia
+Jizan, Saudi Arabia
+Baghdad, Iraq
+Moscow, Russia
+Klin, Russia
+St. Petersburg, Russia
+Kokkola, Finland
+Helsinki, Finland
+Tartu, Estonia
+Valmiera, Latvia
+Panevezys, Lithuania
+Pinsk, Belarus
+Kirovohrad, Ukraine
+Chisinau, Moldova
+Brasov, Romania
+Timisoara, Romania
+Burgas, Bulgaria
+Athens, Greece
+Cesme, Turkey
+Istanbul, Turkey
+Ankara, Turkey
+Nicosia, Cyprus
+Jerusalem, Israel
+Cairo, Egypt
+Pyramids, Egypt
+Kusti, Sudan
+Kindu, Democratic Republic of Congo
+Kabwe, Zambia
+Masvingo, Zimbabwe
+Ghanzi, Botswana
+Johannesburg, South Africa
+Maputo, Mozambique
+Cape Town, South Africa
+Keetmanshoop, Namibia
+Porto Amboim, Angola
+Kango, Gabon
+Bambari, Central African Republic
+Douala, Cameroon
+Lagos, Nigeria
+Abuja, Nigeria
+Mongo, Chad
+Agadez, Niger
+Sabha, Libya
+Ghardaia, Algeria
+Palermo, Italy
+Sorrento, Italy
+Rome, Italy
+Venice, Italy
+Split, Croatia
+Banja Luka, Bosnia-Herzegovina
+Ljubljana, Slovenia
+Debrecen, Hungary
+Bratislava, Slovakia
+Prague, Czech Republic
+Poznan, Poland
+Vienna, Austria
+Zurich, Switzerland
+Frankfurt, Germany
+Berlin, Germany
+Hamburg, Germany
+Copenhagen, Denmark
+Stockholm, Sweden
+Sundsvall, Sweden
+Oslo, Norway
+Amsterdam, Netherlands
+Brussels, Belgium
+Paris, France
+Luxembourg City, Luxembourg
+Monte Carlo, Monaco
+Encamp, Andorra
+Barcelona, Spain
+Madrid, Spain
+Portalegre, Portugal
+Casablanca, Morocco
+Kiffa, Mauritania
+Timbuktu, Mali
+Accra, Ghana
+Divo, Cote D?Ivoire
+Labe, Guinea
+Bignona, Senegal
+Dakar, Senegal
+Santa Cruz de Tenerife, Canary Islands
+Lisbon, Portugal
+Bilbao, Spain
+Ely, UK
+Millennium Stadium, Wales 
+London, UK
+Edinburgh, Scotland
+Inverness, Scotland
+Cork, Ireland
+Dublin, Ireland
+Belfast, Northern Ireland
+Shannon, Ireland
+Londonderry (Derry), Northern Ireland
+Vik, Iceland
+Lajes do Pico, Azores
+Tarrafal, Cape Verde
+Grytviken, South Georgia and the South Sandwich Islands
+Goose Green, Falkland Islands (Islas Malvinas)
+Puerto Santa Cruz, Argentina
+Buenos Aires, Argentina
+Montevideo, Uruguay
+Durazno, Uruguay
+Sao Paulo, Brazil
+Rio de Janeiro, Brazil
+Holetown, Barbados
+Saint George?s, Grenada
+Georgetown, Guyana
+Rio Claro, Trinidad & Tobago
+San Juan, Puerto Rico
+Nuuk, Greenland
+Grand Falls - Windsor, Canada
+Labrador City, Canada
+Charlottetown, Canada
+Dartmouth, Canada
+St. John, Canada
+San Fernando de Apure, Venezuela
+Amazon Rain Forest, Brazil
+Manaus, Brazil
+San Pedro, Paraguay
+Sucre, Bolivia
+Santiago, Chile
+Machu Picchu, Peru
+Lima, Peru
+Quito, Ecuador
+Bogota, Colombia
+Coco Solo, Panama
+Spanish Town, Jamaica
+Saint Marc, Haiti
+Havana, Cuba
+Matthew Town, The Bahamas
+Cape Canaveral, USA
+Atlanta, USA
+Charleston, USA
+Charlotte, USA
+Charleston, USA
+Salem, USA
+Baltimore, USA
+Wilmington, USA
+Pittsburgh, USA
+Carbondale, USA
+Newark, USA
+New York, USA
+Boston, USA
+New Haven, USA
+Providence, USA
+Manchester, USA
+Burlington, USA
+Portland, USA
+Montreal, Canada
+Ottawa, Canada
+Fort George, Canada
+Kivitoo, Canada
+Thule, Greenland
+Reindeer Lake, Canada
+Toronto, Canada
+Thunder Bay, Canada
+Detroit, USA
+Columbus, USA
+Indianapolis, USA
+Santa Claus, USA
+Louisville, USA
+Knoxville, USA
+St. Louis, USA
+Birmingham, USA
+San Lorenzo, Honduras
+San Jose, Costa Rica
+Fernandina, Galapagos Islands
+Quetzaltenango, Guatemala
+New Orleans, USA
+Jackson, USA
+Fayetteville, USA
+Des Moines, USA
+Chicago, USA
+Milwaukee, USA
+Lawrence, USA
+Minneapolis, USA
+Winnipeg, Canada
+Fargo, USA
+Sioux Falls, USA
+Lincoln, USA
+Tulsa, USA
+San Antonio, USA
+Monterrey, Mexico
+Guadalajara, Mexico
+Mexico City, Mexico
+Easter Island, Chile
+Cabo San Lucas, Mexico
+Guaymas, Mexico
+Roswell, USA
+Colorado Springs, USA
+Denver, USA
+Boulder, USA
+Fort Collins, USA
+Lander, USA
+Calgary, Canada
+Edmonton, Canada
+Echo Bay, Canada
+Forty Mile, Canada
+Missoula, USA
+Boise, USA
+Cedar City, USA
+Salt Lake City, USA
+Phoenix, USA
+Tucson, USA
+San Diego, USA
+Los Angeles, USA
+Las Vegas, USA
+Morgan Hill, USA
+San Francisco, USA
+Redding, USA
+Eugene, USA
+Portland, USA
+Seattle, USA
+Spokane, USA
+Fort Nelson, Canada
+Vancouver, Canada
+Palmer, USA
+Anchorage, USA
+McGrath, USA
+Nome, USA
+Lihue, USA
+Waipahu, USA
+Molokai, USA
+Maui, USA
+Hilo, USA
+North Pole

@@ -1,0 +1,190 @@
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+  #map .leaflet-bar {
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  #map .leaflet-control-zoom a {
+    box-sizing: content-box;
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    padding: 0;
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 0;
+    display: block;
+  }
+  #map img {
+    max-width: none;
+    background: none;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+  }
+</style>
+
+<form method="post" action="/config?plugin={{ plugin }}" data-autosave>
+  <label>Your house
+    <small>Click the map to say where Santa should stop, or type coordinates below. Leave them blank to use the Weather plugin's location.</small>
+    <div id="map" style="height: 300px; margin: 0.5em 0;"></div>
+  </label>
+
+  <label>Latitude
+    <input type="number" name="lat" min="-90" max="90" step="any" value="{{ placeholder.lat }}" placeholder="{{ "%.4f" % placeholder.location[0] if placeholder.location else "" }}">
+  </label>
+
+  <label>Longitude
+    <input type="number" name="lng" min="-180" max="180" step="any" value="{{ placeholder.lng }}" placeholder="{{ "%.4f" % placeholder.location[1] if placeholder.location else "" }}">
+  </label>
+
+  <label>On the nice list
+    <small>Names for Santa to find when he checks his list, separated by commas. Up to 8, of 12 letters each</small>
+    <input type="text" name="names" maxlength="120" value="{{ placeholder.names }}" placeholder="Holly, Noel">
+  </label>
+
+  <fieldset>
+    <legend>How far away he is</legend>
+    <small>On his last few stops before your house. Auto goes by the board's time zone: miles in the UK and the United States, kilometres elsewhere</small>
+    <div class="presets">
+      <label><input type="radio" name="units" value="auto" {{ "checked" if placeholder.unit_setting == "auto" else "" }}>Auto</label>
+      <label><input type="radio" name="units" value="miles" {{ "checked" if placeholder.unit_setting == "miles" else "" }}>Miles</label>
+      <label><input type="radio" name="units" value="km" {{ "checked" if placeholder.unit_setting == "km" else "" }}>Kilometres</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Show</legend>
+    <small>Live follows the calendar: the North Pole gets ready from 1 December, and Santa flies on Christmas Eve. The other two are for trying it out, and put a small "test" in the corner of the picture. Remember to come back to Live!</small>
+    <div class="presets">
+      <label><input type="radio" name="show" value="live" {{ "checked" if placeholder.show == "live" else "" }}>Live</label>
+      <label><input type="radio" name="show" value="demo" {{ "checked" if placeholder.show == "demo" else "" }}>Demo of the whole story</label>
+      <label><input type="radio" name="show" value="pretend" {{ "checked" if placeholder.show == "pretend" else "" }}>Pretend it's...</label>
+    </div>
+  </fieldset>
+
+  <label>Pretend it's
+    <small>Your own date and time, where you are. The clock starts here each time you change something on this page, and runs on from it. Or press one of the moments below</small>
+    <input type="datetime-local" name="pretend" value="{{ placeholder.pretend }}">
+  </label>
+
+  <fieldset>
+    <legend>Pretend time runs</legend>
+    <div class="presets">
+      <label><input type="radio" name="speed" value="1" {{ "checked" if placeholder.speed == 1 else "" }}>As in life</label>
+      <label><input type="radio" name="speed" value="60" {{ "checked" if placeholder.speed == 60 else "" }}>A minute a second</label>
+      <label><input type="radio" name="speed" value="600" {{ "checked" if placeholder.speed == 600 else "" }}>Ten minutes a second</label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Jump to a moment</legend>
+    <small id="moments-note"></small>
+    <div id="moments" style="display: flex; flex-wrap: wrap; gap: 0.5em; margin-top: 0.5em;"></div>
+  </fieldset>
+</form>
+
+
+<script>
+  const latInput = document.querySelector('[name=lat]');
+  const lngInput = document.querySelector('[name=lng]');
+
+  // Start on the saved location, or the Weather plugin's shown as the fields'
+  // placeholders, otherwise a zoomed-out world view.
+  const startLat = parseFloat(latInput.value || latInput.placeholder);
+  const startLng = parseFloat(lngInput.value || lngInput.placeholder);
+  const hasStart = !isNaN(startLat) && !isNaN(startLng);
+
+  const map = L.map('map').setView(
+    hasStart ? [startLat, startLng] : [0, 0],
+    hasStart ? 10 : 2
+  );
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  let marker = hasStart ? L.marker([startLat, startLng]).addTo(map) : null;
+
+  map.on('click', function (e) {
+    const p = e.latlng.wrap();
+    latInput.value = p.lat.toFixed(6);
+    lngInput.value = p.lng.toFixed(6);
+    // save both together
+    latInput.form.dispatchEvent(new Event('change'));
+    if (marker) {
+      marker.setLatLng(p);
+    } else {
+      marker = L.marker(p).addTo(map);
+    }
+  });
+</script>
+
+<script>
+  // the moments worth trying, each a local date and time and how fast time then runs
+  (function () {
+    const year = {{ placeholder.test_year }};
+    const takeoff = "{{ placeholder.takeoff_local }}";
+    const landing = "{{ placeholder.landing_local }}";
+    const visit = "{{ placeholder.visit_local }}";
+    const place = "{{ placeholder.visit_place }}";
+    const form = document.querySelector('form[data-autosave]');
+
+    // a local date and time, moved by some minutes
+    const shifted = function (text, minutes) {
+      const [day, time] = text.split('T');
+      const [y, mo, d] = day.split('-').map(Number);
+      const [h, mi] = time.split(':').map(Number);
+      const when = new Date(Date.UTC(y, mo - 1, d, h, mi + minutes));
+      return when.toISOString().slice(0, 16);
+    };
+
+    const moments = [
+      ['30 November: all quiet', (year) + '-11-30T12:00', 1],
+      ['1 December: the list', year + '-12-01T12:00', 1],
+      ['5 December: the workshop', year + '-12-05T12:00', 1],
+      ['10 December: flying practice', year + '-12-10T12:00', 1],
+      ['18 December: loading the sleigh', year + '-12-18T12:00', 1],
+      ['Christmas Eve, an hour before take-off', shifted(takeoff, -60), 1],
+      ['A minute before take-off', shifted(takeoff, -1), 1],
+      ['The flight from the start, fast', shifted(takeoff, 1), 600],
+      ['The flight from the start, steady', shifted(takeoff, 1), 60],
+    ];
+    if (visit) {
+      moments.push(['3 hours before your house', shifted(visit, -180), 60]);
+      moments.push(['20 minutes before your house', shifted(visit, -20), 60]);
+      moments.push(['His last stops before your house', shifted(visit, -11), 60]);
+      moments.push(['2 minutes before your house', shifted(visit, -2), 1]);
+      moments.push(['Just after he has been', shifted(visit, 6), 60]);
+    }
+    moments.push(['Christmas morning', shifted(landing, 30), 1]);
+    moments.push(['27 December: a rest', year + '-12-27T12:00', 1]);
+    moments.push(['January: all quiet', (year + 1) + '-01-15T12:00', 1]);
+
+    document.querySelector('#moments-note').textContent = visit
+      ? 'Santa reaches your house when he reaches ' + place + ', the stop nearest to it: ' + visit.replace('T', ' at ') + ' your time.'
+      : 'Set where your house is to try the moments around his visit.';
+
+    const holder = document.querySelector('#moments');
+    for (const [label, when, speed] of moments) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'secondary';
+      button.style.cssText = 'width: auto; flex: 0 0 auto; white-space: nowrap; margin: 0;';
+      button.textContent = label;
+      button.addEventListener('click', function () {
+        form.querySelector('[name=pretend]').value = when;
+        form.querySelector('[name=show][value=pretend]').checked = true;
+        form.querySelector('[name=speed][value="' + speed + '"]').checked = true;
+        // save all three together
+        form.dispatchEvent(new Event('change'));
+      });
+      holder.appendChild(button);
+    }
+  })();
+</script>
