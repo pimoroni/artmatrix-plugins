@@ -1,0 +1,95 @@
+{
+  "name": "Santa Tracker",
+  "version": "1.0.0",
+  "hash": "c836d7be80b2",
+  "description": "December at the North Pole, then Santa's flight to you",
+  "author": "Vincent Willcox",
+  "category": "Information",
+  "requires_internet": false,
+  "urls": [
+    [
+      "plugins/santa_tracker/OFL-Fredoka.txt",
+      "OFL-Fredoka.txt"
+    ],
+    [
+      "plugins/santa_tracker/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/santa_tracker/clips/checking.clip",
+      "clips/checking.clip"
+    ],
+    [
+      "plugins/santa_tracker/clips/drop.clip",
+      "clips/drop.clip"
+    ],
+    [
+      "plugins/santa_tracker/clips/flying.clip",
+      "clips/flying.clip"
+    ],
+    [
+      "plugins/santa_tracker/clips/globe.clip",
+      "clips/globe.clip"
+    ],
+    [
+      "plugins/santa_tracker/clips/loading.clip",
+      "clips/loading.clip"
+    ],
+    [
+      "plugins/santa_tracker/clips/morning.clip",
+      "clips/morning.clip"
+    ],
+    [
+      "plugins/santa_tracker/clips/pole.clip",
+      "clips/pole.clip"
+    ],
+    [
+      "plugins/santa_tracker/clips/practice.clip",
+      "clips/practice.clip"
+    ],
+    [
+      "plugins/santa_tracker/clips/takeoff.clip",
+      "clips/takeoff.clip"
+    ],
+    [
+      "plugins/santa_tracker/clips/workshop.clip",
+      "clips/workshop.clip"
+    ],
+    [
+      "plugins/santa_tracker/config.html",
+      "config.html"
+    ],
+    [
+      "plugins/santa_tracker/land.bin",
+      "land.bin"
+    ],
+    [
+      "plugins/santa_tracker/route.bin",
+      "route.bin"
+    ],
+    [
+      "plugins/santa_tracker/route.txt",
+      "route.txt"
+    ],
+    [
+      "plugins/santa_tracker/santa.af",
+      "santa.af"
+    ],
+    [
+      "plugins/santa_tracker/sleigh.png",
+      "sleigh.png"
+    ],
+    [
+      "plugins/santa_tracker/sleigh_small.png",
+      "sleigh_small.png"
+    ],
+    [
+      "plugins/santa_tracker/thumbnail.png",
+      "thumbnail.png"
+    ],
+    [
+      "plugins/santa_tracker/towns.bin",
+      "towns.bin"
+    ]
+  ]
+}

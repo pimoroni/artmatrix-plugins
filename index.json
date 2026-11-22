@@ -35,6 +35,7 @@
     "resonance": "Resonance",
     "retro_rail": "Retro Rail",
     "ripples": "Ripples",
+    "santa_tracker": "Santa Tracker",
     "solar_system": "Solar System",
     "spirit_level": "Spirit Level",
     "stars": "Stars",
@@ -256,6 +257,12 @@
       "author": "Pimoroni",
       "category": "Visualisations",
       "hash": "89d95c4f74f4"
+    },
+    "santa_tracker": {
+      "description": "December at the North Pole, then Santa's flight to you",
+      "author": "Vincent Willcox",
+      "category": "Information",
+      "hash": "c836d7be80b2"
     },
     "solar_system": {
       "description": "Planets orbiting around their sun",
