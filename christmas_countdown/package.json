@@ -1,0 +1,23 @@
+{
+  "name": "Christmas Countdown",
+  "version": "1.0.0",
+  "hash": "76d5b4167dcd",
+  "description": "Candy cane themed Christmas countdown with settling snow",
+  "author": "Pimoroni",
+  "category": "Information",
+  "requires_internet": false,
+  "urls": [
+    [
+      "plugins/christmas_countdown/__init__.py",
+      "__init__.py"
+    ],
+    [
+      "plugins/christmas_countdown/config.html",
+      "config.html"
+    ],
+    [
+      "plugins/christmas_countdown/thumbnail.png",
+      "thumbnail.png"
+    ]
+  ]
+}

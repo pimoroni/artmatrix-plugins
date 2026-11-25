@@ -10,6 +10,7 @@
     "blackhole": "Blackhole",
     "block_drop": "Block Drop",
     "cells": "Cells",
+    "christmas_countdown": "Christmas Countdown",
     "co2_matrix": "CO2 Matrix",
     "contours": "Contours",
     "domain_warp": "Domain Warp",
@@ -106,6 +107,12 @@
       "author": "Pimoroni",
       "category": "Visualisations",
       "hash": "ef56814d7be7"
+    },
+    "christmas_countdown": {
+      "description": "Candy cane themed Christmas countdown with settling snow",
+      "author": "Pimoroni",
+      "category": "Information",
+      "hash": "76d5b4167dcd"
     },
     "co2_matrix": {
       "description": "The CO2 level from an SCD41 breakout",
